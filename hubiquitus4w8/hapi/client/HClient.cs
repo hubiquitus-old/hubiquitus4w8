@@ -65,9 +65,7 @@ namespace hubiquitus4w8.hapi.client
         /// </summary>
         public event CommandEventHandler onCommand;
 
-        private Thread statusThread = null;
-        private Thread messageThread = null;
-        private Thread commandThread = null;
+        
 
         private Hashtable resultDelegates = new Hashtable();
 
@@ -752,7 +750,7 @@ namespace hubiquitus4w8.hapi.client
                     hstatus.SetErrorCode(error);
                     hstatus.SetErrorMsg(errorMsg);
 
-                    statusThread = new Thread(new ThreadStart(() =>
+                    Thread statusThread = new Thread(new ThreadStart(() =>
                          {
                              try
                              {
@@ -805,7 +803,7 @@ namespace hubiquitus4w8.hapi.client
             {
                 if (this.onMessage != null)
                 {
-                    messageThread = new Thread(new ThreadStart(() =>
+                    Thread messageThread = new Thread(new ThreadStart(() =>
                     {
                         try
                         {
@@ -834,7 +832,7 @@ namespace hubiquitus4w8.hapi.client
             {
                 if (this.onCommand != null)
                 {
-                    commandThread = new Thread(new ThreadStart(() => {
+                    Thread commandThread = new Thread(new ThreadStart(() => {
                         try
                         {
                             this.onCommand(cmd);
