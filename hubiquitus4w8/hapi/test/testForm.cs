@@ -169,10 +169,10 @@ namespace hubiquitus4w8.hapi.test
                 }
                 catch (FormatException)
                 {
-                    nbLastMsg = 10;
+                    nbLastMsg = -1;
                 }
                 if (nbLastMsg > 0)
-                    client.GetLastMessages(chid, nbLastMsg, ResultDelegateGetLastMessages);
+                    client.GetLastMessages(chid, ResultDelegateGetLastMessages, nbLastMsg);
                 else
                     client.GetLastMessages(chid, ResultDelegateGetLastMessages);
             }

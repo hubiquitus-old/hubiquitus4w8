@@ -48,7 +48,7 @@ namespace hubiquitus4w8.hapi.hStructures
         public HOptions() 
         {
             serverHost = null;
-            serverPort = 5222;
+            serverPort = 8080;
             transport = "socketio";
             endpoints = null;
             hserver = "hnode";

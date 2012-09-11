@@ -303,7 +303,7 @@ namespace hubiquitus4w8.hapi.client
         /// <param name="chid"></param>
         /// <param name="nbLastMsg"></param>
         /// <param name="resultDelegate"></param>
-        public void GetLastMessages(string chid, int nbLastMsg, Action<HResult> resultDelegate)
+        public void GetLastMessages(string chid,Action<HResult> resultDelegate, int nbLastMsg = 10)
         {
             HJsonDictionnary @params = new HJsonDictionnary();
             @params.Add("chid", chid);
@@ -322,10 +322,10 @@ namespace hubiquitus4w8.hapi.client
         /// </summary>
         /// <param name="chid"></param>
         /// <param name="resultDelegate"></param>
-        public void GetLastMessages(string chid, Action<HResult> resultDelegate)
-        {
-            GetLastMessages(chid, -1, resultDelegate);
-        }
+        //public void GetLastMessages(string chid, Action<HResult> resultDelegate)
+        //{
+        //    GetLastMessages(chid, -1, resultDelegate);
+        //}
 
         /// <summary>
         /// 
@@ -515,8 +515,8 @@ namespace hubiquitus4w8.hapi.client
                     message.SetAuthor(mOptions.Author);
                     message.SetHeaders(mOptions.Headers);
                     message.SetLocation(mOptions.Location);
-                    message.SetPublished(mOptions.Published);
-                    message.SetRelevance(mOptions.Relevance);
+                    message.SetPublished(mOptions.Published.Value);
+                    message.SetRelevance(mOptions.Relevance.Value);
                     message.SetTransient(mOptions.Transient);
                 }
                 if (transportOptions != null && transportOptions.Jid != null)
@@ -671,8 +671,8 @@ namespace hubiquitus4w8.hapi.client
         }
 
         /// <summary>
-        /// The client MUST be connected to access to this service.
         /// since v0.5
+        /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage with a hCommand payload.
         /// </summary>
         /// <param name="chid"></param>
@@ -705,7 +705,8 @@ namespace hubiquitus4w8.hapi.client
         }
 
         /// <summary>
-        /// he client MUST be connected to access to this service.
+        /// since v0.5
+        /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage with a hResult payload.
         /// </summary>
         /// <param name="chid"></param>
