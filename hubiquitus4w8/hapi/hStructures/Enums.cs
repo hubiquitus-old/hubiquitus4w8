@@ -43,20 +43,12 @@ namespace hubiquitus4w8.hapi.hStructures
 
     enum ConnectionStatus
     {
-        UNKNOWN = 0,
-        CONNECTING,
-        CONNECTED,
-        REATTACHING,
-        REATTACHED,
-        DISCONNECTING,
-        DISCONNECTED
+        CONNECTING = 1,
+        CONNECTED = 2,
+        DISCONNECTING = 5,
+        DISCONNECTED = 6
     }
-
-
-
-
-   
-
+    
     enum HMessagePriority
     {
         TRACE = 0,
@@ -66,9 +58,7 @@ namespace hubiquitus4w8.hapi.hStructures
         CRITICAL,
         PANIC
     }
-
-
-
+    
     enum ResultStatus
     {
         NO_ERROR = 0,
