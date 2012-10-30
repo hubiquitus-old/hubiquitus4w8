@@ -32,14 +32,23 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     class HMessageOptions
     {
+        private string @ref = null;
         private string convid = null;
         private HMessagePriority priority;
         private DateTime relevance;
-        private bool transient;
+        private int relevanceOffset;
+        private bool persistent;
         private HLocation location = null;
         private string author = null;
         private HJsonObj headers = null;
         private DateTime published;
+        private int timeout = 0;
+
+        public string Ref
+        {
+            get { return @ref; }
+            set { @ref = value; }
+        }
 
         public string Convid 
         {
@@ -59,10 +68,16 @@ namespace hubiquitus4w8.hapi.hStructures
             set { relevance = value; }
         }
 
-        public bool Transient
+        public int RelevanceOffset
         {
-            get { return transient; }
-            set { transient = value; }
+            get { return relevanceOffset; }
+            set { relevanceOffset = value; }
+        }
+
+        public bool Persistent
+        {
+            get { return persistent; }
+            set { persistent = value; }
         }
 
         public HLocation Location
@@ -87,6 +102,12 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             get { return published; }
             set { published = value; }
+        }
+
+        public int Timeout
+        {
+            get { return timeout; }
+            set { timeout = value; }
         }
     }
 }

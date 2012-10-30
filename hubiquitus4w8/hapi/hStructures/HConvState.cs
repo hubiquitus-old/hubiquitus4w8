@@ -25,65 +25,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
   /// <summary>
-  /// Version 0.3
+  /// Version 0.5
   /// This kind of payload is used to describe the status of a thread of correlated messages identified by its convid.
   /// Multiple hConvStates with the same convid can be published into a channel, specifying the evolution of the state of the thread during time.
   /// </summary>
-    class HConvState : HJsonObj
+    class HConvState : JObject
     {
-        
-        private JObject hconvstate = new JObject();
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(HConvState));
         public HConvState()
         { 
         }
 
         public HConvState(JObject jsonObj)
+            : base(jsonObj)
         {
-            FromJson(jsonObj);
         }
 
-
-
-
-        public JObject ToJson()
-        {
-            return this.hconvstate;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-                hconvstate = jsonObj;
-            else
-                hconvstate = new JObject();
-        }
-
-        public string GetHType()
-        {
-            return "hconvstate";
-        }
-
-        public bool Equals(HConvState obj)
-        {
-            if (obj.GetStatus() != this.GetStatus())
-                return false;
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return hconvstate.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return hconvstate.ToString();
-        }
 
         //Getter & setter
         /// <summary>
@@ -95,11 +57,12 @@ namespace hubiquitus4w8.hapi.hStructures
             string status;
             try
             {
-                status = (string)hconvstate["status"];
+                status = this["status"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
                 status = null;
+                log.Info("Message: ", e);
             }
             return status;
         }
@@ -109,14 +72,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (status == null)
-                    hconvstate.Remove("status");
+                    this.Remove("status");
                 else
-                    hconvstate.Add("status", status);
+                    this.Add("status", status);
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Info("Message: ", e);
             }
         }
     }

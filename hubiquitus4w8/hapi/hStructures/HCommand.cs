@@ -20,266 +20,39 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using hubiquitus4w8.hapi.util;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// hAPI Command. For more info, see Hubiquitus reference
     /// </summary>
-    class HCommand : HJsonObj
+    class HCommand : JObject
     {
-        private JObject hcommand = new JObject();
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(HCommand));
         public HCommand()
         { 
         }
 
-        public HCommand(string entity, string cmd, HJsonObj @params)
+        public HCommand(JObject jsonObj)
+            : base(jsonObj)
         {
-            SetEntity(entity);
+        }
+
+        public HCommand(string cmd, JObject @params)
+        {
             SetCmd(cmd);
             SetParams(@params);
         }
 
-        public HCommand(JObject jsonObj)
-        {
-            FromJson(jsonObj);
-        }
-
-        public JObject ToJson()
-        {
-            return this.hcommand;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-                hcommand = jsonObj;
-            else
-                hcommand = null;
-        }
-
-        public string GetHType()
-        {
-            return "hcommand";
-        }
-
-        /// <summary>
-        /// Check are made on reqid, requester, sender, entity, sent, cmd and transient.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public  bool Equals(HCommand obj)
-        {
-            if (obj.GetReqid() != this.GetReqid())
-                return false;
-            if (obj.GetRequester() != this.GetRequester())
-                return false;
-            if (obj.GetSender() != this.GetSender())
-                return false;
-            if (obj.GetEntity() != this.GetEntity())
-                return false;
-            if (obj.GetSent() != this.GetSent())
-                return false;
-            if (obj.GetCmd() != this.GetCmd())
-                return false;
-            if (obj.GetTransient() != this.GetTransient())
-                return false;
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return hcommand.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return hcommand.ToString();
-        }
-
+     
         //Getters &setters
+       
         /// <summary>
-        /// Mandatory. Filled by the hApi.
-        /// </summary>
-        /// <returns></returns>
-        public string GetReqid()
-        {
-            string reqid;
-            try
-            {
-                reqid = (string)hcommand["reqid"];
-            }
-            catch (ArgumentNullException)
-            {
-                reqid = null;
-            }
-            return reqid;
-        }
-
-        public void SetReqid(string reqid)
-        {
-            try
-            {
-                if (reqid == null)
-                    hcommand.Remove("reqid");
-                else
-                    hcommand.Add("reqid", reqid);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Filled by the hApi if empty.
-        /// </summary>
-        /// <returns>requester jid. Null if undefined.</returns>
-        public string GetRequester()
-        {
-            string requester;
-            try
-            {
-                requester = (string)hcommand["requester"];
-            }
-            catch (ArgumentNullException)
-            {
-                requester = null;
-            }
-            return requester;
-        }
-
-
-        public void SetRequester(string requester)
-        {
-            try
-            {
-                if (requester == null)
-                    hcommand.Remove("requester");
-                else
-                    hcommand.Add("requester", requester);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Mandatory. Filled by the hApi.
-        /// </summary>
-        /// <returns>sender jid. Null if undefined.</returns>
-        public string GetSender()
-        {
-            string sender;
-            try
-            {
-                sender = (string)hcommand["sender"];
-            }
-            catch (ArgumentNullException)
-            {
-                sender = null;
-            }
-            return sender;
-        }
-
-        public void SetSender(string sender)
-        {
-            try
-            {
-                if (sender == null)
-                    hcommand.Remove("sender");
-                else
-                    hcommand.Add("sender", sender);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Mandatory.
-        /// </summary>
-        /// <returns>entity jid. Null if undefined.</returns>
-        public string GetEntity()
-        {
-            string entity;
-            try
-            {
-                entity = (string)hcommand["entity"];
-            }
-            catch (ArgumentNullException)
-            {
-                entity = null;
-            }
-            return entity;
-        }
-
-        public void SetEntity(string entity)
-        {
-            try
-            {
-                if (entity == null)
-                    hcommand.Remove("entity");
-                else
-                    hcommand.Add("entity", entity);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Mandatory. Filled by hApi if empty.
-        /// </summary>
-        /// <returns>date of submission. Null if undefined.</returns>
-        public DateTime? GetSent()
-        {
-            DateTime? sent;
-            try
-            {
-                sent = (DateTime)hcommand["sent"];
-            }
-            catch (ArgumentNullException)
-            {
-                sent = null;
-            }
-            return sent;
-        }
-
-        public void SetSent(DateTime sent)
-        {
-            try
-            {
-                if (sent == null)
-                    hcommand.Remove("sent");
-                else
-                    hcommand.Add("sent", sent.ToString(HUtil.DateISO8601Format));
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Mandatory.
+        /// Get the command name. Mandatory.
         /// </summary>
         /// <returns>Null if undefined.</returns>
         public string GetCmd()
@@ -287,94 +60,69 @@ namespace hubiquitus4w8.hapi.hStructures
             string cmd;
             try
             {
-                cmd = (string)hcommand["cmd"];
+                cmd = this["cmd"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
                 cmd = null;    
+                log.Info("Message: ", e);
             }
             return cmd;
         }
 
+        /// <summary>
+        /// Set the command name. Mandatory.
+        /// </summary>
+        /// <param name="cmd"></param>
         public void SetCmd(string cmd)
         {
             try
             {
                 if (cmd == null)
-                    hcommand.Remove("cmd");
+                    this.Remove("cmd");
                 else
-                    hcommand.Add("cmd", cmd);
+                    this.Add("cmd", cmd);
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Info("Message: ", e);
             }
         }
         /// <summary>
-        /// 
+        /// Get params thrown to the hserver. 
         /// </summary>
-        /// <returns>params thrown to the hserver. Null if undefined.</returns>
+        /// <returns>Null if undefined.</returns>
         public JObject GetParams()
         {
             JObject @params;
             try
             {
-                @params = (JObject)hcommand["params"];
+                @params = this["params"].ToObject<JObject>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
                 @params = null;
+                log.Info("Message: ", e);
             }
             return @params;
         }
 
-        public void SetParams(HJsonObj @params)
+        /// <summary>
+        /// Set params thrown to the hserver.
+        /// </summary>
+        /// <param name="params"></param>
+        public void SetParams(JObject @params)
         {
             try
             {
                 if (@params == null)
-                    hcommand.Remove("params");
+                    this.Remove("params");
                 else
-                    hcommand.Add("params", @params.ToJson());
+                    this.Add("params", @params);
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>persist message or not. Null if undefined.</returns>
-        public bool? GetTransient()
-        {
-            bool? transient;
-            try
-            {
-                  transient = (bool)hcommand["transient"];
-            }
-            catch (ArgumentNullException)
-            {
-                transient = null;
-            }
-            return transient;
-        }
-
-        public void SetTransient(bool? transient)
-        {
-            try
-            {
-                if (transient == null)
-                    hcommand.Remove("transient");
-                else
-                    hcommand.Add("transient", transient);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
+                log.Info("Message: ", e);
             }
         }
     }

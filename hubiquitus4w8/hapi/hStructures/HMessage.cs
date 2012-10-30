@@ -76,7 +76,7 @@ namespace hubiquitus4w8.hapi.hStructures
         }
 
         /// <summary>
-        /// Check are made on : msgid, chid, convid, type, priority, relevance, transient, author, publisher, published and location. 
+        /// Check are made on : msgid, actor, convid, type, priority, relevance, transient, author, publisher, published and location. 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -158,29 +158,29 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetChid()
         {
-            string chid;
+            string actor;
             try
             {
-                chid = (string)hmessage["chid"];
+                actor = (string)hmessage["actor"];
             }
             catch (ArgumentNullException)
             {
-                chid = null;
+                actor = null;
             }
-            return chid;
+            return actor;
         }
 
-        public void SetChid(string chid)
+        public void SetChid(string actor)
         {
             try
             {
-                if (chid == null)
+                if (actor == null)
                 {
-                    hmessage.Remove("chid");
+                    hmessage.Remove("actor");
                 }
                 else
                 {
-                    hmessage.Add("chid", chid);
+                    hmessage.Add("actor", actor);
                 }
             }
             catch (JsonWriterException)

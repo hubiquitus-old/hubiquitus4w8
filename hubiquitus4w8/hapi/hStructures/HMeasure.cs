@@ -25,77 +25,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// Describes a measure payload
     /// </summary>
-    class HMeasure : HJsonObj
+    class HMeasure : JObject
     {
-
-        private JObject hmeasure = new JObject();
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(HMeasure));
         public HMeasure()
         {
         }
 
         public HMeasure(JObject jsonObj)
+            : base(jsonObj)
         {
-            FromJson(jsonObj);
         }
 
-        /* HJsonObj interface */
-
-        public JObject ToJson()
-        {
-            return hmeasure;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-            {
-                this.hmeasure = jsonObj;
-            }
-            else
-            {
-                this.hmeasure = new JObject();
-            }
-        }
-
-        public string GetHType()
-        {
-            return "hmeasure";
-        }
-
-
-        public override string ToString()
-        {
-            return hmeasure.ToString();
-        }
-
-        /// <summary>
-        /// Check are made on : value, unit. 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public bool equals(HMeasure obj)
-        {
-            if (obj.GetUnit() != this.GetUnit())
-                return false;
-            if (obj.GetValue() != this.GetValue())
-                return false;
-            return true;
-        }
-
-
-        public override int GetHashCode()
-        {
-            return hmeasure.GetHashCode();
-        }
-
+        
         // Getters & Setters 
 
         /// <summary>
@@ -107,11 +57,12 @@ namespace hubiquitus4w8.hapi.hStructures
             string unit;
             try
             {
-                unit = (string)hmeasure["unit"];
+                unit = this["unit"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
                 unit = null;
+                log.Info("Message: ", e);
             }
             return unit;
         }
@@ -122,16 +73,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (unit == null)
                 {
-                    hmeasure.Remove("unit");
+                    this.Remove("unit");
                 }
                 else
                 {
-                    hmeasure.Add("unit", unit);
+                    this.Add("unit", unit);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Info("Message: ", e);
             }
         }
 
@@ -144,11 +95,12 @@ namespace hubiquitus4w8.hapi.hStructures
             string value;
             try
             {
-                value = (string)hmeasure["value"];
+                value = this["value"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
                 value = null;
+                log.Info("Message: ", e);
             }
             return value;
         }
@@ -159,16 +111,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (value == null)
                 {
-                    hmeasure.Remove("value");
+                    this.Remove("value");
                 }
                 else
                 {
-                    hmeasure.Add("value", value);
+                    this.Add("value", value);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Info("Message: ", e);
             }
         }
 
