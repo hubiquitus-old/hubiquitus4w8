@@ -494,74 +494,94 @@ namespace hubiquitus4w8.hapi.client
         /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="type"></param>
         /// <param name="payload"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildMessage(string chid, string type, HJsonObj payload, HMessageOptions mOptions)
+        public HMessage BuildMessage(string actor, string type, JObject payload, HMessageOptions mOptions)
         {
-            try
-            {
-                if (chid == null || chid.Length <= 0)
-                    throw new MissingAttrException("chid");
-                HMessage message = new HMessage();
-                message.SetActor(chid);
-                message.SetType(type);
-                if (mOptions != null)
-                {
-                    message.SetConvid(mOptions.Convid);
-                    message.SetPriority(mOptions.Priority);
-                    message.SetAuthor(mOptions.Author);
-                    message.SetHeaders(mOptions.Headers);
-                    message.SetLocation(mOptions.Location);
-                    message.SetPublished(mOptions.Published);
-                    message.SetRelevance(mOptions.Relevance);
-                    message.SetPersistent(mOptions.Transient);
-                }
-                if (transportOptions != null && transportOptions.Jid != null)
-                    message.SetPublisher(transportOptions.Jid.GetBareJID());
-                message.SetPayload(payload);
-                return message;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return InnerBuildMessage(actor, type, payload, mOptions);
         }
 
+        public HMessage BuildMessage(string actor, string type, JArray payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, string payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, bool payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, int payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, double payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, HAck payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, HAlert payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, HCommand payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, HConvState payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, HMeasure payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
+
+        public HMessage BuildMessage(string actor, string type, HResult payload, HMessageOptions mOptions)
+        {
+            return InnerBuildMessage(actor, type, payload, mOptions);
+        }
         /// <summary>
         /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage with a hConvState payload.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="convid"></param>
         /// <param name="status"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildConvState(string chid, string convid, string status, HMessageOptions mOptions)
+        public HMessage BuildConvState(string actor, string convid, string status, HMessageOptions mOptions)
         {
-            try
-            {
-                if (chid == null || chid.Length <= 0)
-                    throw new MissingAttrException("chid");
-                if (convid == null || convid.Length <= 0)
-                    throw new MissingAttrException("convid");
-                if (status == null || status.Length <= 0)
-                    throw new MissingAttrException("status");
-                HConvState convState = new HConvState();
-                convState.SetStatus(status);
+            if (actor == null || actor.Length <= 0)
+                throw new MissingAttrException("actor");
+            if (convid == null || convid.Length <= 0)
+                throw new MissingAttrException("convid");
+            if (status == null || status.Length <= 0)
+                throw new MissingAttrException("status");
 
-                HMessage message = BuildMessage(chid, "hConvState", convState, mOptions);
-                message.SetConvid(convid);
-                return message;
-            }
-            catch (Exception)
-            {
+            HConvState convState = new HConvState();
+            convState.SetStatus(status);
 
-                throw;
-            }
+            HMessage message = BuildMessage(actor, "hConvState", convState, mOptions);
+            message.SetConvid(convid);
+            return message;
         }
 
 
@@ -571,7 +591,7 @@ namespace hubiquitus4w8.hapi.client
         /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage with a hAck payload.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="ref"></param>
         /// <param name="ack">
         /// The following values are authorized :
@@ -580,77 +600,58 @@ namespace hubiquitus4w8.hapi.client
         /// </param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildAck(string chid, string @ref, string ack, HMessageOptions mOptions)
+        public HMessage BuildAck(string actor, string @ref, string ack, HMessageOptions mOptions)
         {
-            try
-            {
-                if (chid == null || chid.Length <= 0)
-                    throw new MissingAttrException("chid");
-                if (@ref == null || @ref.Length <= 0)
-                    throw new MissingAttrException("ref");
-                if (ack == null)
-                    throw new MissingAttrException("ack");
-                if (HUtil.CheckAck(ack))
-                    throw new Exception("only 'recv' and 'read' are authorized for ack");
+            if (actor == null || actor.Length <= 0)
+                throw new MissingAttrException("actor");
+            if (@ref == null || @ref.Length <= 0)
+                throw new MissingAttrException("ref");
+            if (ack == null)
+                throw new MissingAttrException("ack");
+            if (HUtil.CheckAck(ack))
+                throw new Exception("only 'recv' and 'read' are authorized for ack");
 
-                HAck hack = new HAck();
-                hack.SetAck(ack);
-                hack.SetAckid(@ref);
-                HMessage message = BuildMessage(chid, "hAck", hack, mOptions);
-                return message;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            HAck hack = new HAck();
+            hack.SetAck(ack);
+            HMessage message = BuildMessage(actor, "hAck", hack, mOptions);
+            return message;
         }
 
         /// <summary>
         /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage with a hAlert payload.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="alert"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildAlert(string chid, string alert, HMessageOptions mOptions)
+        public HMessage BuildAlert(string actor, string alert, HMessageOptions mOptions)
         {
-            try
-            {
-                if (chid == null || chid.Length <= 0)
-                    throw new MissingAttrException("chid");
-                if (alert == null || alert.Length <= 0)
-                    throw new MissingAttrException("alert");
+            if (actor == null || actor.Length <= 0)
+                throw new MissingAttrException("actor");
+            if (alert == null || alert.Length <= 0)
+                throw new MissingAttrException("alert");
 
-                HAlert halert = new HAlert();
-                halert.SetAlert(alert);
+            HAlert halert = new HAlert();
+            halert.SetAlert(alert);
 
-                HMessage message = BuildMessage(chid, "hAlert", halert, mOptions);
-                return message;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            HMessage message = BuildMessage(actor, "hAlert", halert, mOptions);
+            return message;
         }
 
         /// <summary>
         /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage with a hMeasure payload.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="value"></param>
         /// <param name="unit"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildMeassur(string chid, string value, string unit, HMessageOptions mOptions)
+        public HMessage BuildMeassur(string actor, string value, string unit, HMessageOptions mOptions)
         {
-            try
-            {
-                if (chid == null || chid.Length <= 0)
-                    throw new MissingAttrException("chid");
+                if (actor == null || actor.Length <= 0)
+                    throw new MissingAttrException("actor");
                 if (value == null || value.Length <= 0)
                     throw new MissingAttrException("value");
                 if (unit == null || unit.Length <= 0)
@@ -660,14 +661,8 @@ namespace hubiquitus4w8.hapi.client
                 hmeasure.SetUnit(unit);
                 hmeasure.SetValue(value);
 
-                HMessage message = BuildMessage(chid, "hMeasure", hmeasure, mOptions);
+                HMessage message = BuildMessage(actor, "hMeasure", hmeasure, mOptions);
                 return message;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
         }
 
         /// <summary>
@@ -675,33 +670,24 @@ namespace hubiquitus4w8.hapi.client
         /// since v0.5
         /// Allow a hubapp client to create a hMessage with a hCommand payload.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="cmd"></param>
         /// <param name="params"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildCommand(string chid, string cmd, HJsonObj @params, HMessageOptions mOptions)
+        public HMessage BuildCommand(string actor, string cmd, JObject @params, HMessageOptions mOptions)
         {
-            try
-            {
-                if (chid == null || chid.Length <= 0)
-                    throw new MissingAttrException("chid");
-                if (cmd == null || cmd.Length <= 0)
-                    throw new MissingAttrException("cmd");
+            if (actor == null || actor.Length <= 0)
+                throw new MissingAttrException("actor");
+            if (cmd == null || cmd.Length <= 0)
+                throw new MissingAttrException("cmd");
 
-                HCommand hcommand = new HCommand();
-                hcommand.SetCmd(cmd);
-                hcommand.SetParams(@params);
+            HCommand hcommand = new HCommand();
+            hcommand.SetCmd(cmd);
+            hcommand.SetParams(@params);
 
-                HMessage hmessage = BuildMessage(chid, "hcommand", hcommand, mOptions);
-                return hmessage;
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            HMessage hmessage = BuildMessage(actor, "hcommand", hcommand, mOptions);
+            return hmessage;
         }
 
         /// <summary>
@@ -713,31 +699,90 @@ namespace hubiquitus4w8.hapi.client
         /// <param name="result"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildResult(string chid, ResultStatus status, HJsonObj result, HMessageOptions mOptions)
+        public HMessage BuildResult(string actor, string @ref, ResultStatus status, JObject result, HMessageOptions mOptions)
         {
-            try
-            {
-                if (chid == null || chid.Length <= 0)
-                    throw new MissingAttrException("chid");
+            return InnerBuildResult(actor, @ref, status, result, mOptions);
+        }
 
-                HResult hresult = new HResult();
-                hresult.SetResult(result);
-                hresult.SetStatus(status);
+        public HMessage BuildResult(string actor, string @ref, ResultStatus status, JArray result, HMessageOptions mOptions)
+        {
+            return InnerBuildResult(actor, @ref, status, result, mOptions);
+        }
 
-                HMessage hmessage = BuildMessage(chid, "hResult", hresult, mOptions);
-                return hmessage;
+        public HMessage BuildResult(string actor, string @ref, ResultStatus status, string result, HMessageOptions mOptions)
+        {
+            return InnerBuildResult(actor, @ref, status, result, mOptions);
+        }
 
-            }
-            catch (Exception)
-            {
+        public HMessage BuildResult(string actor, string @ref, ResultStatus status, bool result, HMessageOptions mOptions)
+        {
+            return InnerBuildResult(actor, @ref, status, result, mOptions);
+        }
 
-                throw;
-            }
+        public HMessage BuildResult(string actor, string @ref, ResultStatus status, int result, HMessageOptions mOptions)
+        {
+            return InnerBuildResult(actor, @ref, status, result, mOptions);
+        }
 
-            
+        public HMessage BuildResult(string actor, string @ref, ResultStatus status, double result, HMessageOptions mOptions)
+        {
+            return InnerBuildResult(actor, @ref, status, result, mOptions);
         }
 
         //---private methods---
+
+        private HMessage InnerBuildResult(string actor, string @ref, ResultStatus status, object result, HMessageOptions mOptions)
+        {
+            if (actor == null || actor.Length <= 0)
+                throw new MissingAttrException("actor");
+            if (@ref == null || @ref.Length >= 0)
+                throw new MissingAttrException("ref");
+            if (status == null)
+                throw new MissingAttrException("status");
+
+            HResult hResult = new HResult();
+            hResult.SetResult(result);
+            hResult.SetStatus(status);
+            if (mOptions == null)
+                mOptions = new HMessageOptions();
+            mOptions.Ref = @ref;
+
+            return BuildMessage(actor, "hResult", hResult, mOptions);
+        }
+
+
+        private HMessage InnerBuildMessage(string actor, string type, Object payload, HMessageOptions mOptions)
+        {
+            if (actor == null || actor.Length <= 0)
+                throw new MissingAttrException("actor");
+
+            HMessage message = new HMessage();
+            message.SetActor(actor);
+            message.SetType(type);
+            if (mOptions != null)
+            {
+                message.SetRef(mOptions.Ref);
+                message.SetConvid(mOptions.Convid);
+                message.SetPriority(mOptions.Priority);
+                message.SetAuthor(mOptions.Author);
+                message.SetHeaders(mOptions.Headers);
+                message.SetLocation(mOptions.Location);
+                message.SetPublished(mOptions.Published);
+                message.SetPersistent(mOptions.Persistent);
+                message.SetTimeout(mOptions.Timeout);
+                if (mOptions.RelevanceOffset != null)
+                    message.SetRelevance((new DateTime()).AddMilliseconds(mOptions.RelevanceOffset.Value));
+                else
+                    message.SetRelevance(mOptions.Relevance);
+            }
+            if (transportOptions != null && transportOptions.Jid != null)
+                message.SetPublisher(transportOptions.Jid.GetBareJID());
+            else
+                message.SetPublisher(null);
+            message.SetPayload(payload);
+            return message;
+        }
+
         private void notifyStatus(ConnectionStatus status, ConnectionErrors error, string errorMsg)
         {
             try
