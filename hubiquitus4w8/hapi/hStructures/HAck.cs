@@ -58,15 +58,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetAck() // problem with string enum
         {
-            string ack;
+            string ack = null;
             try
             {
                 ack = this["ack"].ToString();
             }
             catch (Exception e)
             {
-                ack = null;
-                log.Info("Message: ",e);
+                log.Error("Can not fetch the ack attribute : ",e);
             }
             return ack;
         }
@@ -90,7 +89,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the ack attribute : ", e);
             }
         }       
     }

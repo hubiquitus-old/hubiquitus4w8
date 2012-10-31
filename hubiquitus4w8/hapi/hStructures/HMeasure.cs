@@ -54,15 +54,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetUnit()
         {
-            string unit;
+            string unit = null;
             try
             {
                 unit = this["unit"].ToString();
             }
             catch (Exception e)
             {
-                unit = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the unit attribute : ", e);
             }
             return unit;
         }
@@ -82,7 +81,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the unit attribute : ", e);
             }
         }
 
@@ -92,15 +91,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetValue()
         {
-            string value;
+            string value = null;
             try
             {
                 value = this["value"].ToString();
             }
             catch (Exception e)
             {
-                value = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the value attribtue : ", e);
             }
             return value;
         }
@@ -120,7 +118,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not udpate the value attribtue : ", e);
             }
         }
 

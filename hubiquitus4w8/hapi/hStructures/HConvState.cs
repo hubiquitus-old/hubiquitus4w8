@@ -54,15 +54,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns>topic description. Null if undefined.</returns>
         public string GetStatus()
         {
-            string status;
+            string status = null;
             try
             {
                 status = this["status"].ToString();
             }
             catch (Exception e)
             {
-                status = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the status attribute : ", e);
             }
             return status;
         }
@@ -78,7 +77,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the status attribute : ", e);
             }
         }
     }

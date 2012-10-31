@@ -54,15 +54,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns>Null if undefined.</returns>
         public string GetAlert()
         {
-            string alert;
+            string alert = null;
             try
             {
                 alert = this["alert"].ToString();
             }
             catch (Exception e)
             {
-                alert = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the alert attribute : ", e);
             }
             return alert;
         }
@@ -82,7 +81,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the alert attribute : ", e);
             }
         }
     }

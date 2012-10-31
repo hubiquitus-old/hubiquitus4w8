@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\V 0.5.0\hubiquitus4w8\hubiquitus4w8\refs\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>refs\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -60,8 +63,7 @@
     <Compile Include="hapi\hStructures\HAlert.cs" />
     <Compile Include="hapi\hStructures\HCommand.cs" />
     <Compile Include="hapi\hStructures\HConvState.cs" />
-    <Compile Include="hapi\hStructures\HFilterTemplate.cs" />
-    <Compile Include="hapi\hStructures\HJsonObj.cs" />
+    <Compile Include="hapi\hStructures\HGeo.cs" />
     <Compile Include="hapi\hStructures\HLocation.cs" />
     <Compile Include="hapi\hStructures\HMeasure.cs" />
     <Compile Include="hapi\hStructures\HMessage.cs" />

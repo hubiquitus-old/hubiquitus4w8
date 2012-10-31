@@ -57,15 +57,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns>Null if undefined.</returns>
         public string GetCmd()
         {
-            string cmd;
+            string cmd = null;
             try
             {
                 cmd = this["cmd"].ToString();
             }
             catch (Exception e)
-            {
-                cmd = null;    
-                log.Info("Message: ", e);
+            {  
+                log.Error("Can not fetch the cmd attribute : ", e);
             }
             return cmd;
         }
@@ -85,7 +84,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the cmd attribute : ", e);
             }
         }
         /// <summary>
@@ -94,15 +93,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns>Null if undefined.</returns>
         public JObject GetParams()
         {
-            JObject @params;
+            JObject @params = null;
             try
             {
                 @params = this["params"].ToObject<JObject>();
             }
             catch (Exception e)
             {
-                @params = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the params attribute : ", e);
             }
             return @params;
         }
@@ -122,7 +120,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the params attribute : ", e);
             }
         }
     }

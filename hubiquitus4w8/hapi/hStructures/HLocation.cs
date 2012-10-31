@@ -54,15 +54,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public HGeo GetPos()
         {
-            HGeo pos;
+            HGeo pos = null;
             try
             {
                 pos = this["pos"].ToObject<HGeo>();
             }
             catch (Exception e)
             {
-                pos = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the pos attribute : ", e);
             }
             return pos;
         }
@@ -76,11 +75,14 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
+                if (pos == null)
+                    log.Error("The pos attribute can not be null!");
+                else
                     this.Add("pos", pos);
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the pos attribute: ", e);
             }
         }
 
@@ -91,15 +93,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetZip()
         {
-            string zip;
+            string zip = null;
             try
             {
                 zip = this["zip"].ToString();
             }
             catch (Exception e)
             {
-                zip = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the zip attribute : ", e);
             }
             return zip;
         }
@@ -115,7 +116,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the zip attribute : ", e);
             }
         }
 
@@ -125,15 +126,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetNum()
         {
-            string num;
+            string num = null;
             try
             {
                 num = this["num"].ToString();
             }
             catch (Exception e)
             {
-                num = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the num attribute : ", e);
             }
             return num;
         }
@@ -149,7 +149,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the num attribute : ", e);
             }
         }
 
@@ -159,15 +159,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetWaytype()
         {
-            string waytype;
+            string waytype = null;
             try
             {
                 waytype = this["waytype"].ToString();
             }
             catch (Exception e)
             {
-                waytype = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the waytype attribute : ", e);
             }
             return waytype;
         }
@@ -183,7 +182,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the waytype attribute : ", e);
             }
         }
 
@@ -193,15 +192,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetWay()
         {
-            string way;
+            string way = null;
             try
             {
                 way = this["way"].ToString();
             }
             catch (Exception e)
             {
-                way = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the way attribute : ", e);
             }
             return way;
         }
@@ -217,7 +215,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the way attribute : ", e);
             }
         }
 
@@ -227,15 +225,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetAddr()
         {
-            string addr;
+            string addr = null;
             try
             {
                 addr = this["addr"].ToString();
             }
             catch (Exception e)
             {
-                addr = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the addr attribute : ", e);
             }
             return addr;
         }
@@ -251,7 +248,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the addr attribute : ", e);
             }
         }
 
@@ -261,15 +258,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetFloor()
         {
-            string floor;
+            string floor = null;
             try
             {
                 floor = this["floor"].ToString();
             }
             catch (Exception e)
             {
-                floor = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the floor attribute : ", e);
             }
             return floor;
         }
@@ -285,7 +281,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the floor the floor attribute : ", e);
             }
         }
 
@@ -295,15 +291,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetBuilding()
         {
-            string building;
+            string building = null;
             try
             {
                 building = this["building"].ToString() ;
             }
             catch (Exception e)
             {
-                building = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the building attribute : ", e);
             }
             return building;
         }
@@ -319,7 +314,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the building attribute : ", e);
             }
         }
 
@@ -329,15 +324,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetCity()
         {
-            string city;
+            string city = null;
             try
             {
                 city = this["city"].ToString();
             }
             catch (Exception e)
             {
-                city = null;
-                log.Info("Message: ", e);
+                log.Error("Can not update the city attribute : ", e);
             }
             return city;
         }
@@ -353,7 +347,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the city attribute : ", e);
             }
         }
 
@@ -363,15 +357,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetCountryCode()
         {
-            string countryCode;
+            string countryCode = null;
             try
             {
                 countryCode = this["countryCode"].ToString();
             }
             catch (Exception e)
             {
-                countryCode = null;
-                log.Info("Message: ", e);
+                log.Error("Can not fetch the countryCode attribute : ", e);
             }
             return countryCode;
         }
@@ -387,9 +380,8 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Info("Message: ", e);
+                log.Error("Can not update the countyCode attribute : ", e);
             }
         }
-        
     }
 }
