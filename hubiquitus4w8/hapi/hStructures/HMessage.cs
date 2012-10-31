@@ -26,91 +26,25 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using hubiquitus4w8.hapi.util;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// hAPI Message. For more info, see Hubiquitus reference
     /// </summary>
-    class HMessage : HJsonObj
+    class HMessage : JObject
     {
-        private JObject hmessage = new JObject();
+        private static readonly ILog log = LogManager.GetLogger(typeof(HMessage));
 
         public HMessage()
         {
         }
 
         public HMessage(JObject jsonObj)
+            : base(jsonObj)
         {
-            FromJson(jsonObj);
-        }
-
-        /* HJsonObj interface */
-
-        public JObject ToJson()
-        {
-            return this.hmessage;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-            {
-                this.hmessage = jsonObj;
-            }
-            else
-            {
-                this.hmessage = new JObject();
-            }
-        }
-
-        public string GetHType()
-        {
-            return "hmessage";
-        }
-
-        public override string ToString()
-        {
-            return hmessage.ToString();
-        }
-
-        /// <summary>
-        /// Check are made on : msgid, actor, convid, type, priority, relevance, transient, author, publisher, published and location. 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public bool equals(HMessage obj)
-        {
-            if (obj.GetMsgid() != this.GetMsgid())
-                return false;
-            if (obj.GetChid() != this.GetChid())
-                return false;
-            if (obj.GetConvid() != this.GetConvid())
-                return false;
-            if (obj.GetType() != this.GetType())
-                return false;
-            if (obj.GetPriority() != this.GetPriority())
-                return false;
-            if (obj.GetRelevance() != this.GetRelevance())
-                return false;
-            if (obj.GetTransient() != this.GetTransient())
-                return false;
-            if (obj.GetAuthor() != this.GetAuthor())
-                return false;
-            if (obj.GetPublisher() != this.GetPublisher())
-                return false;
-            if (obj.GetPublished() != this.GetPublished())
-                return false;
-            if (obj.GetLocation().Equals(this.GetLocation()))
-                return false;
-            return true;
-        }
-
-
-        public override int GetHashCode()
-        {
-            return hmessage.GetHashCode();
         }
 
         /* Getters & Setters */
@@ -121,14 +55,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetMsgid()
         {
-            string msgid;
+            string msgid = null;
             try
             {
-                msgid = (string)hmessage["msgid"];
+                msgid = this["msgid"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                msgid = null;
+                log.Error("Can not fetch the msgid attribute : ", e);
             }
             return msgid;
         }
@@ -139,16 +73,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (msgid == null)
                 {
-                    hmessage.Remove("msgid");
+                    this.Remove("msgid");
                 }
                 else
                 {
-                    hmessage.Add("msgid", msgid);
+                    this.Add("msgid", msgid);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the msgid attribute : ", e);
             }
         }
 
@@ -156,36 +90,36 @@ namespace hubiquitus4w8.hapi.hStructures
         /// Mandatory. channel id. NULL if undefined 
         /// </summary>
         /// <returns></returns>
-        public string GetChid()
+        public string GetActor()
         {
-            string actor;
+            string actor = null;
             try
             {
-                actor = (string)hmessage["actor"];
+                actor = this["actor"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                actor = null;
+                log.Error("Can not fetch the actor attribute : ", e);
             }
             return actor;
         }
 
-        public void SetChid(string actor)
+        public void SetActor(string actor)
         {
             try
             {
                 if (actor == null)
                 {
-                    hmessage.Remove("actor");
+                    this.Remove("actor");
                 }
                 else
                 {
-                    hmessage.Add("actor", actor);
+                    this.Add("actor", actor);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the actor attribute : ", e);
             }
         }
 
@@ -195,14 +129,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetConvid()
         {
-            string convid;
+            string convid = null;
             try
             {
-                convid = (string)hmessage["convid"];
+                convid = this["convid"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                convid = null;
+                log.Error("Can not fetch the convid attribute : ", e);
             }
             return convid;
         }
@@ -213,18 +147,57 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (convid == null)
                 {
-                    hmessage.Remove("convid");
+                    this.Remove("convid");
                 }
                 else
                 {
-                    hmessage.Add("convid", convid);
+                    this.Add("convid", convid);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the convid attribute : ", e);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>reference to another hMessage msgid. NULL if undefined.</returns>
+        public string GetRef()
+        {
+            string @ref = null;
+            try
+            {
+                @ref = this["ref"].ToString();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the ref attribute : ", e);
+            }
+            return @ref;
+        }
+
+        public void SetRef(string @ref)
+        {
+            try
+            {
+                if (@ref == null)
+                {
+                    this.Remove("ref");
+                }
+                else
+                {
+                    this.Add("ref", @ref);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the ref attribute : ", e);
+            }
+        }
+
+
 
         /// <summary>
         /// Get type of the message payload. NULL if undefined 
@@ -232,14 +205,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetType()
         {
-            string type;
+            string type = null;
             try
             {
-                type = (string)hmessage["type"];
+                type = this["type"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not fetch the type attribute : ", e);
             }
             return type;
         }
@@ -250,16 +223,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (type == null)
                 {
-                    hmessage.Remove("type");
+                    this.Remove("type");
                 }
                 else
                 {
-                    hmessage.Add("type", type);
+                    this.Add("type", type);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the type attribute : ", e);
             }
         }
 
@@ -269,16 +242,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public HMessagePriority? GetPriority()
         {
-            HMessagePriority? priority;
+            HMessagePriority? priority = null;
             try
             {
-
-                priority = (HMessagePriority)(int)hmessage["priority"];
-
+                priority = this["priority"].ToObject<HMessagePriority>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                priority = null;
+                log.Error("Can not fetch the priority attribute : ", e);
             }
             return priority;
         }
@@ -288,13 +259,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (priority == null)
-                    hmessage.Remove("priority");
+                    this.Remove("priority");
                 else
-                    hmessage.Add("priority", (int)priority);
+                    this.Add("priority", (int)priority);
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the priority attribute : ", e);
             }
         }
 
@@ -305,35 +276,35 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public DateTime? GetRelevance()
         {
-            DateTime? relevance;
+            DateTime? relevance = null;
             try
             {
-                relevance = (DateTime)hmessage["relevance"];
-              
+                relevance = this["relevance"].ToObject<DateTime>();
+
             }
-            catch (JsonReaderException)
+            catch (Exception e)
             {
-                relevance = null;
+                log.Error("Can not fetch the relevance attribute : ", e);
             }
             return relevance;
         }
 
-        public void SetRelevance(DateTime relevance)
+        public void SetRelevance(DateTime? relevance)
         {
             try
             {
                 if (relevance == null)
                 {
-                    hmessage.Remove("relevance");
+                    this.Remove("relevance");
                 }
                 else
                 {
-                    hmessage.Add("relevance", relevance.ToString(HUtil.DateISO8601Format));
+                    this.Add("relevance", relevance.GetValueOrDefault().ToString(HUtil.DateISO8601Format));
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the relevance attribute : ", e);
             }
         }
 
@@ -342,32 +313,32 @@ namespace hubiquitus4w8.hapi.hStructures
         /// If true, the message is not persistent. persist message or not. NULL if undefined
         /// </summary>
         /// <returns></returns>
-        public bool? GetTransient()
+        public bool? GetPersistent()
         {
-            bool? transient;
+            bool? persistent = null;
             try
             {
-                transient = (bool)hmessage["transient"];
+                persistent = this["persistent"].ToObject<bool>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                transient = null;
+                log.Error("Can not fetch the persistent attribute : ", e);
             }
-            return transient;
+            return persistent;
         }
 
-        public void SetTransient(bool? transient)
+        public void SetPersistent(bool? persistent)
         {
             try
             {
-                if (transient == null)
-                    hmessage.Remove("transient");
+                if (persistent == null)
+                    this.Remove("persistent");
                 else
-                    hmessage.Add("transient", transient);
+                    this.Add("persistent", persistent);
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the persistent attribute : ", e);
             }
         }
 
@@ -377,15 +348,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public HLocation GetLocation()
         {
-            HLocation location;
+            HLocation location = null;
             try
             {
-                location = new HLocation((JObject)hmessage["location"]);
+                location = this["location"].ToObject<HLocation>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                location = null;
-                throw;
+                log.Error("Can not fetch the location attribute : ", e);
             }
             return location;
         }
@@ -396,16 +366,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (location == null)
                 {
-                    hmessage.Remove("location");
+                    this.Remove("location");
                 }
                 else
                 {
-                    hmessage.Add("location", location.ToJson());
+                    this.Add("location", location);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the location attribute : ", e); ;
             }
         }
 
@@ -415,14 +385,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetAuthor()
         {
-            string author;
+            string author = null;
             try
             {
-                author = (string)hmessage["author"];
+                author = this["author"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                author = null;
+                log.Error("Can not fetch the author attribute : ", e);
             }
             return author;
         }
@@ -433,16 +403,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (author == null)
                 {
-                    hmessage.Remove("author");
+                    this.Remove("author");
                 }
                 else
                 {
-                    hmessage.Add("author", author);
+                    this.Add("author", author);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the author attribute : ", e);
             }
         }
 
@@ -452,14 +422,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetPublisher()
         {
-            string publisher;
+            string publisher = null;
             try
             {
-                publisher = (string)hmessage["publisher"];
+                publisher = this["publisher"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                publisher = null;
+                log.Error("Can not fetch the publisher attribute : ", e);
             }
             return publisher;
         }
@@ -470,16 +440,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (publisher == null)
                 {
-                    hmessage.Remove("publisher");
+                    this.Remove("publisher");
                 }
                 else
                 {
-                    hmessage.Add("publisher", publisher);
+                    this.Add("publisher", publisher);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the publisher attribute : ", e);
             }
         }
 
@@ -489,34 +459,34 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public DateTime? GetPublished()
         {
-            DateTime? published;
+            DateTime? published = null;
             try
             {
-                published = (DateTime)hmessage["published"];
+                published = this["published"].ToObject<DateTime>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                published = null;
+                log.Error("Can not fetch the published attribute : ", e);
             }
             return published;
         }
 
-        public void SetPublished(DateTime published)
+        public void SetPublished(DateTime? published)
         {
             try
             {
                 if (published == null)
                 {
-                    hmessage.Remove("published");
+                    this.Remove("published");
                 }
                 else
                 {
-                    hmessage.Add("published", published.ToString(HUtil.DateISO8601Format));
+                    this.Add("published", published.GetValueOrDefault().ToString(HUtil.DateISO8601Format));
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the published attribute : ", e);
             }
         }
 
@@ -524,99 +494,550 @@ namespace hubiquitus4w8.hapi.hStructures
         /// The list of headers attached to this message. NULL if undefined
         /// </summary>
         /// <returns></returns>
-        public HJsonObj GetHeaders()
+        public JObject GetHeaders()
         {
-            HJsonDictionnary headers = new HJsonDictionnary();
+            JObject headers = null;
             try
             {
-                headers.FromJson((JObject)hmessage["headers"]);
+                headers = this["headers"].ToObject<JObject>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                headers = null;
+                log.Error("Can not fetch the headers attribute : ", e);
             }
             return headers;
         }
 
-        public void SetHeaders(HJsonObj headers)
+        public void SetHeaders(JObject headers)
         {
             try
             {
                 if (headers == null)
                 {
-                    hmessage.Remove("headers");
+                    this.Remove("headers");
                 }
                 else
                 {
-                    hmessage.Add("headers", headers.ToJson());
+                    this.Add("headers", headers);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the headers attribute : ", e);
             }
         }
 
         /// <summary>
-        /// The content of the message. NULL if undefined
+        /// if payload type is JObject
         /// </summary>
-        /// <returns></returns>
-        public HJsonObj GetPayload()
+        /// <returns>The payload of JObject type.</returns>
+        public JObject GetPayloadAsJObject()
         {
-            HJsonObj payload;
+            JObject payload = null;
             try
             {
-                JObject jsonPayload = (JObject)hmessage["payload"];
-                string type = this.GetHType();
-                if (type.Equals("hmeasure", StringComparison.OrdinalIgnoreCase))
-                {
-                    payload = new HMeasure(jsonPayload);
-                }
-                else if (type.Equals("halert", StringComparison.OrdinalIgnoreCase))
-                {
-                    payload = new HAlert(jsonPayload);
-                }
-                else if (type.Equals("hack", StringComparison.OrdinalIgnoreCase))
-                {
-                    payload = new HAck(jsonPayload);
-                }
-                else if (type.Equals("hconvstate", StringComparison.OrdinalIgnoreCase))
-                {
-                    payload = new HConvState(jsonPayload);
-                }
-                else
-                {
-                    payload = new HJsonDictionnary(jsonPayload);
-                }
+                payload = this["payload"].ToObject<JObject>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                payload = null;
+                log.Error("Can not fetch the payload attribute : ", e);
             }
             return payload;
         }
 
-        public void SetPayload(HJsonObj payload)
+        /// <summary>
+        /// If payload type is JArray.
+        /// </summary>
+        /// <returns>The paylaod of JArray type.</returns>
+        public JArray GetPayloadAsJArray()
+        {
+            JArray payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<JArray>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is string.
+        /// </summary>
+        /// <returns>The payload of string type.</returns>
+        public string GetPayloadAsString()
+        {
+            string payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<string>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is boolean.
+        /// </summary>
+        /// <returns>The payload of boolean type.</returns>
+        public bool? GetPayloadAsBoolean()
+        {
+            bool? payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<bool>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is int
+        /// </summary>
+        /// <returns>The payload of int type.</returns>
+        public int? GetPayloadAsInt()
+        {
+            int? payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<int>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is double.
+        /// </summary>
+        /// <returns>The payload of double type.</returns>
+        public double? GetPayloadAsDouble()
+        {
+            double? payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<double>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is HAlert.
+        /// </summary>
+        /// <returns>The payload of HAlert type.</returns>
+        public HAlert GetPayloadAsHAlert()
+        {
+            HAlert payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<HAlert>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is HAck.
+        /// </summary>
+        /// <returns>The payload of HAck type.</returns>
+        public HAck GetPayloadAsHAck()
+        {
+            HAck payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<HAck>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is HMeasure.
+        /// </summary>
+        /// <returns>The payload of HMeasure type.</returns>
+        public HMeasure GetPayloadAsHMeasure()
+        {
+            HMeasure payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<HMeasure>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is HConvState.
+        /// </summary>
+        /// <returns>The payload of HConvState type.</returns>
+        public HConvState GetPayloadAsHConvState()
+        {
+            HConvState payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<HConvState>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is HResult.
+        /// </summary>
+        /// <returns>The payload of HResult type.</returns>
+        public HResult GetPayloadAsHResult()
+        {
+            HResult payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<HResult>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+        /// <summary>
+        /// If payload type is HCommand.
+        /// </summary>
+        /// <returns>The payload of HCommand type.</returns>
+        public HCommand GetPayloadAsHCommand()
+        {
+            HCommand payload = null;
+            try
+            {
+                payload = this["payload"].ToObject<HCommand>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the payload attribute : ", e);
+            }
+            return payload;
+        }
+
+
+        /// <summary>
+        /// Payload type could be instance of JSONObject(HAlert, HAck ...), JSONArray, String, Boolean, Number.
+        /// </summary>
+        /// <param name="payload"></param>
+        public void SetPayload(object payload)
         {
             try
             {
                 if (payload == null)
                 {
-                    hmessage.Remove("payload");
+                    this.Remove("payload");
                 }
                 else
                 {
-                    hmessage.Add("payload", payload.ToJson());
+                    this.Add("payload", (JToken)payload);
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the payload attribute : ", e);
             }
         }
 
+        public void SetPayload(JObject payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
 
+        public void SetPayload(JArray payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(string payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(bool payload)
+        {
+            try
+            {
+                this.Add("payload", payload);
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(int payload)
+        {
+            try
+            {
+                this.Add("payload", payload);
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(double payload)
+        {
+            try
+            {
+                this.Add("payload", payload);
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(HAlert payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(HAck payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(HMeasure payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(HConvState payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(HResult payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        public void SetPayload(HCommand payload)
+        {
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this.Add("payload", payload);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>timeout. 0 if undefined.</returns>
+        public int GetTimeout()
+        {
+            int timeout = 0;
+            try
+            {
+                timeout = this["timeout"].ToObject<int>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the timeout attribute : ", e);
+            }
+            return timeout;
+        }
+    
+        public void SetTimeout(int timeout)
+        {
+            try
+            {
+                if (timeout == 0)
+                    this.Remove("timeout");
+                else
+                    this.Add("timeout", timeout);
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the timeout attribute : ", e);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>sent. Null if undefined.</returns>
+        public DateTime? GetSent()
+        {
+            DateTime? sent = null;
+            try
+            {
+                sent = this["sent"].ToObject<DateTime>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the sent attribute : ", e);
+            }
+            return sent;
+        }
+
+        public void SetSent(DateTime? sent)
+        {
+            try
+            {
+                if (sent ==null)
+                    this.Remove("sent");
+                else
+                    this.Add("sent", sent);
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the sent attribute : ", e);
+            }
+        }
     }
-
-
 }
