@@ -18,6 +18,7 @@
  */
 
 
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,14 +35,14 @@ namespace hubiquitus4w8.hapi.hStructures
     {
         private string @ref = null;
         private string convid = null;
-        private HMessagePriority priority;
-        private DateTime relevance;
-        private int relevanceOffset;
-        private bool persistent;
+        private HMessagePriority? priority = null;
+        private DateTime? relevance = null;
+        private int? relevanceOffset = null;
+        private bool? persistent = null;
         private HLocation location = null;
         private string author = null;
-        private HJsonObj headers = null;
-        private DateTime published;
+        private JObject headers = null;
+        private DateTime? published = null;
         private int timeout = 0;
 
         public string Ref
@@ -56,25 +57,25 @@ namespace hubiquitus4w8.hapi.hStructures
             set { convid = value; }
         }
 
-        public HMessagePriority Priority
+        public HMessagePriority? Priority
         {
             get { return priority; }
             set { priority = value; }
         }
 
-        public DateTime Relevance
+        public DateTime? Relevance
         {
             get { return relevance; }
             set { relevance = value; }
         }
 
-        public int RelevanceOffset
+        public int? RelevanceOffset
         {
             get { return relevanceOffset; }
             set { relevanceOffset = value; }
         }
 
-        public bool Persistent
+        public bool? Persistent
         {
             get { return persistent; }
             set { persistent = value; }
@@ -92,13 +93,13 @@ namespace hubiquitus4w8.hapi.hStructures
             set { author = value; }
         }
 
-        public HJsonObj Headers
+        public JObject Headers
         {
             get { return headers; }
             set { headers = value; }
         }
 
-        public DateTime Published
+        public DateTime? Published
         {
             get { return published; }
             set { published = value; }
