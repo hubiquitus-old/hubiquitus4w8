@@ -28,10 +28,10 @@ using System.Threading.Tasks;
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// hAPI MessageOption. For more info, see Hubiquitus reference
     /// </summary>
-    class HMessageOptions
+    public class HMessageOptions
     {
         private string @ref = null;
         private string convid = null;

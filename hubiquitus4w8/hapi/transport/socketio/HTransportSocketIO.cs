@@ -32,7 +32,7 @@ using Newtonsoft.Json;
 
 namespace hubiquitus4w8.hapi.transport.socketio
 {
-    class HTransportSocketIO : HTransport
+    public class HTransportSocketIO : HTransport
     {
 
         private ConnectionStatus connStatus = ConnectionStatus.DISCONNECTED;

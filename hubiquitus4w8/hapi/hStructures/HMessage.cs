@@ -34,7 +34,7 @@ namespace hubiquitus4w8.hapi.hStructures
     /// Version 0.5
     /// hAPI Message. For more info, see Hubiquitus reference
     /// </summary>
-    class HMessage : JObject
+    public class HMessage : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HMessage));
 

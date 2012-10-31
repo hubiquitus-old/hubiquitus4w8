@@ -139,15 +139,15 @@ namespace hubiquitus4w8.hapi.test
         {
             HMessage message = new HMessage();
             message.SetPublisher(usernameTextBox.Text);
-            message.SetChid(channelIDTextBox.Text);
+            message.SetActor(channelIDTextBox.Text);
             message.SetPublished(DateTime.Now);
             message.SetType("obj");
             //message.SetRelevance(DateTime.Now);
 
             if (transientRBt.Checked)
-                message.SetTransient(true);
+                message.SetPersistent(true);
             else
-                message.SetTransient(false);
+                message.SetPersistent(false);
 
             HJsonDictionnary payload = new HJsonDictionnary();
             payload.Add("text", messageTextBox.Text);

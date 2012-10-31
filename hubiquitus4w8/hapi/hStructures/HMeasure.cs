@@ -33,7 +33,7 @@ namespace hubiquitus4w8.hapi.hStructures
     /// Version 0.5
     /// Describes a measure payload
     /// </summary>
-    class HMeasure : JObject
+    public class HMeasure : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HMeasure));
         public HMeasure()

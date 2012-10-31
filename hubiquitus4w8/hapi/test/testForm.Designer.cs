@@ -451,7 +451,7 @@ namespace hubiquitus4w8.hapi.test
             this.transientRBt.Size = new System.Drawing.Size(65, 17);
             this.transientRBt.TabIndex = 42;
             this.transientRBt.TabStop = true;
-            this.transientRBt.Text = "transient";
+            this.transientRBt.Text = "persistent";
             this.transientRBt.UseVisualStyleBackColor = true;
             this.transientRBt.Checked = true;
             // 
@@ -483,7 +483,7 @@ namespace hubiquitus4w8.hapi.test
             this.notTransientRBt.Size = new System.Drawing.Size(83, 17);
             this.notTransientRBt.TabIndex = 45;
             this.notTransientRBt.TabStop = true;
-            this.notTransientRBt.Text = "not transient";
+            this.notTransientRBt.Text = "not persistent";
             this.notTransientRBt.UseVisualStyleBackColor = true;
             // 
             // testForm

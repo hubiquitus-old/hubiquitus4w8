@@ -35,7 +35,7 @@ namespace hubiquitus4w8.hapi.hStructures
     /// Version 0.5
     /// Alert message payload
     /// </summary>
-    class HAlert : JObject
+    public class HAlert : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HAlert)); 
         public HAlert()

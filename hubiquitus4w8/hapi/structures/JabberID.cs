@@ -34,7 +34,7 @@ namespace hubiquitus4w8.hapi.stuctures
     /// JabberID contain the different part of the jid and some method to use it 
     /// A JabberID should look like : my_user@domain/resource
     /// </summary>
-    class JabberID
+    public class JabberID
     {
         private string username = "";      
         private string domain = "";

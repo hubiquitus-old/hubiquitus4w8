@@ -39,7 +39,7 @@ namespace hubiquitus4w8.hapi.client
     /// <summary>
     /// Hubiquitus client, public api version v0.4
     /// </summary>
-    class HClient
+    public class HClient
     {
         private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED;
         private HOptions options = null;
@@ -506,7 +506,7 @@ namespace hubiquitus4w8.hapi.client
                 if (chid == null || chid.Length <= 0)
                     throw new MissingAttrException("chid");
                 HMessage message = new HMessage();
-                message.SetChid(chid);
+                message.SetActor(chid);
                 message.SetType(type);
                 if (mOptions != null)
                 {
@@ -517,7 +517,7 @@ namespace hubiquitus4w8.hapi.client
                     message.SetLocation(mOptions.Location);
                     message.SetPublished(mOptions.Published);
                     message.SetRelevance(mOptions.Relevance);
-                    message.SetTransient(mOptions.Transient);
+                    message.SetPersistent(mOptions.Transient);
                 }
                 if (transportOptions != null && transportOptions.Jid != null)
                     message.SetPublisher(transportOptions.Jid.GetBareJID());

@@ -27,7 +27,7 @@ using hubiquitus4w8.hapi.stuctures;
 
 namespace hubiquitus4w8.hapi.transport
 {
-    class HTransportOptions
+    public class HTransportOptions
     {
         private JabberID jid = null;
         private string password = null;

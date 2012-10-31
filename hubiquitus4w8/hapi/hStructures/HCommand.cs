@@ -30,7 +30,7 @@ namespace hubiquitus4w8.hapi.hStructures
     /// Version 0.5
     /// hAPI Command. For more info, see Hubiquitus reference
     /// </summary>
-    class HCommand : JObject
+    public class HCommand : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HCommand));
         public HCommand()

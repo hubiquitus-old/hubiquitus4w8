@@ -33,7 +33,7 @@ namespace hubiquitus4w8.hapi.hStructures
     /// Version 0.5
     /// This structure describe the location
     /// </summary>
-    class HLocation : JObject
+    public class HLocation : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HLocation));
         public HLocation()

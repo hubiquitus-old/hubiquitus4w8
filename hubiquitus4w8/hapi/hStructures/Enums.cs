@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 namespace hubiquitus4w8.hapi.hStructures
 {
 
-    enum ConnectionErrors
+    public enum ConnectionErrors
     {
         NO_ERROR = 0,
         JID_MALFORMAT,
@@ -41,7 +41,7 @@ namespace hubiquitus4w8.hapi.hStructures
         CONN_PROGRESS
     }
 
-    enum ConnectionStatus
+    public enum ConnectionStatus
     {
         CONNECTING = 1,
         CONNECTED = 2,
@@ -49,7 +49,7 @@ namespace hubiquitus4w8.hapi.hStructures
         DISCONNECTED = 6
     }
     
-    enum HMessagePriority
+    public enum HMessagePriority
     {
         TRACE = 0,
         INFO,
@@ -59,7 +59,7 @@ namespace hubiquitus4w8.hapi.hStructures
         PANIC
     }
     
-    enum ResultStatus
+    public enum ResultStatus
     {
         NO_ERROR = 0,
         TECH_ERROR = 1,

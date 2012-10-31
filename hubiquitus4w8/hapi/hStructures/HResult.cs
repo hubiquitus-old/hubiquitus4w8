@@ -31,10 +31,10 @@ using log4net;
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// hAPI result. For more info, see Hubiquitus reference
     /// </summary>
-    class HResult : JObject
+    public class HResult : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HResult));
 

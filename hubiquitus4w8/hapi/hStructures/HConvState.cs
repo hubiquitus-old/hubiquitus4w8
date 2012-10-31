@@ -34,7 +34,7 @@ namespace hubiquitus4w8.hapi.hStructures
   /// This kind of payload is used to describe the status of a thread of correlated messages identified by its convid.
   /// Multiple hConvStates with the same convid can be published into a channel, specifying the evolution of the state of the thread during time.
   /// </summary>
-    class HConvState : JObject
+    public class HConvState : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HConvState));
         public HConvState()

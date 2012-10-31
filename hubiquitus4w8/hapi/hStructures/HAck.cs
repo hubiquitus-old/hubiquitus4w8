@@ -34,7 +34,7 @@ namespace hubiquitus4w8.hapi.hStructures
     /// acknowledgements are used to identify the participants that have received or not received, read or not read a message 
     /// Note, when a hMessage contains a such kind of payload, the convid must be provided with the same value has the acknowledged hMessage.
     /// </summary>
-    class HAck : JObject
+    public class HAck : JObject
     {
 
         private static readonly ILog log = LogManager.GetLogger(typeof(HAck));

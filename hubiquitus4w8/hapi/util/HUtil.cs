@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace hubiquitus4w8.hapi.util
 {
-    class HUtil
+    public class HUtil
     {
         public static string DateISO8601Format = "yyyy-MM-ddTHH:mm:sszz00";
 

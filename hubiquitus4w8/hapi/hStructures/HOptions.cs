@@ -30,7 +30,7 @@ using log4net;
 namespace hubiquitus4w8.hapi.hStructures
 {   
     
-    class HOptions : JObject
+    public class HOptions : JObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HOptions));
 
