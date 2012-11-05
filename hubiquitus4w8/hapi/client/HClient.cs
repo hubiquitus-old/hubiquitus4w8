@@ -67,7 +67,7 @@ namespace hubiquitus4w8.hapi.client
 
         
 
-        private Hashtable resultDelegates = new Hashtable();
+        private Dictionary<string, Action<HMessage>> messageDelegates = new Dictionary<string, Action<HMessage>>();
 
         public HClient()
         {
@@ -111,7 +111,7 @@ namespace hubiquitus4w8.hapi.client
                     throw e;
                 }
 
-                if (options.transport == "socketio")
+                if (options.GetTransport() == "socketio")
                 {
                     if (transport == null || !(transport is HTransportSocketIO))
                         this.transport = new HTransportSocketIO();
@@ -193,44 +193,45 @@ namespace hubiquitus4w8.hapi.client
         /// removed since v0.5
         /// </summary>
         /// <param name="cmd"></param>
-        /// <param name="resultDelegate"></param>
-        public void Command(HCommand cmd, Action<HResult> resultDelegate)
+        /// <param name="messageDelegate"></param>
+        public void Send(HMessage message, Action<HMessage> messageDelegate)
         {
-            if (this.connectionStatus == ConnectionStatus.CONNECTED && cmd != null)
+            if (this.connectionStatus != ConnectionStatus.CONNECTED)
+            { 
+                notifyResultError(message.GetMsgid(), ResultStatus.NOT_CONNECTED, "Not connected.", messageDelegate);
+                return;
+            }
+            if (message == null)
             {
-                string reqid = null;
-                reqid = cmd.GetReqid();
-                if (reqid == null)
+                notifyResultError(null, ResultStatus.MISSING_ATTR, "Provided message is null.", messageDelegate);
+                return;
+            }
+            if (message.GetActor() == null)
+            {
+                notifyResultError(message.GetMsgid(), ResultStatus.MISSING_ATTR, "Actor is missing.", messageDelegate);
+                return;
+            }
+            message.SetSent(new DateTime());
+            message.SetPublisher(transportOptions.Jid.GetBareJID());
+            if (message.GetTimeout() > 0)
+            {
+                // hAPI will do correlation. If no answer within the
+                // timeout, a timeout error will be sent.
+                if (messageDelegate != null)
                 {
-                    Random random = new Random();
-                    reqid = "c#cmd:" + random.Next();
-                    cmd.SetReqid(reqid);
-                }
+                    message.SetMsgid(Guid.NewGuid().ToString());
+                    messageDelegates.Add(message.GetMsgid(), messageDelegate);
+                    // TODO :  implementer timer pour callback.
 
-                if (cmd.GetSender() == null)
-                    cmd.SetSender(transportOptions.Jid.GetFullJID());
 
-                if (cmd.GetTransient() == null)
-                    cmd.SetTransient(true);
-
-                if (cmd.GetEntity() != null)
-                {
-                    if (resultDelegate != null)
-                        resultDelegates.Add(reqid, resultDelegate);
-                    transport.SendObject(cmd);
                 }
                 else
                 {
-                    notifyResultError(cmd.GetReqid(), cmd.GetCmd(), ResultStatus.MISSING_ATTR, "Entity not found");
+                    //when there is no callback, timeout has no sense. delete timeout.
+                    message.SetTimeout(0);
                 }
-            }
-            else if (cmd == null)
-            {
-                notifyResultError(null, null, ResultStatus.MISSING_ATTR, "Provided cmd is null", resultDelegate);
-            }
-            else
-            {
-                notifyResultError(cmd.GetReqid(), cmd.GetCmd(), ResultStatus.NOT_CONNECTED, null, resultDelegate);
+
+                transport.SendObject(message);
             }
         }
 
@@ -239,80 +240,58 @@ namespace hubiquitus4w8.hapi.client
         /// Demands the server a subscription to a channel.
         /// The server will check if not already subscribed and if authorized subscribe him.
         /// </summary>
-        /// <param name="chid">channel id</param>
-        /// <param name="resultDelegate">An action notified when a result issued</param>
-        public void Subscribe(string chid, Action<HResult> resultDelegate)
+        /// <param name="actor">channel id</param>
+        /// <param name="messageDelegate">An action notified when a result issued</param>
+        public void Subscribe(string actor, Action<HMessage> messageDelegate)
         {
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), "hsubscribe", @params);
-            this.Command(cmd, resultDelegate);
+            if (messageDelegate == null)
+                throw new MissingAttrException("messageDelegate");
+         
+            HMessage cmdMessage = BuildCommand(actor, "hsubscribe", null, null);
+            cmdMessage.SetTimeout(options.GetTimeout());
+            this.Send(cmdMessage, messageDelegate);
         }
 
         /// <summary>
         /// The client MUST be connected to access to this service.
         /// Demands the server an unsubscription to the channel
         /// </summary>
-        /// <param name="chid"></param>
-        /// <param name="resultDelegate"></param>
-        public void Unsubscribe(string chid, Action<HResult> resultDelegate)
+        /// <param name="actor"></param>
+        /// <param name="messageDelegate"></param>
+        public void Unsubscribe(string actor, Action<HMessage> messageDelegate)
         {
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), "hunsubscribe", @params);
-            this.Command(cmd, resultDelegate);
-        }
-        //removed since v0.5
-        public void Publish(HMessage msg, Action<HResult> resultDelegate)
-        {
-            string msgid = msg.GetMsgid();
-            if (msgid == null)
-            {
-                Random random = new Random();
-                msgid = "c#cmd: " + random.Next();
-                msg.SetMsgid(msgid);
-            }
+            if (messageDelegate == null)
+                throw new MissingAttrException("messageDelegate");
 
-            string convid = msg.GetConvid();
-            if (convid == null)
-                msg.SetConvid(msgid);
-            if (msg.GetPublisher() == null)
-                msg.SetPublisher(transportOptions.Jid.GetBareJID());
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), "hpublish", msg);
-            Command(cmd, resultDelegate);
-
+            HMessage cmdMessage = BuildCommand(actor, "hunsubscribe", null, null);
+            cmdMessage.SetTimeout(options.GetTimeout());
+            this.Send(cmdMessage, messageDelegate);
         }
 
-        //since v0.5
-        /// <summary>
-        /// The client MUST be connected to access to this service
-        /// The hAPI sends the hMessage to the hServer.
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="resultDelegate"></param>
-        public void Send(HMeasure msg, Action<HResult> resultDelegate)
-        {
+       
 
-        }
-
+       
         /// <summary>
         /// The client MUST be connected to access to this service.
         /// Demands the hserver a list of the last messages saved for a dedicated channel. 
         /// The requester must be in the channel’s participants list.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="nbLastMsg"></param>
-        /// <param name="resultDelegate"></param>
-        public void GetLastMessages(string chid, int nbLastMsg, Action<HResult> resultDelegate)
+        /// <param name="messageDelegate"></param>
+        public void GetLastMessages(string actor, int nbLastMsg, Action<HMessage> messageDelegate)
         {
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
+            if (messageDelegate == null)
+                throw new MissingAttrException("messageDelegate");
+            JObject @params = new JObject();
+            @params.Add("actor", actor);
             if (nbLastMsg > 0)
                 @params.Add("nbLastMsg", nbLastMsg);
             else
                 @params.Add("nbLastMsg", 10);
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), "hgetlastmessages", @params);
-            Command(cmd, resultDelegate);
+            HMessage cmdMessage = BuildCommand(actor, "hgetlastmessages", @params, null);
+            cmdMessage.SetTimeout(options.GetTimeout());
+            Send(cmdMessage, messageDelegate);
         }
 
         /// <summary>
@@ -320,49 +299,53 @@ namespace hubiquitus4w8.hapi.client
         /// Demands the hserver a list of the last messages saved for a dedicated channel. 
         /// The requester must be in the channel’s participants list.
         /// </summary>
-        /// <param name="chid"></param>
-        /// <param name="resultDelegate"></param>
-        public void GetLastMessages(string chid, Action<HResult> resultDelegate)
+        /// <param name="actor"></param>
+        /// <param name="messageDelegate"></param>
+        public void GetLastMessages(string actor, Action<HMessage> messageDelegate)
         {
-            GetLastMessages(chid, -1, resultDelegate);
+            GetLastMessages(actor, -1, messageDelegate);
         }
 
         /// <summary>
-        /// 
+        /// Demands the server a list of the publisher’s subscriptions.
+	    /// Nominal response : a hMessage with a hResult payload contains an array of channel id which are all active.
         /// </summary>
-        /// <param name="resultDelegate"></param>
-        public void GetSubscriptions(Action<HResult> resultDelegate)
+        /// <param name="messageDelegate"></param>
+        public void GetSubscriptions(Action<HMessage> messageDelegate)
         {
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), "hgetsubscriptions", null);
-            Command(cmd, resultDelegate);
+            if (messageDelegate == null)
+                throw new MissingAttrException("messageDelegate");
+
+            HMessage cmdMessage = BuildCommand(transportOptions.GetHserverService(), "hgetsubscriptions", null, null);
+            cmdMessage.SetTimeout(options.GetTimeout());
+            Send(cmdMessage, messageDelegate);
         }
 
         /// <summary>
         /// The client MUST be connected to access to this service.
         /// Demands to the hserver the list of messages correlated by the convid value on a dedicated channel
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="convid"></param>
-        /// <param name="resultDelegate"></param>
-        public void GetThread(string chid, string convid, Action<HResult> resultDelegate)
+        /// <param name="messageDelegate"></param>
+        public void GetThread(string actor, string convid, Action<HMessage> messageDelegate)
         {
-            string cmdName = "hgetthread";
-            if (chid == null || chid.Length <= 0)
+            if (actor == null || actor.Length <= 0)
             {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
+                notifyResultError(null, ResultStatus.MISSING_ATTR, "Actor is missing", messageDelegate);
                 return;
             }
             if (convid == null || convid.Length <= 0)
             {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "convid is missing", resultDelegate);
+                notifyResultError(null, ResultStatus.MISSING_ATTR, "convid is missing", messageDelegate);
                 return;
             }
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
+            JObject @params = new JObject();
             @params.Add("convid", convid);
 
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
-            Command(cmd, resultDelegate);
+            HMessage cmdMessage = BuildCommand(actor, "hgetthread", @params, null);
+            cmdMessage.SetTimeout(options.GetTimeout());
+            Send(cmdMessage, messageDelegate);
 
         }
 
@@ -370,122 +353,74 @@ namespace hubiquitus4w8.hapi.client
         /// The client MUST be connected to access to this service.
         /// Demands to the hserver the list of convid where there is a hConvState with the status value searched on the channel 
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="status"></param>
-        /// <param name="resultDelegate"></param>
-        public void GetThreads(string chid, string status, Action<HResult> resultDelegate)
+        /// <param name="messageDelegate"></param>
+        public void GetThreads(string actor, string status, Action<HMessage> messageDelegate)
         {
-            string cmdName = "hgetthreads";
-            if (chid == null || chid.Length <= 0)
+            if (actor == null || actor.Length <= 0)
             {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
+                notifyResultError(null, ResultStatus.MISSING_ATTR, "actor is missing", messageDelegate);
                 return;
             }
             if (status == null || status.Length <= 0)
             {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "status is missing", resultDelegate);
+                notifyResultError(null, ResultStatus.MISSING_ATTR, "status is missing", messageDelegate);
                 return;
             }
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
+            JObject @params = new JObject();
             @params.Add("status", status);
 
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
-            Command(cmd, resultDelegate);
+            HMessage cmdMessage = BuildCommand(actor,"hgetthreads",@params, null);
+            cmdMessage.SetTimeout(options.GetTimeout());
+            Send(cmdMessage, messageDelegate);
         }
 
         /// <summary>
         /// Sets a filter to be applied to upcoming messages at the session level for a dedicated channel id.
         /// </summary>
         /// <param name="filter"></param>
-        /// <param name="resultDelegate"></param>
-        public void SetFilter(string chid, HFilterTemplate filter, Action<HResult> resultDelegate)
-        {
-            string cmdName = "hsetfilter";
-            if (chid == null)
-            {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
-                return;
-            }
-            if (filter == null)
-            {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "filter is missing", resultDelegate);
-                return;
-            }
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
-            @params.Add("filter", filter);
+        /// <param name="messageDelegate"></param>
+        //public void SetFilter(string chid, HFilterTemplate filter, Action<HMessage> messageDelegate)
+        //{
+        //    string cmdName = "hsetfilter";
+        //    if (chid == null)
+        //    {
+        //        notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", messageDelegate);
+        //        return;
+        //    }
+        //    if (filter == null)
+        //    {
+        //        notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "filter is missing", messageDelegate);
+        //        return;
+        //    }
+        //    HJsonDictionnary @params = new HJsonDictionnary();
+        //    @params.Add("chid", chid);
+        //    @params.Add("filter", filter);
 
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
-            Command(cmd, resultDelegate);
-        }
+        //    HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
+        //    Send(cmd, messageDelegate);
+        //}
 
-        /// <summary>
-        /// fetches the list of filters set on the current session.
-        /// </summary>
-        /// <param name="chid"></param>
-        /// <param name="resultDelegate"></param>
-        public void ListFilters(string chid, Action<HResult> resultDelegate)
-        {
-            string cmdName = "hlistfilters";
-            if (chid == null || chid.Length <= 0)
-            {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
-                return;
-            }
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
-
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
-            Command(cmd, resultDelegate);
-        }
-
-        /// <summary>
-        /// Unset a filter for a specified actor.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="chid"></param>
-        /// <param name="resultDelegate"></param>
-        public void UnSetFilter(string name, string chid, Action<HResult> resultDelegate)
-        {
-            string cmdName = "hunsetfilter";
-            if (chid == null || chid.Length <= 0)
-            {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
-                return;
-            }
-            if (name == null || name.Length <= 0)
-            {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "name is missing", resultDelegate);
-                return;
-            }
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
-            @params.Add("name", name);
-
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
-            Command(cmd, resultDelegate);
-        }
+       
 
         /// <summary>
         /// The client MUST be connected to access to this service.
         /// Demands to the hserver the list of the available relevant message for a dedicated channel.
         /// </summary>
-        /// <param name="chid"></param>
-        /// <param name="resultDelegate"></param>
-        public void GetRelevantMessages(string chid, Action<HResult> resultDelegate)
+        /// <param name="actor"></param>
+        /// <param name="messageDelegate"></param>
+        public void GetRelevantMessages(string actor, Action<HMessage> messageDelegate)
         {
-            string cmdName = "hrelevantmessages";
-            if (chid == null || chid.Length <= 0)
+            if (actor == null || actor.Length <= 0)
             {
-                notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
+                notifyResultError(null, ResultStatus.MISSING_ATTR, "chid is missing", messageDelegate);
                 return;
             }
-            HJsonDictionnary @params = new HJsonDictionnary();
-            @params.Add("chid", chid);
 
-            HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
-            Command(cmd, resultDelegate);
+            HMessage cmdMessage = BuildCommand(actor, "hrelevantmessages", null, null);
+            cmdMessage.SetTimeout(options.GetTimeout());
+            Send(cmdMessage, messageDelegate);
         }
 
 
@@ -820,17 +755,17 @@ namespace hubiquitus4w8.hapi.client
 
         private void notifyResult(HResult result)
         {
-            Action<HResult> resultDelegate = (Action<HResult>)resultDelegates[result.GetReqid()];
-            notifyResult(result, resultDelegate);
+            Action<HMessage> messageDelegate = (Action<HMessage>)messageDelegates[result.GetReqid()];
+            notifyResult(result, messageDelegate);
         }
 
-        private void notifyResult(HResult result, Action<HResult> resultDelegate)
+        private void notifyResult(HResult result, Action<HMessage> messageDelegate)
         {
             try
             {
-                if (resultDelegate != null)
+                if (messageDelegate != null)
                 {
-                    Thread thread = new Thread(() => resultDelegate(result));
+                    Thread thread = new Thread(() => messageDelegate(result));
                     thread.Start();
                 }
             }
@@ -910,7 +845,7 @@ namespace hubiquitus4w8.hapi.client
             this.notifyResult(result);
         }
 
-        private void notifyResultError(string reqid, string cmd, ResultStatus resultStatus, string errorMsg, Action<HResult> resultDelegate)
+        private void notifyResultError(string reqid, ResultStatus resultStatus, string errorMsg, Action<HMessage> messageDelegate)
         {
             HJsonDictionnary obj = new HJsonDictionnary();
             obj.Add("errorMsg", errorMsg);
@@ -919,7 +854,7 @@ namespace hubiquitus4w8.hapi.client
             result.SetReqid(reqid);
             result.SetStatus(resultStatus);
             result.SetResult(obj);
-            this.notifyResult(result, resultDelegate);
+            this.notifyResult(result, messageDelegate);
         }
 
         private void fillTransportOptions(string publisher, string password, HOptions options)
