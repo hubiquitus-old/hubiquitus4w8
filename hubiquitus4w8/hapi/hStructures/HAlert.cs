@@ -77,7 +77,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (alert == null)
                     this.Remove("alert");
                 else
-                    this.Add("alert", alert);
+                    this["alert"] = alert;
             }
             catch (Exception e)
             {

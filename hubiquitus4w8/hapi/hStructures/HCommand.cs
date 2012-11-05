@@ -80,7 +80,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (cmd == null)
                     this.Remove("cmd");
                 else
-                    this.Add("cmd", cmd);
+                    this["cmd"] = cmd;
             }
             catch (Exception e)
             {
@@ -116,7 +116,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (@params == null)
                     this.Remove("params");
                 else
-                    this.Add("params", @params);
+                    this["params"] = @params;
             }
             catch (Exception e)
             {

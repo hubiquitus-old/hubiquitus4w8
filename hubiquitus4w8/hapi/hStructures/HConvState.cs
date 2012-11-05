@@ -73,7 +73,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (status == null)
                     this.Remove("status");
                 else
-                    this.Add("status", status);
+                    this["status"] = status;
             }
             catch (Exception e)
             {

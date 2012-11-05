@@ -67,7 +67,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("lat", lat);
+                this["lat"] = lat;
             }
             catch (Exception e)
             {
@@ -93,7 +93,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("lng", lng);
+                this["lng"] = lng;
             }
             catch (Exception e)
             {
