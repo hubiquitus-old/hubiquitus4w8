@@ -25,148 +25,67 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.3
+    /// Version 0.5
     /// This structure describe the location
     /// </summary>
-    class HLocation : HJsonObj
+    public class HLocation : JObject
     {
-        private JObject hlocation = new JObject();
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(HLocation));
         public HLocation()
         { 
         }
 
         public HLocation(JObject jsonObj)
+            : base(jsonObj)
         {
-            FromJson(jsonObj);
         }
 
-        public JObject ToJson()
-        {
-            return this.hlocation;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-                hlocation = jsonObj;
-            else
-                hlocation = new JObject();
-        }
-
-        public string GetHType()
-        {
-            return "hlocation";
-        }
-
-        /// <summary>
-        /// Check are made on : lng, lat, zip, num, building, floor, way, waytype, addr, city and countryCode.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public  bool Equals(HLocation obj)
-        {
-            if (obj.GetLat() != this.GetLat())
-                return false;
-            if (obj.GetLng() != this.GetLng())
-                return false;
-            if (obj.GetZip() != this.GetZip())
-                return false;
-            if (obj.GetNum() != this.GetNum())
-                return false;
-            if (obj.GetBuilding() != this.GetBuilding())
-                return false;
-            if (obj.GetFloor() != this.GetFloor())
-                return false;
-            if (obj.GetWay() != this.GetWay())
-                return false;
-            if (obj.GetWaytype() != this.GetWaytype())
-                return false;
-            if (obj.GetAddr() != this.GetAddr())
-                return false;
-            if (obj.GetCity() != this.GetCity())
-                return false;
-            if (obj.GetCountryCode() != this.GetCountryCode())
-                return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            return hlocation.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return hlocation.ToString();
-        }
-
+        
         //Getters & setters
 
         /// <summary>
-        /// Get the latitude of the location. 0 if undefined
+        /// Get the pos. null if undefined
         /// </summary>
         /// <returns></returns>
-        public double GetLat()
+        public HGeo GetPos()
         {
-            double lat;
+            HGeo pos = null;
             try
             {
-                lat = (double)hlocation["lat"];
+                pos = new HGeo(JObject.Parse(this["pos"].ToString()));
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                lat = 0;
+                log.Error("Can not fetch the pos attribute : ", e);
             }
-            return lat;
-        }
-
-        public void SetLat(double lat)
-        {
-            try
-            {
-                    hlocation.Add("lat", lat);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
+            return pos;
         }
 
         /// <summary>
-        /// Get the longitude of the location. 0 if undefined
+        /// Set the pos.
         /// </summary>
-        /// <returns></returns>
-        public double GetLng()
+        /// <param name="pos"></param>
+
+        public void SetPos(HGeo pos)
         {
-            double lng;
             try
             {
-                lng = (double)hlocation["lng"];
+                if (pos == null)
+                    log.Error("The pos attribute can not be null!");
+                else
+                    this["pos"] = pos;
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                lng = 0;
+                log.Error("Can not update the pos attribute: ", e);
             }
-            return lng;
         }
 
-        public void SetLng(double lng)
-        {
-            try
-            {
-                    hlocation.Add("lng", lng);
-            }
-            catch (JsonWriterException )
-            {
-                
-                throw;
-            }
-        }
 
         /// <summary>
         /// Get the zip code of the location. NULL if undefined
@@ -174,14 +93,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetZip()
         {
-            string zip;
+            string zip = null;
             try
             {
-                zip = (string)hlocation["zip"];
+                zip = this["zip"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                zip = null;
+                log.Error("Can not fetch the zip attribute : ", e);
             }
             return zip;
         }
@@ -191,14 +110,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (zip == null)
-                    hlocation.Remove("zip");
+                    this.Remove("zip");
                 else
-                    hlocation.Add("zip", zip);
+                    this["zip"] = zip;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the zip attribute : ", e);
             }
         }
 
@@ -208,14 +126,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetNum()
         {
-            string num;
+            string num = null;
             try
             {
-                num = (string)hlocation["num"];
+                num = this["num"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                num = null;
+                log.Error("Can not fetch the num attribute : ", e);
             }
             return num;
         }
@@ -225,14 +143,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (num == null)
-                    hlocation.Remove("num");
+                    this.Remove("num");
                 else
-                    hlocation.Add("num", num);
+                    this["num"] = num;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the num attribute : ", e);
             }
         }
 
@@ -242,14 +159,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetWaytype()
         {
-            string waytype;
+            string waytype = null;
             try
             {
-                waytype = (string)hlocation["waytype"];
+                waytype = this["waytype"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                waytype = null;
+                log.Error("Can not fetch the waytype attribute : ", e);
             }
             return waytype;
         }
@@ -259,14 +176,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (waytype == null)
-                    hlocation.Remove("waytype");
+                    this.Remove("waytype");
                 else
-                    hlocation.Add("waytype", waytype);
+                    this["waytype"] = waytype;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the waytype attribute : ", e);
             }
         }
 
@@ -276,14 +192,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetWay()
         {
-            string way;
+            string way = null;
             try
             {
-                way = (string)hlocation["way"];
+                way = this["way"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                way = null;
+                log.Error("Can not fetch the way attribute : ", e);
             }
             return way;
         }
@@ -293,14 +209,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (way == null)
-                    hlocation.Remove("way");
+                    this.Remove("way");
                 else
-                    hlocation.Add("way", way);
+                    this["way"] = way;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the way attribute : ", e);
             }
         }
 
@@ -310,14 +225,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetAddr()
         {
-            string addr;
+            string addr = null;
             try
             {
-                addr = (string)hlocation["addr"];
+                addr = this["addr"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                addr = null;
+                log.Error("Can not fetch the addr attribute : ", e);
             }
             return addr;
         }
@@ -327,14 +242,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (addr == null)
-                    hlocation.Remove("addr");
+                    this.Remove("addr");
                 else
-                    hlocation.Add("addr", addr);
+                    this["addr"] = addr;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-
-                throw;
+                log.Error("Can not update the addr attribute : ", e);
             }
         }
 
@@ -344,14 +258,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetFloor()
         {
-            string floor;
+            string floor = null;
             try
             {
-                floor = (string)hlocation["floor"];
+                floor = this["floor"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                floor = null;
+                log.Error("Can not fetch the floor attribute : ", e);
             }
             return floor;
         }
@@ -361,14 +275,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (floor == null)
-                    hlocation.Remove("floor");
+                    this.Remove("floor");
                 else
-                    hlocation.Add("floor", floor);
+                    this["floor"] = floor;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-
-                throw;
+                log.Error("Can not update the floor the floor attribute : ", e);
             }
         }
 
@@ -378,14 +291,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetBuilding()
         {
-            string building;
+            string building = null;
             try
             {
-                building = (string)hlocation["building"];
+                building = this["building"].ToString() ;
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                building = null;
+                log.Error("Can not fetch the building attribute : ", e);
             }
             return building;
         }
@@ -395,14 +308,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (building == null)
-                    hlocation.Remove("building");
+                    this.Remove("building");
                 else
-                    hlocation.Add("building", building);
+                    this["building"] = building;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-
-                throw;
+                log.Error("Can not update the building attribute : ", e);
             }
         }
 
@@ -412,14 +324,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetCity()
         {
-            string city;
+            string city = null;
             try
             {
-                city = (string)hlocation["city"];
+                city = this["city"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                city = null;
+                log.Error("Can not update the city attribute : ", e);
             }
             return city;
         }
@@ -429,14 +341,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (city == null)
-                    hlocation.Remove("city");
+                    this.Remove("city");
                 else
-                    hlocation.Add("city", city);
+                    this["city"] = city;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-
-                throw;
+                log.Error("Can not update the city attribute : ", e);
             }
         }
 
@@ -446,14 +357,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetCountryCode()
         {
-            string countryCode;
+            string countryCode = null;
             try
             {
-                countryCode = (string)hlocation["countryCode"];
+                countryCode = this["countryCode"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                countryCode = null;
+                log.Error("Can not fetch the countryCode attribute : ", e);
             }
             return countryCode;
         }
@@ -463,16 +374,14 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (countryCode == null)
-                    hlocation.Remove("countryCode");
+                    this.Remove("countryCode");
                 else
-                    hlocation.Add("countryCode", countryCode);
+                    this["countryCode"] = countryCode;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-
-                throw;
+                log.Error("Can not update the countyCode attribute : ", e);
             }
         }
-        
     }
 }

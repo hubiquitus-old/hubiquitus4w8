@@ -24,34 +24,117 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {   
-    [JsonObject(MemberSerialization.OptIn)]
-    class HOptions
+    
+    public class HOptions : JObject
     {
-        [JsonProperty]
-        public string serverHost { get; set; }
+        private static readonly ILog log = LogManager.GetLogger(typeof(HOptions));
 
-        [JsonProperty]
-        public int serverPort { get; set; }
-
-        [JsonProperty]
-        public string transport { get; set; }
-
-        [JsonProperty]
-        public List<string> endpoints { get; set; }
-
-        [JsonProperty]
-        public string hserver { get; set; }
-
-        public HOptions() 
+        public HOptions()
         {
-            serverHost = null;
-            serverPort = 8080;
-            transport = "socketio";
-            endpoints = null;
-            hserver = "hnode";
+        }
+
+        public HOptions(JObject jsonObj)
+            : base(jsonObj)
+        { 
+        }
+
+        public HOptions(HOptions options)
+        { 
+            
+        }
+
+        public string GetTransport()
+        {
+            string transport = null;
+            try
+            {
+                transport = this["transport"].ToString();
+            }
+            catch (Exception e)
+            {
+                transport = "socketio";
+            }
+            return transport;
+        }
+
+        public void SetTransport(string transport)
+        {
+            try
+            {
+                if (transport == null || transport.Length <= 0)
+                    this["transport"] = "socketio";
+                else
+                    this["transport"] = transport;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the transport attribute : ", e);
+            }
+        }
+
+        public JArray GetEndpoints()
+        {
+            JArray endpoints = null;
+            try
+            {
+                endpoints = this["endpoints"].ToObject<JArray>();
+            }
+            catch(Exception e)
+            {
+                endpoints = new JArray();
+                endpoints.Add("http://localhost:8080");
+                log.Error("Can not fetch the endpoints attribute, return 'http://localhost:8080' instead : ", e);
+            }
+            return endpoints;
+        }
+
+        public void SetEndpoints(JArray endpoints)
+        {
+            try
+            {
+                if (endpoints != null && endpoints.Count > 0)
+                    this["endpoints"] = endpoints;
+                else
+                    log.Error("The endpoints attribute can not be null or empty.");
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the endpoints attribute : ", e);
+            }
+        }
+
+        public int GetTimeout()
+        {
+            int timeout = 0;
+            try
+            {
+                timeout = this["timeout"].ToObject<int>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the timeout attribute : ", e);
+            }
+            return timeout;
+        }
+
+        public void SetTimeout(int timeout)
+        {
+            try
+            {
+                if (timeout >= 0)
+                    this["timeout"] = timeout;
+                else
+                    this["timeout"] = 3000; // 3000s by default.
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the timeout attribute : ", e);
+            }
         }
     }
 }

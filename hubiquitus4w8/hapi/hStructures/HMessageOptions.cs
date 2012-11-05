@@ -18,6 +18,7 @@
  */
 
 
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,19 +28,29 @@ using System.Threading.Tasks;
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// hAPI MessageOption. For more info, see Hubiquitus reference
     /// </summary>
-    class HMessageOptions
+    public class HMessageOptions
     {
+        private string @ref = null;
         private string convid = null;
         private HMessagePriority? priority = null;
         private DateTime? relevance = null;
-        private bool? transient = null;
+        private int? relevanceOffset = null;
+        private bool? persistent = null;
         private HLocation location = null;
         private string author = null;
-        private HJsonObj headers = null;
+        private JObject headers = null;
         private DateTime? published = null;
+        private int timeout = 0;
+
+        public string Ref
+        {
+            get { return @ref; }
+            set { @ref = value; }
+        }
+
 
         public string Convid 
         {
@@ -59,10 +70,17 @@ namespace hubiquitus4w8.hapi.hStructures
             set { relevance = value; }
         }
 
-        public bool? Transient
+
+        public int? RelevanceOffset
         {
-            get { return transient; }
-            set { transient = value; }
+            get { return relevanceOffset; }
+            set { relevanceOffset = value; }
+        }
+
+        public bool? Persistent
+        {
+            get { return persistent; }
+            set { persistent = value; }
         }
 
         public HLocation Location
@@ -77,7 +95,7 @@ namespace hubiquitus4w8.hapi.hStructures
             set { author = value; }
         }
 
-        public HJsonObj Headers
+        public JObject Headers
         {
             get { return headers; }
             set { headers = value; }
@@ -87,6 +105,12 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             get { return published; }
             set { published = value; }
+        }
+
+        public int Timeout
+        {
+            get { return timeout; }
+            set { timeout = value; }
         }
     }
 }

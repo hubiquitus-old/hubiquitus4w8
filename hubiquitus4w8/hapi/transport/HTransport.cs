@@ -28,9 +28,9 @@ using Newtonsoft.Json.Linq;
 
 namespace hubiquitus4w8.hapi.transport
 {
-     delegate void DataEventHandler(string type, JObject obj);
-     delegate void StatusEventHandler(ConnectionStatus status, ConnectionErrors error, string errrorMsg);
-    interface HTransport
+    public delegate void DataEventHandler(string type, JObject obj);
+    public delegate void StatusEventHandler(ConnectionStatus status, ConnectionErrors error, string errrorMsg);
+    public interface HTransport
     {
         
         event DataEventHandler onData;
@@ -38,6 +38,6 @@ namespace hubiquitus4w8.hapi.transport
 
         void Connect(HTransportOptions options);
         void Disconnect();
-        void SendObject(HJsonObj obj);
+        void SendObject(JObject obj);
     }
 }

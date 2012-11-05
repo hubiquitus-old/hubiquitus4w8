@@ -411,7 +411,7 @@ namespace hubiquitus4w8.hapi.test
             this.listFilterBt.TabIndex = 36;
             this.listFilterBt.Text = "listFilter";
             this.listFilterBt.UseVisualStyleBackColor = true;
-            this.listFilterBt.Click += new System.EventHandler(this.listFilterBt_Click);
+            //this.listFilterBt.Click += new System.EventHandler(this.listFilterBt_Click);
             // 
             // unSetFilterBt
             // 
@@ -421,7 +421,7 @@ namespace hubiquitus4w8.hapi.test
             this.unSetFilterBt.TabIndex = 37;
             this.unSetFilterBt.Text = "unSetFilter";
             this.unSetFilterBt.UseVisualStyleBackColor = true;
-            this.unSetFilterBt.Click += new System.EventHandler(this.unSetFilterBt_Click);
+            //this.unSetFilterBt.Click += new System.EventHandler(this.unSetFilterBt_Click);
             // 
             // getRelevantMsgBt
             // 
@@ -441,7 +441,7 @@ namespace hubiquitus4w8.hapi.test
             this.commandBt.TabIndex = 41;
             this.commandBt.Text = "command";
             this.commandBt.UseVisualStyleBackColor = true;
-            this.commandBt.Click += new System.EventHandler(this.commandBt_Click);
+            //this.commandBt.Click += new System.EventHandler(this.commandBt_Click);
             // 
             // transientRBt
             // 
@@ -451,7 +451,7 @@ namespace hubiquitus4w8.hapi.test
             this.transientRBt.Size = new System.Drawing.Size(65, 17);
             this.transientRBt.TabIndex = 42;
             this.transientRBt.TabStop = true;
-            this.transientRBt.Text = "transient";
+            this.transientRBt.Text = "persistent";
             this.transientRBt.UseVisualStyleBackColor = true;
             this.transientRBt.Checked = true;
             // 
@@ -483,7 +483,7 @@ namespace hubiquitus4w8.hapi.test
             this.notTransientRBt.Size = new System.Drawing.Size(83, 17);
             this.notTransientRBt.TabIndex = 45;
             this.notTransientRBt.TabStop = true;
-            this.notTransientRBt.Text = "not transient";
+            this.notTransientRBt.Text = "not persistent";
             this.notTransientRBt.UseVisualStyleBackColor = true;
             // 
             // testForm

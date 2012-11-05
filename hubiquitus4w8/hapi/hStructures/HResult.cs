@@ -26,131 +26,29 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using hubiquitus4w8.hapi.util;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// hAPI result. For more info, see Hubiquitus reference
     /// </summary>
-    class HResult : HJsonObj
+    public class HResult : JObject
     {
-        private JObject hresult = new JObject();
+        private static readonly ILog log = LogManager.GetLogger(typeof(HResult));
 
         public HResult()
         {
         }
 
         public HResult(JObject jsonObj)
+            : base(jsonObj)
         {
-                FromJson(jsonObj);
         }
 
-
-        public JObject ToJson()
-        {
-            return this.hresult;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-                this.hresult = jsonObj;
-            else
-                this.hresult = new JObject();
-        }
-
-        public string GetHType()
-        {
-            return "hresult";
-        }
-
-        /// <summary>
-        /// Checks are made on cmd, reqid, status
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public  bool Equals(HResult obj)
-        {
-            if (obj.GetCmd() != this.GetCmd())
-                return false;
-            if (obj.GetReqid() != this.GetReqid())
-                return false;
-            if (obj.GetStatus() != this.GetStatus())
-                return false;
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return hresult.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return hresult.ToString();
-        }
 
         //Getters & setters
-        public string GetCmd()
-        {
-            string cmd;
-            try
-            {
-                cmd = (string)hresult["cmd"];
-            }
-            catch (ArgumentNullException)
-            {
-                cmd = null;
-            }
-            return cmd;
-        }
-
-        public void SetCmd(string cmd)
-        {
-            try
-            {
-                if (cmd == null)
-                    hresult.Remove("cmd");
-                else
-                    hresult.Add("cmd", cmd);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
-        }
-
-        public string GetReqid()
-        {
-            string reqid;
-            try
-            {
-                reqid = (string)hresult["reqid"];
-            }
-            catch (ArgumentNullException)
-            {
-                reqid = null;
-            }
-            return reqid;
-        }
-
-        public void SetReqid(string reqid)
-        {
-            try
-            {
-                if (reqid == null)
-                    hresult.Remove("reqid");
-                else
-                    hresult.Add("reqid", reqid);
-            }
-            catch (JsonWriterException)
-            {
-                
-                throw;
-            }
-        }
 
         /// <summary>
         /// Get the status of the result. Null if undefined.
@@ -158,14 +56,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public ResultStatus? GetStatus()
         {
-            ResultStatus? status;
+            ResultStatus? status = null;
             try
             {
-                status = (ResultStatus)(int)hresult["status"];
+                status = this["status"].ToObject<ResultStatus>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                status = null;
+                log.Error("Can not fetch the status attritbute : ", e);
             }
             return status;
         }
@@ -175,93 +73,242 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (status == null)
-                    hresult.Remove("status");
+                    this.Remove("status");
                 else
-                    hresult.Add("status", (int)status);
+                    this["status"] = (int)status;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the status attribute : ", e);
             }
         }
 
         /// <summary>
-        /// If result type is a JObjet.
-        /// If not, see GetResultArray() or GetResultValue().
+        /// If we don't know the type of result.
         /// </summary>
-        /// <returns>Result of a command operation or a subscription operation.</returns>
-        public HJsonObj GetResult()
+        /// <returns></returns>
+        public object GetResult()
         {
-            HJsonObj result;
+            object result = null;
             try
             {
-                result = new HJsonDictionnary((JObject)hresult["result"]);
+                result = this["result"];
             }
-            catch (JsonReaderException)
+            catch (Exception e)
             {
-                result = null;
-                throw;
+                log.Error("Can not fetch the result attribute : ", e);
             }
             return result;
         }
 
+        /// <summary>
+        /// If result type is JObject.
+        /// </summary>
+        /// <returns></returns>
+        public JObject GetResultAsJObject()
+        {
+            JObject result = null;
+            try
+            {
+                result = this["result"].ToObject<JObject>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the result attribute : ", e);
+            }
+            return result;
+        }
         /// <summary>
         /// If result type is JArray.
-        /// If not, see GetResult() or GetResultValue().
         /// </summary>
-        /// <returns>Result of a command operation or a subscription operation.</returns>
-        public JArray GetResultArray()
+        /// <returns></returns>
+        public JArray GetResultASJArray()
         {
-            JArray result;
+            JArray result = null;
             try
             {
-                result = (JArray)hresult["result"];
+                result = this["result"].ToObject<JArray>();
             }
-            catch (JsonReaderException)
+            catch (Exception e)
             {
-                result = null;
-                throw;
+                log.Error("Can not fetch the result attribute : ", e);
             }
             return result;
         }
 
         /// <summary>
-        /// If result type is string, interger, date etc.
-        /// If not, see GetResult() or GetResultArray();
+        /// If result type is string.
         /// </summary>
-        /// <returns>Result of a command operation or a subscription operation.</returns>
-        public JValue GetResultValue()
+        /// <returns></returns>
+        public string GetResultAsString()
         {
-            JValue result;
+            string result = null;
             try
             {
-                result = (JValue)hresult["result"];
+                result = this["result"].ToString();
             }
-            catch (JsonReaderException)
+            catch (Exception e)
             {
-                result = null;
-                throw;
+                log.Error("Can not fetch the result attribute : ", e);
             }
             return result;
         }
 
-        public void SetResult(HJsonObj result)
+        /// <summary>
+        /// If the result type is bool.
+        /// </summary>
+        /// <returns></returns>
+        public bool? GetResultAsBoolean()
+        {
+            bool? result = null;
+            try
+            {
+                result = this["result"].ToObject<bool>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the result attribute : ", e);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// If the result type is int.
+        /// </summary>
+        /// <returns></returns>
+        public int? GetResultAsInt()
+        {
+            int? result = null;
+            try
+            {
+                result = this["result"].ToObject<int>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the result attribute : ", e);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// If the result type is double.
+        /// </summary>
+        /// <returns></returns>
+        public double? GetResultAsDouble()
+        {
+            double? result = null;
+            try
+            {
+                result = this["result"].ToObject<double>();
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not fetch the result attribute : ", e);
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// The result type could be JObject, JArray, String, Boolean, Number.
+        /// </summary>
+        /// <param name="result"></param>
+        public void SetResult(JToken result)
         {
             try
             {
                 if (result == null)
-                    hresult.Remove("result");
+                    this.Remove("result");
                 else
-                    hresult.Add("result", result.ToJson());
+                    this["result"] = result;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the result attribute : ", e);
             }
         }
 
-        
+
+        public void SetResult(JObject result)
+        {
+            try
+            {
+                if (result == null)
+                    this.Remove("result");
+                else
+                    this["result"] = result;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the result attribute : ", e);
+            }
+        }
+
+        public void SetResult(JArray result)
+        {
+            try
+            {
+                if (result == null)
+                    this.Remove("result");
+                else
+                    this["result"] = result;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the result attribute : ", e);
+            }
+        }
+
+        public void SetResult(string result)
+        {
+            try
+            {
+                if (result == null)
+                    this.Remove("result");
+                else
+                    this["result"] = result;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the result attribute : ", e);
+            }
+        }
+
+        public void SetResult(bool result)
+        {
+            try
+            {
+                this["result"] = result;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the result attribute : ", e);
+            }
+        }
+
+        public void SetResult(int result)
+        {
+            try
+            {
+                this["result"] = result;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the result attribute : ", e);
+            }
+        }
+
+        public void SetResult(double result)
+        {
+            try
+            {
+                this["result"] = result;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the result attribute : ", e);
+            }
+        }
+
     }
 }

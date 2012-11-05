@@ -26,92 +26,62 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using log4net;
+
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// Alert message payload
     /// </summary>
-    class HAlert : HJsonObj
+    public class HAlert : JObject
     {
-        private JObject halert = new JObject();
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(HAlert)); 
         public HAlert()
         { 
         }
 
         public HAlert(JObject jsonObj)
+            : base(jsonObj)
         {
-            FromJson(jsonObj);
-        }
-        
-        //interface HJsonObj
-        public JObject ToJson()
-        {
-            return this.halert;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-                halert = jsonObj;
-            else
-                halert = new JObject();
-        }
-
-        public string GetHType()
-        {
-            return "halert";
-        }
-
-        public override bool Equals(object obj)
-        {
-            return halert.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return halert.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return halert.ToString();
         }
 
         // Getter & setter
         /// <summary>
-        /// The message provided by the the author to descibe the alert. (Eg: Power Failure)
+        /// Get the message provided by the author to describe the alert. (Eg: Power Failure)
         /// </summary>
         /// <returns>Null if undefined.</returns>
         public string GetAlert()
         {
-            string alert;
+            string alert = null;
             try
             {
-                alert = (string)halert["alert"];
+                alert = this["alert"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                alert = null;
+                log.Error("Can not fetch the alert attribute : ", e);
             }
             return alert;
         }
 
+        /// <summary>
+        /// Set the message provided by the author to describe the alert. (Eg: Power Failure)
+        /// </summary>
+        /// <param name="alert"></param>
         public void SetAlert(string alert)
         {
             try
             {
                 if (alert == null)
-                    halert.Remove("alert");
+                    this.Remove("alert");
                 else
-                    halert.Add("alert", alert);
+                    this["alert"] = alert;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the alert attribute : ", e);
             }
         }
     }

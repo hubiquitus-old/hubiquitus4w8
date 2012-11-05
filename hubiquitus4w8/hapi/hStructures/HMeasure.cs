@@ -25,77 +25,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// Describes a measure payload
     /// </summary>
-    class HMeasure : HJsonObj
+    public class HMeasure : JObject
     {
-
-        private JObject hmeasure = new JObject();
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(HMeasure));
         public HMeasure()
         {
         }
 
         public HMeasure(JObject jsonObj)
+            : base(jsonObj)
         {
-            FromJson(jsonObj);
         }
 
-        /* HJsonObj interface */
-
-        public JObject ToJson()
-        {
-            return hmeasure;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-            {
-                this.hmeasure = jsonObj;
-            }
-            else
-            {
-                this.hmeasure = new JObject();
-            }
-        }
-
-        public string GetHType()
-        {
-            return "hmeasure";
-        }
-
-
-        public override string ToString()
-        {
-            return hmeasure.ToString();
-        }
-
-        /// <summary>
-        /// Check are made on : value, unit. 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public bool equals(HMeasure obj)
-        {
-            if (obj.GetUnit() != this.GetUnit())
-                return false;
-            if (obj.GetValue() != this.GetValue())
-                return false;
-            return true;
-        }
-
-
-        public override int GetHashCode()
-        {
-            return hmeasure.GetHashCode();
-        }
-
+        
         // Getters & Setters 
 
         /// <summary>
@@ -104,14 +54,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetUnit()
         {
-            string unit;
+            string unit = null;
             try
             {
-                unit = (string)hmeasure["unit"];
+                unit = this["unit"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                unit = null;
+                log.Error("Can not fetch the unit attribute : ", e);
             }
             return unit;
         }
@@ -122,16 +72,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (unit == null)
                 {
-                    hmeasure.Remove("unit");
+                    this.Remove("unit");
                 }
                 else
                 {
-                    hmeasure.Add("unit", unit);
+                    this["unit"] = unit;
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not update the unit attribute : ", e);
             }
         }
 
@@ -141,14 +91,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetValue()
         {
-            string value;
+            string value = null;
             try
             {
-                value = (string)hmeasure["value"];
+                value = this["value"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                value = null;
+                log.Error("Can not fetch the value attribtue : ", e);
             }
             return value;
         }
@@ -159,16 +109,16 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 if (value == null)
                 {
-                    hmeasure.Remove("value");
+                    this.Remove("value");
                 }
                 else
                 {
-                    hmeasure.Add("value", value);
+                    this["value"] = value;
                 }
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                throw;
+                log.Error("Can not udpate the value attribtue : ", e);
             }
         }
 

@@ -29,7 +29,7 @@ namespace hubiquitus4w8.hapi.exceptions
     /// <summary>
     /// Exception to notify a missing attribute (ONLY used in builders)
     /// </summary>
-    class MissingAttrException : Exception
+    public class MissingAttrException : Exception
     {
         private static readonly long serialVersionUID = 1L;
         private string attrName = null;

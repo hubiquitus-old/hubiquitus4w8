@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hubiquitus4w8", "hubiquitus4w8\hubiquitus4w8.csproj", "{27808EEF-A3EE-4EEA-9C83-F2EC4823CDE4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{26DDDD83-E98E-4B2B-86F6-0298CD4B8CC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{27808EEF-A3EE-4EEA-9C83-F2EC4823CDE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27808EEF-A3EE-4EEA-9C83-F2EC4823CDE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27808EEF-A3EE-4EEA-9C83-F2EC4823CDE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26DDDD83-E98E-4B2B-86F6-0298CD4B8CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26DDDD83-E98E-4B2B-86F6-0298CD4B8CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26DDDD83-E98E-4B2B-86F6-0298CD4B8CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26DDDD83-E98E-4B2B-86F6-0298CD4B8CC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

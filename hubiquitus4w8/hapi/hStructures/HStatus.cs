@@ -25,71 +25,28 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
     /// <summary>
-    /// Version 0.4
+    /// Version 0.5
     /// This structure describe the connection status
     /// </summary>
-    class HStatus : HJsonObj
+    public class HStatus : JObject
     {
-        
-        private JObject hstatus = new JObject();
+
+        private static readonly ILog log = LogManager.GetLogger(typeof(HStatus));
 
         public HStatus()
         { 
         }
 
         public HStatus(JObject jsonObj)
+            : base(jsonObj)
         {
-            FromJson(jsonObj);
         }
 
-
-        public JObject ToJson()
-        {
-            return this.hstatus;
-        }
-
-        public void FromJson(JObject jsonObj)
-        {
-            if (jsonObj != null)
-                hstatus = jsonObj;
-            else
-                hstatus = new JObject();
-        }
-
-        public string GetHType()
-        {
-            return "hstatus";
-        }
-
-        /// <summary>
-        /// Check are made on status, errorCode, errorMsg.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public bool Equals(HStatus obj)
-        {
-            if (obj.GetStatus() != this.GetStatus())
-                return false;
-            if (obj.GetErrorCode() != this.GetErrorCode())
-                return false;
-            if (obj.GetErrorMsg() != this.GetErrorMsg())
-                return false;
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return hstatus.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return hstatus.ToString();
-        }
 
         //Getters & setters
         /// <summary>
@@ -98,14 +55,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public ConnectionStatus? GetStatus()
         {
-            ConnectionStatus? status;
+            ConnectionStatus? status = null;
             try
             {
-                status = (ConnectionStatus)(int)hstatus["status"];
+                status = (ConnectionStatus)this["status"].ToObject<int>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                status = null;
+                log.Error("Can not fetch the status attribute : ", e);
             }
             return status;
         }
@@ -115,14 +72,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (status == null)
-                    hstatus.Remove("status");
+                    this.Remove("status");
                 else
-                    hstatus.Add("status", (int)status);
+                    this["status"] = (int)status;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the status attribute : ", e);
             }
         }
 
@@ -132,14 +88,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public ConnectionErrors? GetErrorCode()
         {
-            ConnectionErrors? errorCode;
+            ConnectionErrors? errorCode = null;
             try
             {
-                errorCode = (ConnectionErrors)(int)hstatus["errorCode"];
+                errorCode = (ConnectionErrors)this["errorCode"].ToObject<int>();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                errorCode = null;
+                log.Error("Can not fetch the errorCode attribute : ", e);
             }
             return errorCode;
         }
@@ -149,14 +105,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (errorCode == null)
-                    hstatus.Remove("errorCode");
+                    this.Remove("errorCode");
                 else
-                    hstatus.Add("errorCode", (int)errorCode);
+                    this["errorCode"] = (int)errorCode;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the errorCode attribute : ",e);
             }
         }
 
@@ -166,14 +121,14 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <returns></returns>
         public string GetErrorMsg()
         {
-            string errorMsg;
+            string errorMsg = null;
             try
             {
-                errorMsg = (string)hstatus["errorMsg"];
+                errorMsg = this["errorMsg"].ToString();
             }
-            catch (ArgumentNullException)
+            catch (Exception e)
             {
-                errorMsg = null;
+                log.Error("Can not fetch the errorMsg attribute : ", e);
             }
             return errorMsg;
         }
@@ -183,14 +138,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (errorMsg == null)
-                    hstatus.Remove("errorMsg");
+                    this.Remove("errorMsg");
                 else
-                    hstatus.Add("errorMsg", errorMsg);
+                    this["errorMsg"] = errorMsg;
             }
-            catch (JsonWriterException)
+            catch (Exception e)
             {
-                
-                throw;
+                log.Error("Can not update the errorMsg attribute : ", e);
             }
         }
 
