@@ -80,21 +80,17 @@ namespace hubiquitus4w8.hapi.test
         private void connectBt_Click(object sender, EventArgs e)
         {
             string endpoint = endpointTextBox.Text;
-            if (options.endpoints != null)
-                options.endpoints.Clear();
+            if (options.GetEndpoints() != null)
+                options.GetEndpoints().Clear();
             if (endpoint == null || endpoint == "")
-                options.endpoints = null;
+                options.SetEndpoints(null);
             else
             {
-                options.endpoints = new List<string>();
-                options.endpoints.Add(endpoint);
+                
+               
             }
             string serverHost = serverHostTextBox.Text;
-            if (serverHost != null)
-                options.serverHost = serverHost;
-            string serverPort = serverPortTextBox.Text;
-            if (serverPort != null)
-                options.serverPort = int.Parse(serverPort);
+            
 
             client.Connect(usernameTextBox.Text, passwordTextBox.Text, options);
 
@@ -106,24 +102,7 @@ namespace hubiquitus4w8.hapi.test
             client.Disconnect();
         }
 
-        private void commandBt_Click(object sender, EventArgs e)
-        {
-            HJsonDictionnary jsonObj = new HJsonDictionnary();
-            try
-            {
-                jsonObj.Add("text", messageTextBox.Text);
-                HCommand cmd = new HCommand("hnode@hub.novediagroup.com", "hecho", jsonObj);
-                if (transientRBt.Checked)
-                    cmd.SetTransient(true);
-                client.Command(cmd, commandResultDelegate);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-        }
+      
 
         private void subscribeBt_Click(object sender, EventArgs e)
         {
@@ -149,11 +128,11 @@ namespace hubiquitus4w8.hapi.test
             else
                 message.SetPersistent(false);
 
-            HJsonDictionnary payload = new HJsonDictionnary();
+            JObject payload = new JObject();
             payload.Add("text", messageTextBox.Text);
             message.SetPayload(payload);
             Console.WriteLine(message.ToString());
-            client.Publish(message, ResultDelegatePublisher);
+            client.Send(message, ResultDelegatePublisher);
         }
 
         private void getLastMsgsBt_Click(object sender, EventArgs e)
@@ -244,30 +223,10 @@ namespace hubiquitus4w8.hapi.test
 
 
             Console.WriteLine("----> Template:\n " + template.ToString());
-            HFilterTemplate filter = new HFilterTemplate();
-
-            filter.SetChid(chid);
-            filter.SetName(filterName);
-            filter.SetTemplate(template);
-            client.SetFilter(chid, filter, ResultDelegateSetFilter);
+          
         }
 
-        private void listFilterBt_Click(object sender, EventArgs e)
-        {
-            string chid = channelIDTextBox.Text;
-            if (chid == "")
-                client.ListFilters(null, ResultDelegateListFilter);
-            else
-                client.ListFilters(chid, ResultDelegateListFilter);
-        }
-
-        private void unSetFilterBt_Click(object sender, EventArgs e)
-        {
-            string chid = channelIDTextBox.Text;
-            string filterName = filterNameTextBox.Text;
-            client.UnSetFilter(filterName, chid, ResultDelegateUnSetFilter);
-        }
-
+      
         private void getRelevantMsgBt_Click(object sender, EventArgs e)
         {
             string chid = channelIDTextBox.Text;
@@ -277,62 +236,62 @@ namespace hubiquitus4w8.hapi.test
 
 
         //result delegates
-        private void commandResultDelegate(HResult result)
+        private void commandResultDelegate(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for Command---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateSubscirbe(HResult result)
+        private void ResultDelegateSubscirbe(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for Subscribe---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateUnsubscirbe(HResult result)
+        private void ResultDelegateUnsubscirbe(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for Unsubscribe---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegatePublisher(HResult result)
+        private void ResultDelegatePublisher(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for Publisher---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateGetLastMessages(HResult result)
+        private void ResultDelegateGetLastMessages(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for GetLastMessages---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateGetSubcriptions(HResult result)
+        private void ResultDelegateGetSubcriptions(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for GetSubcriptions---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateGetThread(HResult result)
+        private void ResultDelegateGetThread(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for GetThread---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateGetThreads(HResult result)
+        private void ResultDelegateGetThreads(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for GetThreads---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateSetFilter(HResult result)
+        private void ResultDelegateSetFilter(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for SetFilter---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateListFilter(HResult result)
+        private void ResultDelegateListFilter(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for Listfilter---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateUnSetFilter(HResult result)
+        private void ResultDelegateUnSetFilter(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for UnSetFilter---\n" + result.ToString() + "\n\n");
         }
 
-        private void ResultDelegateGetRelevantMsg(HResult result)
+        private void ResultDelegateGetRelevantMsg(HMessage result)
         {
             Console.WriteLine("\n\n---ResultDelegate for GetRelevantMsg---\n" + result.ToString() + "\n\n");
         }
@@ -345,13 +304,13 @@ namespace hubiquitus4w8.hapi.test
 
             HMessageOptions mOptions = new HMessageOptions();
             if (transientRBt.Checked)
-                mOptions.Transient = true;
+                mOptions.Persistent = true;
             else
-                mOptions.Transient = false;
+                mOptions.Persistent = false;
             try
             {
                 HMessage pubMsg = client.BuildConvState(chid, convid, status, mOptions);
-                client.Publish(pubMsg, ResultDelegatePublisher);
+                client.Send(pubMsg, ResultDelegatePublisher);
             }
             catch (Exception)
             {

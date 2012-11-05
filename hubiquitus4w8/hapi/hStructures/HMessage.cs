@@ -77,7 +77,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("msgid", msgid);
+                    this["msgid"] = msgid;
                 }
             }
             catch (Exception e)
@@ -114,7 +114,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("actor", actor);
+                    this["actor"] = actor;
                 }
             }
             catch (Exception e)
@@ -151,7 +151,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("convid", convid);
+                    this["convid"] = convid;
                 }
             }
             catch (Exception e)
@@ -188,7 +188,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("ref", @ref);
+                    this["ref"] = @ref;
                 }
             }
             catch (Exception e)
@@ -227,7 +227,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("type", type);
+                    this["type"] = type;
                 }
             }
             catch (Exception e)
@@ -261,7 +261,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (priority == null)
                     this.Remove("priority");
                 else
-                    this.Add("priority", (int)priority);
+                    this["priority"] = (int)priority;
             }
             catch (Exception e)
             {
@@ -299,7 +299,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("relevance", relevance.GetValueOrDefault().ToString(HUtil.DateISO8601Format));
+                    this["relevance"] = relevance.GetValueOrDefault().ToString(HUtil.DateISO8601Format);
                 }
             }
             catch (Exception e)
@@ -334,7 +334,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (persistent == null)
                     this.Remove("persistent");
                 else
-                    this.Add("persistent", persistent);
+                    this["persistent"] = persistent;
             }
             catch (Exception e)
             {
@@ -370,7 +370,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("location", location);
+                    this["location"] = location;
                 }
             }
             catch (Exception e)
@@ -407,7 +407,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("author", author);
+                    this["author"] = author;
                 }
             }
             catch (Exception e)
@@ -444,7 +444,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("publisher", publisher);
+                    this["publisher"] = publisher;
                 }
             }
             catch (Exception e)
@@ -481,7 +481,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("published", published.GetValueOrDefault().ToString(HUtil.DateISO8601Format));
+                    this["published"] = published.GetValueOrDefault().ToString(HUtil.DateISO8601Format);
                 }
             }
             catch (Exception e)
@@ -518,7 +518,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("headers", headers);
+                    this["headers"] = headers;
                 }
             }
             catch (Exception e)
@@ -750,21 +750,7 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <param name="payload"></param>
         public void SetPayload(object payload)
         {
-            try
-            {
-                if (payload == null)
-                {
-                    this.Remove("payload");
-                }
-                else
-                {
-                    this.Add("payload", (JToken)payload);
-                }
-            }
-            catch (Exception e)
-            {
-                log.Error("Can not update the payload attribute : ", e);
-            }
+            log.Error("Payload type not supported.");
         }
 
         public void SetPayload(JObject payload)
@@ -777,7 +763,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -796,7 +782,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -815,7 +801,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -828,7 +814,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("payload", payload);
+                this["payload"] = payload;
             }
             catch (Exception e)
             {
@@ -840,7 +826,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("payload", payload);
+                this["payload"] = payload;
             }
             catch (Exception e)
             {
@@ -852,7 +838,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("payload", payload);
+                this["payload"] = payload;
             }
             catch (Exception e)
             {
@@ -870,7 +856,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -889,7 +875,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -908,7 +894,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -927,7 +913,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -946,7 +932,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -965,7 +951,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("payload", payload);
+                    this["payload"] = payload;
                 }
             }
             catch (Exception e)
@@ -999,7 +985,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (timeout == 0)
                     this.Remove("timeout");
                 else
-                    this.Add("timeout", timeout);
+                    this["timeout"] = timeout;
             }
             catch (Exception e)
             {
@@ -1032,7 +1018,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (sent ==null)
                     this.Remove("sent");
                 else
-                    this.Add("sent", sent);
+                    this["sent"] = sent;
             }
             catch (Exception e)
             {

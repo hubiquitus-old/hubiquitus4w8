@@ -75,7 +75,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (status == null)
                     this.Remove("status");
                 else
-                    this.Add("status", (int)status);
+                    this["status"] = (int)status;
             }
             catch (Exception e)
             {
@@ -215,17 +215,7 @@ namespace hubiquitus4w8.hapi.hStructures
         /// <param name="result"></param>
         public void SetResult(Object result)
         {
-            try
-            {
-                if (result == null)
-                    this.Remove("result");
-                else
-                    this.Add("result", (JToken)result);
-            }
-            catch (Exception e)
-            {
-                log.Error("Can not update the result attribute : ", e);
-            }
+            log.Error("Result type not supported.");
         }
 
 
@@ -236,7 +226,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (result == null)
                     this.Remove("result");
                 else
-                    this.Add("result", result);
+                    this["result"] = result;
             }
             catch (Exception e)
             {
@@ -251,7 +241,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (result == null)
                     this.Remove("result");
                 else
-                    this.Add("result", (JToken)result);
+                    this["result"] = result;
             }
             catch (Exception e)
             {
@@ -266,7 +256,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (result == null)
                     this.Remove("result");
                 else
-                    this.Add("result", result);
+                    this["result"] = result;
             }
             catch (Exception e)
             {
@@ -278,7 +268,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("result", result);
+                this["result"] = result;
             }
             catch (Exception e)
             {
@@ -290,7 +280,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("result", result);
+                this["result"] = result;
             }
             catch (Exception e)
             {
@@ -302,7 +292,7 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                this.Add("result", result);
+                this["result"] = result;
             }
             catch (Exception e)
             {

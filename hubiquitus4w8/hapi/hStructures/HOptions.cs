@@ -67,9 +67,9 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (transport == null || transport.Length <= 0)
-                    this.Add("transport", "socketio");
+                    this["transport"] = "socketio";
                 else
-                    this.Add("transport", transport);
+                    this["transport"] = transport;
             }
             catch (Exception e)
             {
@@ -98,7 +98,7 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (endpoints != null && endpoints.Count > 0)
-                    this.Add("endpoints", endpoints);
+                    this["endpoints"] = endpoints;
                 else
                     log.Error("The endpoints attribute can not be null or empty.");
             }
@@ -127,9 +127,9 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (timeout >= 0)
-                    this.Add("timeout", timeout);
+                    this["timeout"] = timeout;
                 else
-                    this.Add("timeout", 3000); // 3000s by default.
+                    this["timeout"] = 3000; // 3000s by default.
             }
             catch (Exception e)
             {

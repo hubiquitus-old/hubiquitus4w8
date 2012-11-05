@@ -31,8 +31,6 @@ namespace hubiquitus4w8.hapi.transport
     {
         private JabberID jid = null;
         private string password = null;
-        private string serverHost = null;
-        private int serverPort = 0;
         private string endpointHost = null;
         private int endpointPort = 0;
         private string endpointPath = null;
@@ -91,23 +89,7 @@ namespace hubiquitus4w8.hapi.transport
             set { password = value; }
         }
 
-        public string ServerHost
-        {
-            get { return serverHost; }
-            set
-            {
-                if (value == null || value.Equals(""))
-                    this.serverHost = null;
-                else
-                    this.serverHost = value;
-            }
-        }
-
-        public int ServerPort
-        {
-            get { return serverPort; }
-            set { serverPort = value; }
-        }
+       
 
         public string EndpointHost
         {
@@ -136,7 +118,6 @@ namespace hubiquitus4w8.hapi.transport
         public override string ToString()
         {
             return "HTransportOptions [jid=" + jid + ", password=" + password
-                + ", serverHost=" + serverHost + ", serverPort=" + serverPort
                 + ", endpointHost=" + endpointHost + ", endpointPort="
                 + endpointPort + ", endpointPath=" + endpointPath + ", hNode="
                 + hserver + "]";
@@ -155,9 +136,6 @@ namespace hubiquitus4w8.hapi.transport
             result = prime * result + ((jid == null) ? 0 : jid.GetHashCode());
             result = prime * result
                     + ((password == null) ? 0 : password.GetHashCode());
-            result = prime * result
-                    + ((serverHost == null) ? 0 : serverHost.GetHashCode());
-            result = prime * result + serverPort;
             return result;
         }
 
@@ -174,11 +152,7 @@ namespace hubiquitus4w8.hapi.transport
                 return false;
             if (this.password != hobj.password)
                 return false;
-            if (this.serverHost != hobj.serverHost)
-                return false;
-            if (this.serverPort != hobj.serverPort)
-                return false;
-            if (this.endpointHost != hobj.endpointHost)
+          if (this.endpointHost != hobj.endpointHost)
                 return false;
             if (this.endpointPath != hobj.endpointPath)
                 return false;

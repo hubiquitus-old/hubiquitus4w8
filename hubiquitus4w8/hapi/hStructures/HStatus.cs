@@ -74,7 +74,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (status == null)
                     this.Remove("status");
                 else
-                    this.Add("status", (int)status);
+                    this["status"] = (int)status;
             }
             catch (Exception e)
             {
@@ -107,7 +107,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (errorCode == null)
                     this.Remove("errorCode");
                 else
-                    this.Add("errorCode", (int)errorCode);
+                    this["errorCode"] = (int)errorCode;
             }
             catch (Exception e)
             {
@@ -140,7 +140,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (errorMsg == null)
                     this.Remove("errorMsg");
                 else
-                    this.Add("errorMsg", errorMsg);
+                    this["errorMsg"] = errorMsg;
             }
             catch (Exception e)
             {

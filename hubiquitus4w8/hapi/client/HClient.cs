@@ -139,7 +139,7 @@ namespace hubiquitus4w8.hapi.client
         void transport_onData(string type, JObject obj)
         {
             if (type.Equals("hresult", StringComparison.OrdinalIgnoreCase))
-                notifyResult(new HResult(obj));
+                notifyResult(new HMessage(obj));
             if (type.Equals("hmessage", StringComparison.OrdinalIgnoreCase))
                 notifyMessage(new HMessage(obj));
             if (type.Equals("hcommand", StringComparison.OrdinalIgnoreCase))
@@ -753,19 +753,19 @@ namespace hubiquitus4w8.hapi.client
             }
         }
 
-        private void notifyResult(HResult result)
+        private void notifyResult(HMessage message)
         {
-            Action<HMessage> messageDelegate = (Action<HMessage>)messageDelegates[result.GetReqid()];
-            notifyResult(result, messageDelegate);
+            Action<HMessage> messageDelegate = (Action<HMessage>)messageDelegates[message.GetRef()];
+            notifyResult(message, messageDelegate);
         }
 
-        private void notifyResult(HResult result, Action<HMessage> messageDelegate)
+        private void notifyResult(HMessage message, Action<HMessage> messageDelegate)
         {
             try
             {
                 if (messageDelegate != null)
                 {
-                    Thread thread = new Thread(() => messageDelegate(result));
+                    Thread thread = new Thread(() => messageDelegate(message));
                     thread.Start();
                 }
             }
@@ -835,26 +835,24 @@ namespace hubiquitus4w8.hapi.client
 
         private void notifyResultError(string reqid, string cmd, ResultStatus resultStatus, string errorMsg)
         {
-            HJsonDictionnary obj = new HJsonDictionnary();
+            JObject obj = new JObject();
             obj.Add("errorMsg", errorMsg);
             HResult result = new HResult();
-            result.SetCmd(cmd);
-            result.SetReqid(reqid);
+           
             result.SetStatus(resultStatus);
             result.SetResult(obj);
-            this.notifyResult(result);
+            //this.notifyResult(result);
         }
 
         private void notifyResultError(string reqid, ResultStatus resultStatus, string errorMsg, Action<HMessage> messageDelegate)
         {
-            HJsonDictionnary obj = new HJsonDictionnary();
+            JObject obj = new JObject();
             obj.Add("errorMsg", errorMsg);
             HResult result = new HResult();
-            result.SetCmd(cmd);
-            result.SetReqid(reqid);
+         
             result.SetStatus(resultStatus);
             result.SetResult(obj);
-            this.notifyResult(result, messageDelegate);
+            //this.notifyResult(result, messageDelegate);
         }
 
         private void fillTransportOptions(string publisher, string password, HOptions options)
@@ -865,31 +863,31 @@ namespace hubiquitus4w8.hapi.client
 
                 this.transportOptions.Jid = jid;
                 this.transportOptions.Password = password;
-                this.transportOptions.Hserver = options.hserver;
+                //this.transportOptions.Hserver = options.;
 
                 //by default we user server host rather than publish host if defined
-                if (options.serverHost != null)
-                    this.transportOptions.ServerHost = options.serverHost;
-                else
-                    this.transportOptions.ServerHost = jid.Domain;
-                this.transportOptions.ServerPort = options.serverPort;
+                //if (options.serverHost != null)
+                //    this.transportOptions.ServerHost = options.serverHost;
+                //else
+                //    this.transportOptions.ServerHost = jid.Domain;
+                //this.transportOptions.ServerPort = options.serverPort;
 
-                //for endpoints, pick one randomly and fill transport options
-                if (options.endpoints.Count() > 0)
-                {
-                    int endpointIndex = HUtil.PickIndex<string>(options.endpoints);
-                    string endpoint = options.endpoints.ElementAt<string>(endpointIndex);
+                ////for endpoints, pick one randomly and fill transport options
+                //if (options.GetEndpoints().Count() > 0)
+                //{
+                //    int endpointIndex = HUtil.PickIndex<string>(options.GetEndpoints());
+                //    string endpoint = options.endpoints.ElementAt<string>(endpointIndex);
 
-                    transportOptions.EndpointHost = HUtil.GetHost(endpoint);
-                    transportOptions.EndpointPort = HUtil.GetPort(endpoint);
-                    transportOptions.EndpointPath = HUtil.GetPath(endpoint);
-                }
-                else
-                {
-                    transportOptions.EndpointHost = null;
-                    transportOptions.EndpointPort = 0;
-                    transportOptions.EndpointPath = null;
-                }
+                //    transportOptions.EndpointHost = HUtil.GetHost(endpoint);
+                //    transportOptions.EndpointPort = HUtil.GetPort(endpoint);
+                //    transportOptions.EndpointPath = HUtil.GetPath(endpoint);
+                //}
+                //else
+                //{
+                //    transportOptions.EndpointHost = null;
+                //    transportOptions.EndpointPort = 0;
+                //    transportOptions.EndpointPath = null;
+                //}
             }
             catch (Exception)
             {

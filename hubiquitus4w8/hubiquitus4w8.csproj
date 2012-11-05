@@ -61,7 +61,9 @@
     <Compile Include="hapi\hStructures\Enums.cs" />
     <Compile Include="hapi\hStructures\HAck.cs" />
     <Compile Include="hapi\hStructures\HAlert.cs" />
+    <Compile Include="hapi\hStructures\HArrayOfValue.cs" />
     <Compile Include="hapi\hStructures\HCommand.cs" />
+    <Compile Include="hapi\hStructures\HCondition.cs" />
     <Compile Include="hapi\hStructures\HConvState.cs" />
     <Compile Include="hapi\hStructures\HGeo.cs" />
     <Compile Include="hapi\hStructures\HLocation.cs" />
@@ -71,6 +73,8 @@
     <Compile Include="hapi\hStructures\HOptions.cs" />
     <Compile Include="hapi\hStructures\HResult.cs" />
     <Compile Include="hapi\hStructures\HStatus.cs" />
+    <Compile Include="hapi\hStructures\HValue.cs" />
+    <Compile Include="hapi\hStructures\OperandNames.cs" />
     <Compile Include="hapi\structures\JabberID.cs" />
     <Compile Include="hapi\test\testForm.cs">
       <SubType>Form</SubType>
@@ -81,7 +85,6 @@
     <Compile Include="hapi\transport\HTransport.cs" />
     <Compile Include="hapi\transport\HTransportOptions.cs" />
     <Compile Include="hapi\transport\socketio\HTransportSocketIO.cs" />
-    <Compile Include="hapi\util\HJsonDictionnary.cs" />
     <Compile Include="hapi\util\HUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

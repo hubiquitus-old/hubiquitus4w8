@@ -70,16 +70,14 @@ namespace hubiquitus4w8.hapi.transport.socketio
                 {
                     string publisher = options.Jid.GetFullJID();
                     string password = options.Password;
-                    string serverHost = options.ServerHost;
-                    int serverPort = options.ServerPort;
-
+               
                     JObject data = new JObject();
                     try
                     {
                         data.Add("publisher", publisher);
                         data.Add("password", password);
-                        data.Add("serverHost", serverHost);
-                        data.Add("serverPort", serverPort);
+                        //data.Add("serverHost", serverHost);
+                        //data.Add("serverPort", serverPort);
                         socketIO.Emit("hConnect", data);
 
                     }
@@ -237,10 +235,10 @@ namespace hubiquitus4w8.hapi.transport.socketio
             }
         }
 
-        public void SendObject(HJsonObj obj)
+        public void SendObject(JObject obj)
         {
             if (connStatus == ConnectionStatus.CONNECTED)
-                socketIO.Emit("hCommand", obj.ToJson());
+                socketIO.Emit("hCommand", obj);
             else
                 throw new Exception("Not connected");
         }

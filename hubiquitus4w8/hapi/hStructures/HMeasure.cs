@@ -76,7 +76,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("unit", unit);
+                    this["unit"] = unit;
                 }
             }
             catch (Exception e)
@@ -113,7 +113,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this.Add("value", value);
+                    this["value"] = value;
                 }
             }
             catch (Exception e)

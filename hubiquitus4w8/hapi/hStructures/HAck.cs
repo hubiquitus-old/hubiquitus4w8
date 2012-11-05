@@ -83,8 +83,9 @@ namespace hubiquitus4w8.hapi.hStructures
                 else
                 {
                     if (HUtil.CheckAck(ack))
-                        throw new Exception("only 'recv' and 'read' are authorized for ack");
-                    this.Add("ack", ack);
+                        log.Error("only 'recv' and 'read' are authorized for ack");
+                    else
+                        this["ack"] = ack;
                 }
             }
             catch (Exception e)

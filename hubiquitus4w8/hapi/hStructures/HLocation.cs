@@ -78,7 +78,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (pos == null)
                     log.Error("The pos attribute can not be null!");
                 else
-                    this.Add("pos", pos);
+                    this["pos"] = pos;
             }
             catch (Exception e)
             {
@@ -112,7 +112,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (zip == null)
                     this.Remove("zip");
                 else
-                    this.Add("zip", zip);
+                    this["zip"] = zip;
             }
             catch (Exception e)
             {
@@ -145,7 +145,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (num == null)
                     this.Remove("num");
                 else
-                    this.Add("num", num);
+                    this["num"] = num;
             }
             catch (Exception e)
             {
@@ -178,7 +178,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (waytype == null)
                     this.Remove("waytype");
                 else
-                    this.Add("waytype", waytype);
+                    this["waytype"] = waytype;
             }
             catch (Exception e)
             {
@@ -211,7 +211,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (way == null)
                     this.Remove("way");
                 else
-                    this.Add("way", way);
+                    this["way"] = way;
             }
             catch (Exception e)
             {
@@ -244,7 +244,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (addr == null)
                     this.Remove("addr");
                 else
-                    this.Add("addr", addr);
+                    this["addr"] = addr;
             }
             catch (Exception e)
             {
@@ -277,7 +277,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (floor == null)
                     this.Remove("floor");
                 else
-                    this.Add("floor", floor);
+                    this["floor"] = floor;
             }
             catch (Exception e)
             {
@@ -310,7 +310,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (building == null)
                     this.Remove("building");
                 else
-                    this.Add("building", building);
+                    this["building"] = building;
             }
             catch (Exception e)
             {
@@ -343,7 +343,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (city == null)
                     this.Remove("city");
                 else
-                    this.Add("city", city);
+                    this["city"] = city;
             }
             catch (Exception e)
             {
@@ -376,7 +376,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (countryCode == null)
                     this.Remove("countryCode");
                 else
-                    this.Add("countryCode", countryCode);
+                    this["countryCode"] = countryCode;
             }
             catch (Exception e)
             {

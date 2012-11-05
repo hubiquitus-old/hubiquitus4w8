@@ -38,6 +38,6 @@ namespace hubiquitus4w8.hapi.transport
 
         void Connect(HTransportOptions options);
         void Disconnect();
-        void SendObject(HJsonObj obj);
+        void SendObject(JObject obj);
     }
 }
