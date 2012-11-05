@@ -213,9 +213,19 @@ namespace hubiquitus4w8.hapi.hStructures
         /// The result type could be JObject, JArray, String, Boolean, Number.
         /// </summary>
         /// <param name="result"></param>
-        public void SetResult(Object result)
+        public void SetResult(JToken result)
         {
-            log.Error("Result type not supported.");
+            try
+            {
+                if (result == null)
+                    this.Remove("result");
+                else
+                    this["result"] = result;
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the result attribute : ", e);
+            }
         }
 
 

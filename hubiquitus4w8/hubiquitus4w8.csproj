@@ -74,7 +74,6 @@
     <Compile Include="hapi\hStructures\HResult.cs" />
     <Compile Include="hapi\hStructures\HStatus.cs" />
     <Compile Include="hapi\hStructures\HValue.cs" />
-    <Compile Include="hapi\hStructures\OperandNames.cs" />
     <Compile Include="hapi\structures\JabberID.cs" />
     <Compile Include="hapi\test\testForm.cs">
       <SubType>Form</SubType>

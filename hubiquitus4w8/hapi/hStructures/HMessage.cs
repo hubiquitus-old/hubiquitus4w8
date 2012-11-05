@@ -351,7 +351,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HLocation location = null;
             try
             {
-                location = this["location"].ToObject<HLocation>();
+                location = new HLocation(JObject.Parse(this["location"].ToString()));
             }
             catch (Exception e)
             {
@@ -644,7 +644,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HAlert payload = null;
             try
             {
-                payload = this["payload"].ToObject<HAlert>();
+                payload = new HAlert(JObject.Parse(this["payload"].ToString()));
             }
             catch (Exception e)
             {
@@ -662,7 +662,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HAck payload = null;
             try
             {
-                payload = this["payload"].ToObject<HAck>();
+                payload = new HAck(JObject.Parse(this["payload"].ToString()));
             }
             catch (Exception e)
             {
@@ -680,7 +680,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HMeasure payload = null;
             try
             {
-                payload = this["payload"].ToObject<HMeasure>();
+                payload = new HMeasure(JObject.Parse(this["payload"].ToString()));
             }
             catch (Exception e)
             {
@@ -698,7 +698,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HConvState payload = null;
             try
             {
-                payload = this["payload"].ToObject<HConvState>();
+                payload = new HConvState(JObject.Parse(this["payload"].ToString()));
             }
             catch (Exception e)
             {
@@ -716,7 +716,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HResult payload = null;
             try
             {
-                payload = this["payload"].ToObject<HResult>();
+                payload = new HResult(JObject.Parse(this["payload"].ToString()));
             }
             catch (Exception e)
             {
@@ -734,7 +734,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HCommand payload = null;
             try
             {
-                payload = this["payload"].ToObject<HCommand>();
+                payload = new HCommand(JObject.Parse(this["payload"].ToString()));
             }
             catch (Exception e)
             {
@@ -748,9 +748,23 @@ namespace hubiquitus4w8.hapi.hStructures
         /// Payload type could be instance of JSONObject(HAlert, HAck ...), JSONArray, String, Boolean, Number.
         /// </summary>
         /// <param name="payload"></param>
-        public void SetPayload(object payload)
+        public void SetPayload(JToken payload)
         {
-            log.Error("Payload type not supported.");
+            try
+            {
+                if (payload == null)
+                {
+                    this.Remove("payload");
+                }
+                else
+                {
+                    this["payload"] = payload;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Can not update the payload attribute : ", e);
+            }
         }
 
         public void SetPayload(JObject payload)

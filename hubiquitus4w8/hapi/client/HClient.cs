@@ -548,6 +548,9 @@ namespace hubiquitus4w8.hapi.client
 
             HAck hack = new HAck();
             hack.SetAck(ack);
+            if (mOptions == null)
+                mOptions = new HMessageOptions();
+            mOptions.Ref = @ref;
             HMessage message = BuildMessage(actor, "hAck", hack, mOptions);
             return message;
         }
@@ -583,7 +586,7 @@ namespace hubiquitus4w8.hapi.client
         /// <param name="unit"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildMeassur(string actor, string value, string unit, HMessageOptions mOptions)
+        public HMessage BuildMeasure(string actor, string value, string unit, HMessageOptions mOptions)
         {
                 if (actor == null || actor.Length <= 0)
                     throw new MissingAttrException("actor");
@@ -621,7 +624,7 @@ namespace hubiquitus4w8.hapi.client
             hcommand.SetCmd(cmd);
             hcommand.SetParams(@params);
 
-            HMessage hmessage = BuildMessage(actor, "hcommand", hcommand, mOptions);
+            HMessage hmessage = BuildMessage(actor, "hCommand", hcommand, mOptions);
             return hmessage;
         }
 
@@ -666,11 +669,11 @@ namespace hubiquitus4w8.hapi.client
 
         //---private methods---
 
-        private HMessage InnerBuildResult(string actor, string @ref, ResultStatus status, object result, HMessageOptions mOptions)
+        private HMessage InnerBuildResult(string actor, string @ref, ResultStatus? status, JToken result, HMessageOptions mOptions)
         {
             if (actor == null || actor.Length <= 0)
                 throw new MissingAttrException("actor");
-            if (@ref == null || @ref.Length >= 0)
+            if (@ref == null || @ref.Length <= 0)
                 throw new MissingAttrException("ref");
             if (status == null)
                 throw new MissingAttrException("status");
@@ -686,7 +689,7 @@ namespace hubiquitus4w8.hapi.client
         }
 
 
-        private HMessage InnerBuildMessage(string actor, string type, Object payload, HMessageOptions mOptions)
+        private HMessage InnerBuildMessage(string actor, string type, JToken payload, HMessageOptions mOptions)
         {
             if (actor == null || actor.Length <= 0)
                 throw new MissingAttrException("actor");

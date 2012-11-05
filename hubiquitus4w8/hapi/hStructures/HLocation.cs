@@ -57,7 +57,7 @@ namespace hubiquitus4w8.hapi.hStructures
             HGeo pos = null;
             try
             {
-                pos = this["pos"].ToObject<HGeo>();
+                pos = new HGeo(JObject.Parse(this["pos"].ToString()));
             }
             catch (Exception e)
             {
@@ -71,7 +71,7 @@ namespace hubiquitus4w8.hapi.hStructures
         /// </summary>
         /// <param name="pos"></param>
 
-        public void SetLat(HGeo pos)
+        public void SetPos(HGeo pos)
         {
             try
             {
