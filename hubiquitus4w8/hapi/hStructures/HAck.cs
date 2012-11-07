@@ -23,7 +23,6 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using hubiquitus4w8.hapi.util;
-using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -36,8 +35,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HAck : JObject
     {
-
-        private static readonly ILog log = LogManager.GetLogger(typeof(HAck));
 
         public HAck()
         { 
@@ -65,7 +62,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the ack attribute : ",e);
+                Console.WriteLine("{0} : Can not fetch the ack attribute : ",e);
             }
             return ack;
         }
@@ -83,14 +80,14 @@ namespace hubiquitus4w8.hapi.hStructures
                 else
                 {
                     if (HUtil.CheckAck(ack))
-                        log.Error("only 'recv' and 'read' are authorized for ack");
+                        Console.WriteLine("{0} : only 'recv' and 'read' are authorized for ack");
                     else
                         this["ack"] = ack;
                 }
             }
             catch (Exception e)
             {
-                log.Error("Can not update the ack attribute : ", e);
+                Console.WriteLine("{0} : Can not update the ack attribute", e.ToString());
             }
         }       
     }

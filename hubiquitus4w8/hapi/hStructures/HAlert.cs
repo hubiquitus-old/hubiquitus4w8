@@ -26,7 +26,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using log4net;
 
 
 namespace hubiquitus4w8.hapi.hStructures
@@ -37,7 +36,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HAlert : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HAlert)); 
         public HAlert()
         { 
         }
@@ -61,7 +59,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the alert attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the alert attribute", e.ToString());
             }
             return alert;
         }
@@ -81,7 +79,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the alert attribute : ", e);
+                Console.WriteLine("{0} : Can not update the alert attribute", e.ToString());
             }
         }
     }

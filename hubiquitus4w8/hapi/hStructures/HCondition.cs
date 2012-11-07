@@ -1,5 +1,4 @@
-﻿using log4net;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,6 @@ namespace hubiquitus4w8.hapi.hStructures
 {
     public class HCondition : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HCondition));
 
         public HCondition()
             : base()
@@ -33,7 +31,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the eq value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the eq value attribute", e.ToString());
             }
         }
 
@@ -46,7 +44,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the eq value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the eq value attribute", e.ToString());
             }
             return value;
         }
@@ -62,7 +60,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the ne value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the ne value attribute", e.ToString());
             }
         }
 
@@ -75,7 +73,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the ne value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the ne value attribute", e.ToString());
             }
             return value;
         }
@@ -91,7 +89,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the gt value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the gt value attribute", e.ToString());
             }
         }
 
@@ -104,7 +102,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the gt value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the gt value attribute", e.ToString());
             }
             return value;
         }
@@ -120,7 +118,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the gte value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the gte value attribute", e.ToString());
             }
         }
 
@@ -133,7 +131,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the gte value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the gte value attribute", e.ToString());
             }
             return value;
         }
@@ -149,7 +147,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the lt value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the lt value attribute", e.ToString());
             }
         }
 
@@ -162,7 +160,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the lt value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the lt value attribute", e.ToString());
             }
             return value;
         }
@@ -178,7 +176,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the lte value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the lte value attribute", e.ToString());
             }
         }
 
@@ -191,7 +189,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the lte value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the lte value attribute", e.ToString());
             }
             return value;
         }
@@ -207,7 +205,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the in value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the in value attribute", e.ToString());
             }
         }
 
@@ -220,7 +218,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the in value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the in value attribute", e.ToString());
             }
             return value;
         }
@@ -236,7 +234,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the nin value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the nin value attribute", e.ToString());
             }
         }
 
@@ -249,7 +247,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the nin value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the nin value attribute", e.ToString());
             }
             return value;
         }
@@ -265,7 +263,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the and value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the and value attribute", e.ToString());
             }
         }
 
@@ -278,7 +276,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the and value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the and value attribute", e.ToString());
             }
             return value;
         }
@@ -294,7 +292,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the or value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the or value attribute", e.ToString());
             }
         }
 
@@ -307,7 +305,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the or value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the or value attribute", e.ToString());
             }
             return value;
         }
@@ -323,7 +321,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the nor value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the nor value attribute", e.ToString());
             }
         }
 
@@ -336,7 +334,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the nor value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the nor value attribute", e.ToString());
             }
             return value;
         }
@@ -352,7 +350,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the not value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the not value attribute", e.ToString());
             }
         }
 
@@ -365,7 +363,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the not value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the not value attribute", e.ToString());
             }
             return value;
         }

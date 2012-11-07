@@ -32,7 +32,6 @@ namespace hubiquitus4w8.hapi.hStructures
     
     public class HOptions : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HOptions));
 
         public HOptions()
         {
@@ -44,8 +43,11 @@ namespace hubiquitus4w8.hapi.hStructures
         }
 
         public HOptions(HOptions options)
-        { 
-            
+        {
+            SetEndpoints(options.GetEndpoints());
+            SetTransport(options.GetTransport());
+            SetTimeout(options.GetTimeout());
+            SetMsgTimeout(options.GetMsgTimeout());
         }
 
         public string GetTransport()
@@ -55,7 +57,7 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 transport = this["transport"].ToString();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 transport = "socketio";
             }
@@ -73,7 +75,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the transport attribute : ", e);
+                Console.WriteLine("{0} : Can not update the transport attribute", e.ToString());
             }
         }
 
@@ -88,7 +90,7 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 endpoints = new JArray();
                 endpoints.Add("http://localhost:8080");
-                log.Error("Can not fetch the endpoints attribute, return 'http://localhost:8080' instead : ", e);
+                Console.WriteLine("{0} : Can not fetch the endpoints attribute, return 'http://localhost:8080' instead : {0}", e.ToString());
             }
             return endpoints;
         }
@@ -100,14 +102,18 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (endpoints != null && endpoints.Count > 0)
                     this["endpoints"] = endpoints;
                 else
-                    log.Error("The endpoints attribute can not be null or empty.");
+                    Console.WriteLine("{0} : The endpoints attribute can not be null or empty.");
             }
             catch (Exception e)
             {
-                log.Error("Can not update the endpoints attribute : ", e);
+                Console.WriteLine("{0} : Can not update the endpoints attribute", e.ToString());
             }
         }
 
+        /// <summary>
+        /// default timeout value used by the hAPI before rise a connection timeout error during connection attempt
+        /// </summary>
+        /// <returns></returns>
         public int GetTimeout()
         {
             int timeout = 0;
@@ -115,9 +121,9 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 timeout = this["timeout"].ToObject<int>();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                log.Error("Can not fetch the timeout attribute : ", e);
+                timeout = 15000; //15000s by default
             }
             return timeout;
         }
@@ -129,12 +135,45 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (timeout >= 0)
                     this["timeout"] = timeout;
                 else
-                    this["timeout"] = 3000; // 3000s by default.
+                    this["timeout"] = 15000; // 15000s by default.
             }
             catch (Exception e)
             {
-                log.Error("Can not update the timeout attribute : ", e);
+                Console.WriteLine("{0} : Can not update the timeout attribute", e.ToString());
             }
         }
+        /// <summary>
+        /// default timeout value used by the hAPI for all the services except the send() one
+        /// </summary>
+        /// <returns></returns>
+        public int GetMsgTimeout()
+        {
+            int timeout = 0;
+            try
+            {
+                timeout = this["msgTimeout"].ToObject<int>();
+            }
+            catch (Exception)
+            {
+                timeout = 30000; //30000s by default
+            }
+            return timeout;
+        }
+
+        public void SetMsgTimeout(int timeout)
+        {
+            try
+            {
+                if (timeout >= 0)
+                    this["msgTimeout"] = timeout;
+                else
+                    this["msgTimeout"] = 30000; //30000s by default
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("{0} : Can not update the msgTimerout attribute", e.ToString());
+            }
+        }
+
     }
 }

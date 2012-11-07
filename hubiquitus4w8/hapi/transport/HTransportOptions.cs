@@ -35,6 +35,7 @@ namespace hubiquitus4w8.hapi.transport
         private int endpointPort = 0;
         private string endpointPath = null;
         private string hserver = "hnode";
+        private int timeout = 0;
 
         public HTransportOptions()
         {
@@ -113,6 +114,12 @@ namespace hubiquitus4w8.hapi.transport
         {
             get { return hserver; }
             set { hserver = value; }
+        }
+
+        public int Timeout
+        {
+            get { return timeout; }
+            set { timeout = value; }
         }
 
         public override string ToString()

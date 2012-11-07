@@ -46,28 +46,19 @@ namespace hubiquitus4w8.hapi.test
             client = new HClient();
 
             client.onMessage += client_onMessage;
-            client.onCommand += client_onCommand;
             client.onStatus += client_onStatus;
 
             InitializeComponent();
             usernameTextBox.Text = "u1@hub.novediagroup.com";
             passwordTextBox.Text = "u1";
             endpointTextBox.Text = "http://hub.novediagroup.com:8080";
-            serverHostTextBox.Text = "hub.novediagroup.com";
-            serverPortTextBox.Text = "8080";
-            channelIDTextBox.Text = "#test@hub.novediagroup.com";
+            actorTextBox.Text = "#test@hub.novediagroup.com";
         }
 
 
         void client_onStatus(HStatus status)
         {
             string output = "\n\n---HClient API OnStatus---\n" + status.ToString() + "\n---------------------------\n\n";
-            Console.WriteLine(output);
-        }
-
-        void client_onCommand(HCommand command)
-        {
-            string output = "\n\n---HClient API OnCommand---\n" + command.ToString() + "\n---------------------------\n\n";
             Console.WriteLine(output);
         }
 
@@ -86,11 +77,11 @@ namespace hubiquitus4w8.hapi.test
                 options.SetEndpoints(null);
             else
             {
-                
-               
-            }
-            string serverHost = serverHostTextBox.Text;
-            
+                JArray jArray = new JArray();
+                jArray.Add(endpoint);
+                options.SetEndpoints(jArray);
+
+            }            
 
             client.Connect(usernameTextBox.Text, passwordTextBox.Text, options);
 
@@ -106,38 +97,38 @@ namespace hubiquitus4w8.hapi.test
 
         private void subscribeBt_Click(object sender, EventArgs e)
         {
-            client.Subscribe(channelIDTextBox.Text, ResultDelegateSubscirbe);
+            client.Subscribe(actorTextBox.Text, MessageDelegateSubscirbe);
         }
 
         private void unsubscribeBt_Click(object sender, EventArgs e)
         {
-            client.Unsubscribe(channelIDTextBox.Text, ResultDelegateUnsubscirbe);
+            client.Unsubscribe(actorTextBox.Text, MessageDelegateUnsubscirbe);
         }
 
-        private void publisherBt_Click(object sender, EventArgs e)
+        private void sendBt_Click(object sender, EventArgs e)
         {
-            HMessage message = new HMessage();
-            message.SetPublisher(usernameTextBox.Text);
-            message.SetActor(channelIDTextBox.Text);
-            message.SetPublished(DateTime.Now);
-            message.SetType("obj");
-            //message.SetRelevance(DateTime.Now);
-
-            if (transientRBt.Checked)
-                message.SetPersistent(true);
+            HMessageOptions msgOptions = new HMessageOptions();
+            if (persistentRBt.Checked)
+                msgOptions.Persistent = true;
             else
-                message.SetPersistent(false);
+                msgOptions.Persistent = false;
 
-            JObject payload = new JObject();
-            payload.Add("text", messageTextBox.Text);
-            message.SetPayload(payload);
-            Console.WriteLine(message.ToString());
-            client.Send(message, ResultDelegatePublisher);
+            if (!string.IsNullOrEmpty(timeoutTextBox.Text))
+                msgOptions.Timeout = int.Parse(timeoutTextBox.Text);
+
+            if (!string.IsNullOrEmpty(relevanceOffsetTextBox.Text))
+                msgOptions.RelevanceOffset = int.Parse(relevanceOffsetTextBox.Text);
+
+            
+            HMessage msg = client.BuildMessage(actorTextBox.Text, "text", messageTextBox.Text, msgOptions);
+            Console.WriteLine(msg.ToString());
+
+            client.Send(msg,MessageDelegateSend);
         }
 
         private void getLastMsgsBt_Click(object sender, EventArgs e)
         {
-            string chid = channelIDTextBox.Text;
+            string actor = actorTextBox.Text;
             int nbLastMsg;
             try
             {
@@ -151,9 +142,9 @@ namespace hubiquitus4w8.hapi.test
                     nbLastMsg = -1;
                 }
                 if (nbLastMsg > 0)
-                    client.GetLastMessages(chid, ResultDelegateGetLastMessages, nbLastMsg);
+                    client.GetLastMessages(actor, nbLastMsg, MessageDelegateGetLastMessages);
                 else
-                    client.GetLastMessages(chid, ResultDelegateGetLastMessages);
+                    client.GetLastMessages(actor, MessageDelegateGetLastMessages);
             }
             catch (Exception)
             {
@@ -165,18 +156,18 @@ namespace hubiquitus4w8.hapi.test
 
         private void getSubscriptionsBt_Click(object sender, EventArgs e)
         {
-            client.GetSubscriptions(ResultDelegateGetSubcriptions);
+            client.GetSubscriptions(MessageDelegateGetSubcriptions);
         }
 
 
         private void getThreadBt_Click(object sender, EventArgs e)
         {
-            string chid = channelIDTextBox.Text;
+            string actor = actorTextBox.Text;
             string convid = convidTextBox.Text;
 
             try
             {
-                client.GetThread(chid, convid, ResultDelegateGetThread);
+                client.GetThread(actor, convid, MessageDelegateGetThread);
             }
             catch (Exception)
             {
@@ -187,11 +178,11 @@ namespace hubiquitus4w8.hapi.test
 
         private void getThreadsBt_Click(object sender, EventArgs e)
         {
-            string chid = channelIDTextBox.Text;
+            string actor = actorTextBox.Text;
             string status = statusTextBox.Text;
             try
             {
-                client.GetThreads(chid, status, ResultDelegateGetThreads);
+                client.GetThreads(actor, status, MessageDelegateGetThreads);
             }
             catch (Exception)
             {
@@ -203,120 +194,115 @@ namespace hubiquitus4w8.hapi.test
 
         private void setFilterBt_Click(object sender, EventArgs e)
         {
-            string chid = channelIDTextBox.Text;
-            string filterName = filterNameTextBox.Text;
-            string filterAttr = filterAttrTextBox.Text;
-            string filterValue = filterValueTextBox.Text;
-
-            JObject jsonObj = new JObject();
-            try
-            {
-                jsonObj.Add(filterAttr, filterValue);
-            }
-            catch (JsonWriterException)
-            {
-
-                throw;
-            }
-
-            HMessage template = new HMessage(jsonObj);
-
-
-            Console.WriteLine("----> Template:\n " + template.ToString());
-          
+            HCondition filter = new HCondition();
+            HArrayOfValue arrayOfValue = new HArrayOfValue();
+            arrayOfValue.SetName("publisher");
+            JArray j = new JArray();
+            j.Add("u1@hub.novediagroup.com");
+            j.Add("u2@hub.novediagroup.com");
+            arrayOfValue.SetValue(j);
+            filter.SetInValue(arrayOfValue);
+            client.SetFilter(filter, MessageDelegateSetFilter);         
         }
 
       
         private void getRelevantMsgBt_Click(object sender, EventArgs e)
         {
-            string chid = channelIDTextBox.Text;
-            client.GetRelevantMessages(chid, ResultDelegateGetRelevantMsg);
+            string actor = actorTextBox.Text;
+            client.GetRelevantMessages(actor, MessageDelegateGetRelevantMsg);
         }
 
-
-
-        //result delegates
-        private void commandResultDelegate(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for Command---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateSubscirbe(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for Subscribe---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateUnsubscirbe(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for Unsubscribe---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegatePublisher(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for Publisher---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateGetLastMessages(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for GetLastMessages---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateGetSubcriptions(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for GetSubcriptions---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateGetThread(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for GetThread---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateGetThreads(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for GetThreads---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateSetFilter(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for SetFilter---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateListFilter(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for Listfilter---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateUnSetFilter(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for UnSetFilter---\n" + result.ToString() + "\n\n");
-        }
-
-        private void ResultDelegateGetRelevantMsg(HMessage result)
-        {
-            Console.WriteLine("\n\n---ResultDelegate for GetRelevantMsg---\n" + result.ToString() + "\n\n");
-        }
 
         private void pubConvStateBt_Click(object sender, EventArgs e)
         {
-            string chid = channelIDTextBox.Text;
+            string actor = actorTextBox.Text;
             string convid = convidTextBox.Text;
             string status = statusTextBox.Text;
 
             HMessageOptions mOptions = new HMessageOptions();
-            if (transientRBt.Checked)
+            if (persistentRBt.Checked)
                 mOptions.Persistent = true;
             else
                 mOptions.Persistent = false;
             try
             {
-                HMessage pubMsg = client.BuildConvState(chid, convid, status, mOptions);
-                client.Send(pubMsg, ResultDelegatePublisher);
+                HMessage pubMsg = client.BuildConvState(actor, convid, status, mOptions);
+                client.Send(pubMsg, MessageDelegatePubConvState);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                Console.WriteLine("{0} exception caught.", ex.ToString());
             }
+        }
+        
+        //result delegates
+        private void MessageDelegateSend(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for Command---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegateSubscirbe(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for Subscribe---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegateUnsubscirbe(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for Unsubscribe---\n" + result.ToString() + "\n\n");
+        }
+
+        
+        private void MessageDelegateGetLastMessages(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for GetLastMessages---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegateGetSubcriptions(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for GetSubcriptions---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegateGetThread(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for GetThread---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegateGetThreads(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for GetThreads---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegateSetFilter(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for SetFilter---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegateGetRelevantMsg(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for GetRelevantMsg---\n" + result.ToString() + "\n\n");
+        }
+
+        private void MessageDelegatePubConvState(HMessage result)
+        {
+            Console.WriteLine("\n\n---MessageDelegate for PubConvState---\n" + result.ToString() + "\n\n");
+        }
+
+
+        private void createChannelBt_Click(object sender, EventArgs e)
+        {
+            JObject channelToCreate = new JObject();
+          
+                channelToCreate.Add("type", "channel");
+                channelToCreate.Add("actor", actorTextBox.Text);
+                channelToCreate.Add("owner", usernameTextBox.Text);
+				JArray jsonArray = new JArray();
+				jsonArray.Add("u1@hub.novediagroup.com");
+				jsonArray.Add("u2@hub.novediagroup.com");
+				channelToCreate.Add("subscribers", jsonArray);
+				channelToCreate.Add("active", true);
+				HMessage message = client.BuildCommand("hnode@hub.novediagroup.com",
+						"hcreateupdatechannel", channelToCreate, null);
+				client.Send(message, null);
         }
     }
 }

@@ -34,7 +34,6 @@ namespace hubiquitus4w8.hapi.transport.socketio
 {
     public class HTransportSocketIO : HTransport
     {
-
         private ConnectionStatus connStatus = ConnectionStatus.DISCONNECTED;
         private HTransportOptions options = null;
         Client socketIO;
@@ -42,9 +41,6 @@ namespace hubiquitus4w8.hapi.transport.socketio
 
         public event DataEventHandler onData;
         public event StatusEventHandler onStatus;
-
-
-
 
         public void Connect(HTransportOptions options)
         {
@@ -57,7 +53,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
 
             string endpointAdress = ToEndpointAdress(endpointHost, endpointPort, endpointPath);
 
-            timeout = new Timer(10000);
+            timeout = new Timer(options.Timeout);
             timeout.Elapsed += timeout_Elapsed;
             timeout.Enabled = true;
 
@@ -76,12 +72,11 @@ namespace hubiquitus4w8.hapi.transport.socketio
                     {
                         data.Add("publisher", publisher);
                         data.Add("password", password);
-                        //data.Add("serverHost", serverHost);
-                        //data.Add("serverPort", serverPort);
+                        data.Add("sent", DateTime.Now);
                         socketIO.Emit("hConnect", data);
 
                     }
-                    catch (JsonReaderException e)
+                    catch (Exception e)
                     {
                         if (socketIO != null)
                             Disconnect();
@@ -91,7 +86,6 @@ namespace hubiquitus4w8.hapi.transport.socketio
                             timeout = null;
                         }
                         updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR, e.Message);
-                        throw;
                     }
                 });
 
@@ -118,7 +112,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("{0} exception caught.", ex);
+                    Console.WriteLine("{0} : {0} exception caught.", ex);
                     if (timeout != null)
                     {
                         timeout.Close();
@@ -145,7 +139,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("{0} exception caught.", ex);
+                        Console.WriteLine("{0} : {0} exception caught.", ex);
                         if (timeout != null)
                         {
                             timeout.Close();
@@ -175,6 +169,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
                 timeout.Close();
                 timeout = null;
             }
+            Console.WriteLine("\n\n -->socketIO Error ");
             updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR, errorMsg);
         }
 
@@ -189,14 +184,8 @@ namespace hubiquitus4w8.hapi.transport.socketio
             {
                 updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.NO_ERROR, null);
             }
+            Console.WriteLine("\n\n -->socketIO closed ");
         }
-
-        void socketIO_Opened(object sender, EventArgs e)
-        {
-        }
-
-
-
 
         public void updateStatus(ConnectionStatus status, ConnectionErrors error, string errorMsg)
         {
@@ -229,18 +218,23 @@ namespace hubiquitus4w8.hapi.transport.socketio
                     updateStatus(connStatus, ConnectionErrors.NO_ERROR, null);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} exception caught.", e);
             }
         }
 
         public void SendObject(JObject obj)
         {
             if (connStatus == ConnectionStatus.CONNECTED)
-                socketIO.Emit("hCommand", obj);
+            {
+                socketIO.Emit("hMessage", obj);
+            }
+                
+
             else
-                throw new Exception("Not connected");
+                Console.WriteLine("Not connected.");
+                
         }
 
         /// <summary>
@@ -250,7 +244,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
         /// <param name="endpointPort"></param>
         /// <param name="endpointPath"></param>
         /// <returns></returns>
-        public string ToEndpointAdress(string endpointHost, int endpointPort, string endpointPath)
+        private string ToEndpointAdress(string endpointHost, int endpointPort, string endpointPath)
         {
             string endpointAdress = "";
             endpointAdress += "http://";
@@ -263,11 +257,10 @@ namespace hubiquitus4w8.hapi.transport.socketio
             return endpointAdress;
         }
 
-        public void Close()
+        private void Close()
         {
             if (this.socketIO != null)
             {
-                socketIO.Opened -= socketIO_Opened;
                 socketIO.Message -= socketIO_Message;
                 socketIO.SocketConnectionClosed -= socketIO_SocketConnectionClosed;
                 socketIO.Error -= socketIO_Error;

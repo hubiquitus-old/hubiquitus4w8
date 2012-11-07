@@ -25,7 +25,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -36,7 +35,6 @@ namespace hubiquitus4w8.hapi.hStructures
   /// </summary>
     public class HConvState : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HConvState));
         public HConvState()
         { 
         }
@@ -61,7 +59,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the status attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the status attribute", e.ToString());
             }
             return status;
         }
@@ -77,7 +75,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the status attribute : ", e);
+                Console.WriteLine("{0} : Can not update the status attribute", e.ToString());
             }
         }
     }

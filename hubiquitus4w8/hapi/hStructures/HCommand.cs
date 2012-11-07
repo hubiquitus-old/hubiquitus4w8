@@ -22,7 +22,6 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -32,7 +31,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HCommand : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HCommand));
         public HCommand()
         { 
         }
@@ -64,7 +62,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {  
-                log.Error("Can not fetch the cmd attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the cmd attribute", e.ToString());
             }
             return cmd;
         }
@@ -84,7 +82,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the cmd attribute : ", e);
+                Console.WriteLine("{0} : Can not update the cmd attribute", e.ToString());
             }
         }
         /// <summary>
@@ -100,7 +98,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the params attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the params attribute", e.ToString());
             }
             return @params;
         }
@@ -120,7 +118,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the params attribute : ", e);
+                Console.WriteLine("{0} : Can not update the params attribute", e.ToString());
             }
         }
     }

@@ -25,7 +25,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -35,7 +34,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HLocation : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HLocation));
         public HLocation()
         { 
         }
@@ -61,7 +59,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the pos attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the pos attribute", e.ToString());
             }
             return pos;
         }
@@ -76,13 +74,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (pos == null)
-                    log.Error("The pos attribute can not be null!");
+                    Console.WriteLine("{0} : The pos attribute can not be null!");
                 else
                     this["pos"] = pos;
             }
             catch (Exception e)
             {
-                log.Error("Can not update the pos attribute: ", e);
+                Console.WriteLine("{0} : Can not update the pos attribute: {0}", e.ToString());
             }
         }
 
@@ -100,7 +98,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the zip attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the zip attribute", e.ToString());
             }
             return zip;
         }
@@ -116,7 +114,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the zip attribute : ", e);
+                Console.WriteLine("{0} : Can not update the zip attribute", e.ToString());
             }
         }
 
@@ -133,7 +131,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the num attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the num attribute", e.ToString());
             }
             return num;
         }
@@ -149,7 +147,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the num attribute : ", e);
+                Console.WriteLine("{0} : Can not update the num attribute", e.ToString());
             }
         }
 
@@ -166,7 +164,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the waytype attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the waytype attribute", e.ToString());
             }
             return waytype;
         }
@@ -182,7 +180,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the waytype attribute : ", e);
+                Console.WriteLine("{0} : Can not update the waytype attribute", e.ToString());
             }
         }
 
@@ -199,7 +197,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the way attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the way attribute", e.ToString());
             }
             return way;
         }
@@ -215,7 +213,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the way attribute : ", e);
+                Console.WriteLine("{0} : Can not update the way attribute", e.ToString());
             }
         }
 
@@ -232,7 +230,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the addr attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the addr attribute", e.ToString());
             }
             return addr;
         }
@@ -248,7 +246,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the addr attribute : ", e);
+                Console.WriteLine("{0} : Can not update the addr attribute", e.ToString());
             }
         }
 
@@ -265,7 +263,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the floor attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the floor attribute", e.ToString());
             }
             return floor;
         }
@@ -281,7 +279,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the floor the floor attribute : ", e);
+                Console.WriteLine("{0} : Can not update the floor the floor attribute", e.ToString());
             }
         }
 
@@ -298,7 +296,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the building attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the building attribute", e.ToString());
             }
             return building;
         }
@@ -314,7 +312,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the building attribute : ", e);
+                Console.WriteLine("{0} : Can not update the building attribute", e.ToString());
             }
         }
 
@@ -331,7 +329,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the city attribute : ", e);
+                Console.WriteLine("{0} : Can not update the city attribute", e.ToString());
             }
             return city;
         }
@@ -347,7 +345,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the city attribute : ", e);
+                Console.WriteLine("{0} : Can not update the city attribute", e.ToString());
             }
         }
 
@@ -364,7 +362,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the countryCode attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the countryCode attribute", e.ToString());
             }
             return countryCode;
         }
@@ -380,7 +378,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the countyCode attribute : ", e);
+                Console.WriteLine("{0} : Can not update the countyCode attribute", e.ToString());
             }
         }
     }

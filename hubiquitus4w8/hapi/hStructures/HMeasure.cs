@@ -25,7 +25,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -35,7 +34,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HMeasure : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HMeasure));
         public HMeasure()
         {
         }
@@ -61,7 +59,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the unit attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the unit attribute", e.ToString());
             }
             return unit;
         }
@@ -81,7 +79,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the unit attribute : ", e);
+                Console.WriteLine("{0} : Can not update the unit attribute", e.ToString());
             }
         }
 
@@ -98,7 +96,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the value attribtue : ", e);
+                Console.WriteLine("{0} : Can not fetch the value attribtue : {0}", e.ToString());
             }
             return value;
         }
@@ -118,7 +116,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not udpate the value attribtue : ", e);
+                Console.WriteLine("{0} : Can not udpate the value attribtue : {0}", e.ToString());
             }
         }
 

@@ -17,7 +17,6 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using log4net;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -29,7 +28,6 @@ namespace hubiquitus4w8.hapi.hStructures
 {
     public class HGeo : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HGeo));
 
         public HGeo()
         {
@@ -58,7 +56,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the lat attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the lat attribute", e.ToString());
             }
             return lat;
         }
@@ -71,7 +69,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the lat attribute : ", e);
+                Console.WriteLine("{0} : Can not update the lat attribute", e.ToString());
             }
         }
 
@@ -84,7 +82,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the lng attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the lng attribute", e.ToString());
             }
             return lng;
         }
@@ -97,7 +95,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the lng attribute : ", e);
+                Console.WriteLine("{0} : Can not update the lng attribute", e.ToString());
             }
         }
         

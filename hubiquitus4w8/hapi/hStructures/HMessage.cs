@@ -36,7 +36,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HMessage : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HMessage));
 
         public HMessage()
         {
@@ -62,7 +61,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the msgid attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the msgid attribute", e.ToString());
             }
             return msgid;
         }
@@ -82,7 +81,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the msgid attribute : ", e);
+                Console.WriteLine("{0} : Can not update the msgid attribute", e.ToString());
             }
         }
 
@@ -99,7 +98,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the actor attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the actor attribute", e.ToString());
             }
             return actor;
         }
@@ -119,7 +118,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the actor attribute : ", e);
+                Console.WriteLine("{0} : Can not update the actor attribute", e.ToString());
             }
         }
 
@@ -136,7 +135,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the convid attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the convid attribute", e.ToString());
             }
             return convid;
         }
@@ -156,7 +155,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the convid attribute : ", e);
+                Console.WriteLine("{0} : Can not update the convid attribute", e.ToString());
             }
         }
 
@@ -173,7 +172,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the ref attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the ref attribute", e.ToString());
             }
             return @ref;
         }
@@ -193,7 +192,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the ref attribute : ", e);
+                Console.WriteLine("{0} : Can not update the ref attribute", e.ToString());
             }
         }
 
@@ -212,7 +211,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the type attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the type attribute", e.ToString());
             }
             return type;
         }
@@ -232,7 +231,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the type attribute : ", e);
+                Console.WriteLine("{0} : Can not update the type attribute", e.ToString());
             }
         }
 
@@ -249,7 +248,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the priority attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the priority attribute", e.ToString());
             }
             return priority;
         }
@@ -265,7 +264,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the priority attribute : ", e);
+                Console.WriteLine("{0} : Can not update the priority attribute", e.ToString());
             }
         }
 
@@ -284,7 +283,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the relevance attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the relevance attribute", e.ToString());
             }
             return relevance;
         }
@@ -304,7 +303,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the relevance attribute : ", e);
+                Console.WriteLine("{0} : Can not update the relevance attribute", e.ToString());
             }
         }
 
@@ -322,7 +321,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the persistent attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the persistent attribute", e.ToString());
             }
             return persistent;
         }
@@ -338,7 +337,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the persistent attribute : ", e);
+                Console.WriteLine("{0} : Can not update the persistent attribute", e.ToString());
             }
         }
 
@@ -355,7 +354,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the location attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the location attribute", e.ToString());
             }
             return location;
         }
@@ -375,7 +374,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the location attribute : ", e); ;
+                Console.WriteLine("{0} : Can not update the location attribute", e.ToString()); ;
             }
         }
 
@@ -392,7 +391,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the author attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the author attribute", e.ToString());
             }
             return author;
         }
@@ -412,7 +411,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the author attribute : ", e);
+                Console.WriteLine("{0} : Can not update the author attribute", e.ToString());
             }
         }
 
@@ -429,7 +428,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the publisher attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the publisher attribute", e.ToString());
             }
             return publisher;
         }
@@ -449,7 +448,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the publisher attribute : ", e);
+                Console.WriteLine("{0} : Can not update the publisher attribute", e.ToString());
             }
         }
 
@@ -466,7 +465,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the published attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the published attribute", e.ToString());
             }
             return published;
         }
@@ -486,7 +485,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the published attribute : ", e);
+                Console.WriteLine("{0} : Can not update the published attribute", e.ToString());
             }
         }
 
@@ -503,7 +502,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the headers attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the headers attribute", e.ToString());
             }
             return headers;
         }
@@ -523,7 +522,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the headers attribute : ", e);
+                Console.WriteLine("{0} : Can not update the headers attribute", e.ToString());
             }
         }
 
@@ -540,7 +539,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -558,7 +557,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -576,7 +575,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -594,7 +593,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -612,7 +611,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -630,7 +629,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -648,7 +647,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -666,7 +665,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -684,7 +683,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -702,7 +701,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -720,7 +719,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -738,7 +737,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the payload attribute", e.ToString());
             }
             return payload;
         }
@@ -763,7 +762,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -782,7 +781,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -801,7 +800,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -820,7 +819,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -832,7 +831,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -844,7 +843,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -856,7 +855,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -875,7 +874,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -894,7 +893,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -913,7 +912,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -932,7 +931,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -951,7 +950,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -970,7 +969,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the payload attribute : ", e);
+                Console.WriteLine("{0} : Can not update the payload attribute", e.ToString());
             }
         }
 
@@ -987,7 +986,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the timeout attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the timeout attribute", e.ToString());
             }
             return timeout;
         }
@@ -1003,7 +1002,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the timeout attribute : ", e);
+                Console.WriteLine("{0} : Can not update the timeout attribute", e.ToString());
             }
         }
 
@@ -1020,7 +1019,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the sent attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the sent attribute", e.ToString());
             }
             return sent;
         }
@@ -1029,14 +1028,14 @@ namespace hubiquitus4w8.hapi.hStructures
         {
             try
             {
-                if (sent ==null)
+                if (sent == null)
                     this.Remove("sent");
                 else
-                    this["sent"] = sent;
+                    this["sent"] = sent.GetValueOrDefault();
             }
             catch (Exception e)
             {
-                log.Error("Can not update the sent attribute : ", e);
+                Console.WriteLine("{0} : Can not update the sent attribute", e.ToString());
             }
         }
     }

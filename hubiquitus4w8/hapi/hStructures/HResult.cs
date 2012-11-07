@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using hubiquitus4w8.hapi.util;
-using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -36,7 +35,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HResult : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HResult));
 
         public HResult()
         {
@@ -63,7 +61,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the status attritbute : ", e);
+                Console.WriteLine("{0} : Can not fetch the status attritbute : {0}", e.ToString());
             }
             return status;
         }
@@ -79,7 +77,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the status attribute : ", e);
+                Console.WriteLine("{0} : Can not update the status attribute", e.ToString());
             }
         }
 
@@ -96,7 +94,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the result attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the result attribute", e.ToString());
             }
             return result;
         }
@@ -114,7 +112,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the result attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the result attribute", e.ToString());
             }
             return result;
         }
@@ -131,7 +129,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the result attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the result attribute", e.ToString());
             }
             return result;
         }
@@ -149,7 +147,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the result attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the result attribute", e.ToString());
             }
             return result;
         }
@@ -167,7 +165,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the result attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the result attribute", e.ToString());
             }
             return result;
         }
@@ -185,7 +183,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the result attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the result attribute", e.ToString());
             }
             return result;
         }
@@ -203,7 +201,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the result attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the result attribute", e.ToString());
             }
             return result;
         }
@@ -224,7 +222,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the result attribute : ", e);
+                Console.WriteLine("{0} : Can not update the result attribute", e.ToString());
             }
         }
 
@@ -240,7 +238,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the result attribute : ", e);
+                Console.WriteLine("{0} : Can not update the result attribute", e.ToString());
             }
         }
 
@@ -255,7 +253,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the result attribute : ", e);
+                Console.WriteLine("{0} : Can not update the result attribute", e.ToString());
             }
         }
 
@@ -270,7 +268,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the result attribute : ", e);
+                Console.WriteLine("{0} : Can not update the result attribute", e.ToString());
             }
         }
 
@@ -282,7 +280,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the result attribute : ", e);
+                Console.WriteLine("{0} : Can not update the result attribute", e.ToString());
             }
         }
 
@@ -294,7 +292,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the result attribute : ", e);
+                Console.WriteLine("{0} : Can not update the result attribute", e.ToString());
             }
         }
 
@@ -306,7 +304,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the result attribute : ", e);
+                Console.WriteLine("{0} : Can not update the result attribute", e.ToString());
             }
         }
 

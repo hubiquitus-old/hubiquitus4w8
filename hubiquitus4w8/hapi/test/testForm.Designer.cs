@@ -61,38 +61,30 @@ namespace hubiquitus4w8.hapi.test
             this.getLastMsgsBt = new System.Windows.Forms.Button();
             this.getSubscriptionsBt = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.endpointTextBox = new System.Windows.Forms.TextBox();
-            this.serverHostTextBox = new System.Windows.Forms.TextBox();
-            this.serverPortTextBox = new System.Windows.Forms.TextBox();
-            this.channelIDTextBox = new System.Windows.Forms.TextBox();
+            this.actorTextBox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
             this.nbLastMessagesTextBox = new System.Windows.Forms.TextBox();
             this.messageTextBox = new System.Windows.Forms.TextBox();
             this.convidTextBox = new System.Windows.Forms.TextBox();
             this.statusTextBox = new System.Windows.Forms.TextBox();
-            this.filterNameTextBox = new System.Windows.Forms.TextBox();
-            this.filterAttrTextBox = new System.Windows.Forms.TextBox();
-            this.filterValueTextBox = new System.Windows.Forms.TextBox();
             this.getThreadBt = new System.Windows.Forms.Button();
             this.getThreadsBt = new System.Windows.Forms.Button();
             this.setFilterBt = new System.Windows.Forms.Button();
-            this.listFilterBt = new System.Windows.Forms.Button();
-            this.unSetFilterBt = new System.Windows.Forms.Button();
             this.getRelevantMsgBt = new System.Windows.Forms.Button();
-            this.commandBt = new System.Windows.Forms.Button();
-            this.transientRBt = new System.Windows.Forms.RadioButton();
+            this.persistentRBt = new System.Windows.Forms.RadioButton();
             this.console = new System.Windows.Forms.TextBox();
             this.pubConvStateBt = new System.Windows.Forms.Button();
             this.notTransientRBt = new System.Windows.Forms.RadioButton();
+            this.label4 = new System.Windows.Forms.Label();
+            this.timeoutTextBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.relevanceOffsetTextBox = new System.Windows.Forms.TextBox();
+            this.createChannelBt = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // usernameTextBox
@@ -169,17 +161,17 @@ namespace hubiquitus4w8.hapi.test
             // 
             // publisherBt
             // 
-            this.publisherBt.Location = new System.Drawing.Point(342, 506);
+            this.publisherBt.Location = new System.Drawing.Point(180, 505);
             this.publisherBt.Name = "publisherBt";
             this.publisherBt.Size = new System.Drawing.Size(75, 23);
             this.publisherBt.TabIndex = 8;
-            this.publisherBt.Text = "publisher";
+            this.publisherBt.Text = "send";
             this.publisherBt.UseVisualStyleBackColor = true;
-            this.publisherBt.Click += new System.EventHandler(this.publisherBt_Click);
+            this.publisherBt.Click += new System.EventHandler(this.sendBt_Click);
             // 
             // getLastMsgsBt
             // 
-            this.getLastMsgsBt.Location = new System.Drawing.Point(423, 506);
+            this.getLastMsgsBt.Location = new System.Drawing.Point(342, 506);
             this.getLastMsgsBt.Name = "getLastMsgsBt";
             this.getLastMsgsBt.Size = new System.Drawing.Size(75, 23);
             this.getLastMsgsBt.TabIndex = 9;
@@ -189,7 +181,7 @@ namespace hubiquitus4w8.hapi.test
             // 
             // getSubscriptionsBt
             // 
-            this.getSubscriptionsBt.Location = new System.Drawing.Point(504, 506);
+            this.getSubscriptionsBt.Location = new System.Drawing.Point(433, 506);
             this.getSubscriptionsBt.Name = "getSubscriptionsBt";
             this.getSubscriptionsBt.Size = new System.Drawing.Size(98, 23);
             this.getSubscriptionsBt.TabIndex = 10;
@@ -206,32 +198,14 @@ namespace hubiquitus4w8.hapi.test
             this.label3.TabIndex = 11;
             this.label3.Text = "endpoint";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 107);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 13);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "serverHost";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 142);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(55, 13);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "serverPort";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 177);
+            this.label6.Location = new System.Drawing.Point(12, 100);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 13);
+            this.label6.Size = new System.Drawing.Size(79, 13);
             this.label6.TabIndex = 14;
-            this.label6.Text = "channel ID";
+            this.label6.Text = "Actor (channel)";
             // 
             // endpointTextBox
             // 
@@ -240,31 +214,17 @@ namespace hubiquitus4w8.hapi.test
             this.endpointTextBox.Size = new System.Drawing.Size(447, 20);
             this.endpointTextBox.TabIndex = 15;
             // 
-            // serverHostTextBox
+            // actorTextBox
             // 
-            this.serverHostTextBox.Location = new System.Drawing.Point(155, 104);
-            this.serverHostTextBox.Name = "serverHostTextBox";
-            this.serverHostTextBox.Size = new System.Drawing.Size(447, 20);
-            this.serverHostTextBox.TabIndex = 16;
-            // 
-            // serverPortTextBox
-            // 
-            this.serverPortTextBox.Location = new System.Drawing.Point(155, 139);
-            this.serverPortTextBox.Name = "serverPortTextBox";
-            this.serverPortTextBox.Size = new System.Drawing.Size(447, 20);
-            this.serverPortTextBox.TabIndex = 17;
-            // 
-            // channelIDTextBox
-            // 
-            this.channelIDTextBox.Location = new System.Drawing.Point(155, 174);
-            this.channelIDTextBox.Name = "channelIDTextBox";
-            this.channelIDTextBox.Size = new System.Drawing.Size(447, 20);
-            this.channelIDTextBox.TabIndex = 18;
+            this.actorTextBox.Location = new System.Drawing.Point(155, 97);
+            this.actorTextBox.Name = "actorTextBox";
+            this.actorTextBox.Size = new System.Drawing.Size(447, 20);
+            this.actorTextBox.TabIndex = 18;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 215);
+            this.label7.Location = new System.Drawing.Point(12, 133);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(87, 13);
             this.label7.TabIndex = 19;
@@ -273,7 +233,7 @@ namespace hubiquitus4w8.hapi.test
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 250);
+            this.label8.Location = new System.Drawing.Point(12, 172);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(49, 13);
             this.label8.TabIndex = 20;
@@ -282,7 +242,7 @@ namespace hubiquitus4w8.hapi.test
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 284);
+            this.label9.Location = new System.Drawing.Point(12, 211);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(39, 13);
             this.label9.TabIndex = 21;
@@ -291,87 +251,39 @@ namespace hubiquitus4w8.hapi.test
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 312);
+            this.label10.Location = new System.Drawing.Point(12, 243);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(35, 13);
             this.label10.TabIndex = 22;
             this.label10.Text = "status";
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(12, 341);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(58, 13);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "Filter name";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(12, 372);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(47, 13);
-            this.label12.TabIndex = 24;
-            this.label12.Text = "Filter attr";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 400);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(58, 13);
-            this.label13.TabIndex = 25;
-            this.label13.Text = "Filter value";
-            // 
             // nbLastMessagesTextBox
             // 
-            this.nbLastMessagesTextBox.Location = new System.Drawing.Point(155, 212);
+            this.nbLastMessagesTextBox.Location = new System.Drawing.Point(154, 130);
             this.nbLastMessagesTextBox.Name = "nbLastMessagesTextBox";
             this.nbLastMessagesTextBox.Size = new System.Drawing.Size(447, 20);
             this.nbLastMessagesTextBox.TabIndex = 26;
             // 
             // messageTextBox
             // 
-            this.messageTextBox.Location = new System.Drawing.Point(155, 247);
+            this.messageTextBox.Location = new System.Drawing.Point(154, 172);
             this.messageTextBox.Name = "messageTextBox";
             this.messageTextBox.Size = new System.Drawing.Size(447, 20);
             this.messageTextBox.TabIndex = 27;
             // 
             // convidTextBox
             // 
-            this.convidTextBox.Location = new System.Drawing.Point(155, 281);
+            this.convidTextBox.Location = new System.Drawing.Point(154, 208);
             this.convidTextBox.Name = "convidTextBox";
             this.convidTextBox.Size = new System.Drawing.Size(447, 20);
             this.convidTextBox.TabIndex = 28;
             // 
             // statusTextBox
             // 
-            this.statusTextBox.Location = new System.Drawing.Point(155, 309);
+            this.statusTextBox.Location = new System.Drawing.Point(154, 240);
             this.statusTextBox.Name = "statusTextBox";
             this.statusTextBox.Size = new System.Drawing.Size(447, 20);
             this.statusTextBox.TabIndex = 29;
-            // 
-            // filterNameTextBox
-            // 
-            this.filterNameTextBox.Location = new System.Drawing.Point(155, 338);
-            this.filterNameTextBox.Name = "filterNameTextBox";
-            this.filterNameTextBox.Size = new System.Drawing.Size(447, 20);
-            this.filterNameTextBox.TabIndex = 30;
-            // 
-            // filterAttrTextBox
-            // 
-            this.filterAttrTextBox.Location = new System.Drawing.Point(155, 369);
-            this.filterAttrTextBox.Name = "filterAttrTextBox";
-            this.filterAttrTextBox.Size = new System.Drawing.Size(447, 20);
-            this.filterAttrTextBox.TabIndex = 31;
-            // 
-            // filterValueTextBox
-            // 
-            this.filterValueTextBox.Location = new System.Drawing.Point(155, 397);
-            this.filterValueTextBox.Name = "filterValueTextBox";
-            this.filterValueTextBox.Size = new System.Drawing.Size(447, 20);
-            this.filterValueTextBox.TabIndex = 32;
             // 
             // getThreadBt
             // 
@@ -403,29 +315,9 @@ namespace hubiquitus4w8.hapi.test
             this.setFilterBt.UseVisualStyleBackColor = true;
             this.setFilterBt.Click += new System.EventHandler(this.setFilterBt_Click);
             // 
-            // listFilterBt
-            // 
-            this.listFilterBt.Location = new System.Drawing.Point(342, 534);
-            this.listFilterBt.Name = "listFilterBt";
-            this.listFilterBt.Size = new System.Drawing.Size(75, 23);
-            this.listFilterBt.TabIndex = 36;
-            this.listFilterBt.Text = "listFilter";
-            this.listFilterBt.UseVisualStyleBackColor = true;
-            //this.listFilterBt.Click += new System.EventHandler(this.listFilterBt_Click);
-            // 
-            // unSetFilterBt
-            // 
-            this.unSetFilterBt.Location = new System.Drawing.Point(423, 534);
-            this.unSetFilterBt.Name = "unSetFilterBt";
-            this.unSetFilterBt.Size = new System.Drawing.Size(75, 23);
-            this.unSetFilterBt.TabIndex = 37;
-            this.unSetFilterBt.Text = "unSetFilter";
-            this.unSetFilterBt.UseVisualStyleBackColor = true;
-            //this.unSetFilterBt.Click += new System.EventHandler(this.unSetFilterBt_Click);
-            // 
             // getRelevantMsgBt
             // 
-            this.getRelevantMsgBt.Location = new System.Drawing.Point(504, 534);
+            this.getRelevantMsgBt.Location = new System.Drawing.Point(342, 535);
             this.getRelevantMsgBt.Name = "getRelevantMsgBt";
             this.getRelevantMsgBt.Size = new System.Drawing.Size(97, 23);
             this.getRelevantMsgBt.TabIndex = 38;
@@ -433,27 +325,17 @@ namespace hubiquitus4w8.hapi.test
             this.getRelevantMsgBt.UseVisualStyleBackColor = true;
             this.getRelevantMsgBt.Click += new System.EventHandler(this.getRelevantMsgBt_Click);
             // 
-            // commandBt
+            // persistentRBt
             // 
-            this.commandBt.Location = new System.Drawing.Point(180, 506);
-            this.commandBt.Name = "commandBt";
-            this.commandBt.Size = new System.Drawing.Size(75, 23);
-            this.commandBt.TabIndex = 41;
-            this.commandBt.Text = "command";
-            this.commandBt.UseVisualStyleBackColor = true;
-            //this.commandBt.Click += new System.EventHandler(this.commandBt_Click);
-            // 
-            // transientRBt
-            // 
-            this.transientRBt.AutoSize = true;
-            this.transientRBt.Location = new System.Drawing.Point(15, 447);
-            this.transientRBt.Name = "transientRBt";
-            this.transientRBt.Size = new System.Drawing.Size(65, 17);
-            this.transientRBt.TabIndex = 42;
-            this.transientRBt.TabStop = true;
-            this.transientRBt.Text = "persistent";
-            this.transientRBt.UseVisualStyleBackColor = true;
-            this.transientRBt.Checked = true;
+            this.persistentRBt.AutoSize = true;
+            this.persistentRBt.Checked = true;
+            this.persistentRBt.Location = new System.Drawing.Point(15, 331);
+            this.persistentRBt.Name = "persistentRBt";
+            this.persistentRBt.Size = new System.Drawing.Size(70, 17);
+            this.persistentRBt.TabIndex = 42;
+            this.persistentRBt.TabStop = true;
+            this.persistentRBt.Text = "persistent";
+            this.persistentRBt.UseVisualStyleBackColor = true;
             // 
             // console
             // 
@@ -467,7 +349,7 @@ namespace hubiquitus4w8.hapi.test
             // 
             // pubConvStateBt
             // 
-            this.pubConvStateBt.Location = new System.Drawing.Point(609, 505);
+            this.pubConvStateBt.Location = new System.Drawing.Point(537, 506);
             this.pubConvStateBt.Name = "pubConvStateBt";
             this.pubConvStateBt.Size = new System.Drawing.Size(92, 23);
             this.pubConvStateBt.TabIndex = 44;
@@ -475,55 +357,89 @@ namespace hubiquitus4w8.hapi.test
             this.pubConvStateBt.UseVisualStyleBackColor = true;
             this.pubConvStateBt.Click += new System.EventHandler(this.pubConvStateBt_Click);
             // 
-            // radioButton1
+            // notTransientRBt
             // 
             this.notTransientRBt.AutoSize = true;
-            this.notTransientRBt.Location = new System.Drawing.Point(15, 471);
-            this.notTransientRBt.Name = "radioButton1";
-            this.notTransientRBt.Size = new System.Drawing.Size(83, 17);
+            this.notTransientRBt.Location = new System.Drawing.Point(15, 363);
+            this.notTransientRBt.Name = "notTransientRBt";
+            this.notTransientRBt.Size = new System.Drawing.Size(88, 17);
             this.notTransientRBt.TabIndex = 45;
             this.notTransientRBt.TabStop = true;
             this.notTransientRBt.Text = "not persistent";
             this.notTransientRBt.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 269);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(41, 13);
+            this.label4.TabIndex = 46;
+            this.label4.Text = "timeout";
+            // 
+            // timeoutTextBox
+            // 
+            this.timeoutTextBox.Location = new System.Drawing.Point(154, 269);
+            this.timeoutTextBox.Name = "timeoutTextBox";
+            this.timeoutTextBox.Size = new System.Drawing.Size(447, 20);
+            this.timeoutTextBox.TabIndex = 47;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 301);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(82, 13);
+            this.label5.TabIndex = 48;
+            this.label5.Text = "relevanceOffset";
+            // 
+            // relevanceOffsetTextBox
+            // 
+            this.relevanceOffsetTextBox.Location = new System.Drawing.Point(155, 301);
+            this.relevanceOffsetTextBox.Name = "relevanceOffsetTextBox";
+            this.relevanceOffsetTextBox.Size = new System.Drawing.Size(447, 20);
+            this.relevanceOffsetTextBox.TabIndex = 49;
+            // 
+            // createChannelBt
+            // 
+            this.createChannelBt.Location = new System.Drawing.Point(456, 536);
+            this.createChannelBt.Name = "createChannelBt";
+            this.createChannelBt.Size = new System.Drawing.Size(75, 23);
+            this.createChannelBt.TabIndex = 51;
+            this.createChannelBt.Text = "CreateChannel";
+            this.createChannelBt.UseVisualStyleBackColor = true;
+            this.createChannelBt.Click += new System.EventHandler(this.createChannelBt_Click);
             // 
             // testForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(957, 577);
+            this.Controls.Add(this.createChannelBt);
+            this.Controls.Add(this.relevanceOffsetTextBox);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.timeoutTextBox);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.notTransientRBt);
             this.Controls.Add(this.pubConvStateBt);
             this.Controls.Add(this.console);
-            this.Controls.Add(this.transientRBt);
-            this.Controls.Add(this.commandBt);
+            this.Controls.Add(this.persistentRBt);
             this.Controls.Add(this.usernameTextBox);
             this.Controls.Add(this.getRelevantMsgBt);
-            this.Controls.Add(this.unSetFilterBt);
-            this.Controls.Add(this.listFilterBt);
             this.Controls.Add(this.setFilterBt);
             this.Controls.Add(this.getThreadsBt);
             this.Controls.Add(this.getThreadBt);
-            this.Controls.Add(this.filterValueTextBox);
-            this.Controls.Add(this.filterAttrTextBox);
-            this.Controls.Add(this.filterNameTextBox);
             this.Controls.Add(this.statusTextBox);
             this.Controls.Add(this.convidTextBox);
             this.Controls.Add(this.messageTextBox);
             this.Controls.Add(this.nbLastMessagesTextBox);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.channelIDTextBox);
-            this.Controls.Add(this.serverPortTextBox);
-            this.Controls.Add(this.serverHostTextBox);
+            this.Controls.Add(this.actorTextBox);
             this.Controls.Add(this.endpointTextBox);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.getSubscriptionsBt);
             this.Controls.Add(this.getLastMsgsBt);
@@ -548,30 +464,20 @@ namespace hubiquitus4w8.hapi.test
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label13;
 
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.TextBox endpointTextBox;
-        private System.Windows.Forms.TextBox serverHostTextBox;
-        private System.Windows.Forms.TextBox serverPortTextBox;
-        private System.Windows.Forms.TextBox channelIDTextBox;
+        private System.Windows.Forms.TextBox actorTextBox;
         private System.Windows.Forms.TextBox nbLastMessagesTextBox;
         private System.Windows.Forms.TextBox messageTextBox;
         private System.Windows.Forms.TextBox convidTextBox;
         private System.Windows.Forms.TextBox statusTextBox;
-        private System.Windows.Forms.TextBox filterNameTextBox;
-        private System.Windows.Forms.TextBox filterAttrTextBox;
-        private System.Windows.Forms.TextBox filterValueTextBox;
 
         private System.Windows.Forms.Button connectBt;
         private System.Windows.Forms.Button disconnectBt;
@@ -583,14 +489,16 @@ namespace hubiquitus4w8.hapi.test
         private System.Windows.Forms.Button getThreadBt;
         private System.Windows.Forms.Button getThreadsBt;
         private System.Windows.Forms.Button setFilterBt;
-        private System.Windows.Forms.Button listFilterBt;
-        private System.Windows.Forms.Button unSetFilterBt;
         private System.Windows.Forms.Button getRelevantMsgBt;
-        private System.Windows.Forms.Button commandBt;
-        private System.Windows.Forms.RadioButton transientRBt;
+        private System.Windows.Forms.RadioButton persistentRBt;
         private System.Windows.Forms.TextBox console;
         private System.Windows.Forms.Button pubConvStateBt;
         private System.Windows.Forms.RadioButton notTransientRBt;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox timeoutTextBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox relevanceOffsetTextBox;
+        private System.Windows.Forms.Button createChannelBt;
 
     }
 }

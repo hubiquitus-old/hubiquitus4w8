@@ -10,7 +10,6 @@ namespace hubiquitus4w8.hapi.hStructures
 {
     public class HArrayOfValue : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HArrayOfValue));
         private string name;
 
         public HArrayOfValue()
@@ -48,7 +47,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the value attribute", e.ToString());
             }
         }
 
@@ -61,7 +60,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the value attribute", e.ToString());
             }
             return value;
         }

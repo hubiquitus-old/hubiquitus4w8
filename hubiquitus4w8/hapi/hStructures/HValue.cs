@@ -1,5 +1,4 @@
-﻿using log4net;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +13,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HValue : JObject
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HValue));
         private string name;
 
         public HValue()
@@ -51,7 +49,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the value attribute : ", e);
+                Console.WriteLine("{0} : Can not update the value attribute", e.ToString());
             }
             
         }
@@ -65,7 +63,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the value attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the value attribute", e.ToString());
             }
             return value;
         }

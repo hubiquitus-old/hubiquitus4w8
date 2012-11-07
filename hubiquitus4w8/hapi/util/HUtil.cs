@@ -18,6 +18,7 @@
  */
 
 
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +31,9 @@ namespace hubiquitus4w8.hapi.util
     {
         public static string DateISO8601Format = "yyyy-MM-ddTHH:mm:sszz00";
 
-        public static int PickIndex<T>(List<T> list)
+        public static int PickIndex(JArray jArray)
         {
-            int index = 0;
-            Random random = new Random();
-            index = (int)(list.Count() * random.NextDouble());
-            return index;
+            return (int)(jArray.Count() * (new Random()).NextDouble());
         }
 
         public static string GetHost(string endpoint)
@@ -95,6 +93,14 @@ namespace hubiquitus4w8.hapi.util
                 return true;
             else
                 return false;
+        }
+
+        public static string GetApiRef(string @ref)
+        {
+            if (@ref != null)
+                return @ref.Split("#".ToCharArray())[0];
+            else
+                return null;
         }
 
     }

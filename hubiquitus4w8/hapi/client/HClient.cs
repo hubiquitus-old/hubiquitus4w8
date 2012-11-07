@@ -45,10 +45,10 @@ namespace hubiquitus4w8.hapi.client
         private HOptions options = null;
         private HTransport transport = null;
         private HTransportOptions transportOptions;
+        private bool isEventHandlerAdded = false;
 
         public delegate void StatusEventHandler(HStatus status);
         public delegate void MessageEventHandler(HMessage message);
-        public delegate void CommandEventHandler(HCommand command);
 
         /// <summary>
         /// Status event handler recieve all connection status events
@@ -60,14 +60,9 @@ namespace hubiquitus4w8.hapi.client
         /// </summary>
         public event MessageEventHandler onMessage;
 
-        /// <summary>
-        /// Command event handler recieve all command events
-        /// </summary>
-        public event CommandEventHandler onCommand;
-
-        
 
         private Dictionary<string, Action<HMessage>> messageDelegates = new Dictionary<string, Action<HMessage>>();
+        private Dictionary<string, Timer> timerOutDictionary = new Dictionary<string, Timer>();
 
         public HClient()
         {
@@ -86,6 +81,7 @@ namespace hubiquitus4w8.hapi.client
             bool shouldConnect = false;
             bool connInprogress = false;
             bool disconnInprogress = false;
+            this.options = new HOptions(options);
 
             if (this.connectionStatus == ConnectionStatus.DISCONNECTED)
             {
@@ -114,16 +110,23 @@ namespace hubiquitus4w8.hapi.client
                 if (options.GetTransport() == "socketio")
                 {
                     if (transport == null || !(transport is HTransportSocketIO))
+                    {
                         this.transport = new HTransportSocketIO();
+                    }
+                    if (!isEventHandlerAdded)
+                    {
+                        this.transport.onStatus += transport_onStatus;
+                        this.transport.onData += transport_onData;
+                        isEventHandlerAdded = true;
+                    }
                     this.transport.Connect(this.transportOptions);
                 }
                 else
                 {
                     // XMPP
-                    Console.WriteLine("XMPP to be defined!!");
+                    Console.WriteLine("{0} : XMPP to be defined!!");
                 }
-                this.transport.onStatus += transport_onStatus;
-                this.transport.onData += transport_onData;
+                
             }
             else
             {
@@ -138,12 +141,8 @@ namespace hubiquitus4w8.hapi.client
 
         void transport_onData(string type, JObject obj)
         {
-            if (type.Equals("hresult", StringComparison.OrdinalIgnoreCase))
-                notifyResult(new HMessage(obj));
             if (type.Equals("hmessage", StringComparison.OrdinalIgnoreCase))
-                notifyMessage(new HMessage(obj));
-            if (type.Equals("hcommand", StringComparison.OrdinalIgnoreCase))
-                notifyCommand(new HCommand(obj));
+                notifyMessage(new HMessage(obj),  null);
         }
 
         private void transport_onStatus(ConnectionStatus status, ConnectionErrors error, string errrorMsg)
@@ -179,8 +178,12 @@ namespace hubiquitus4w8.hapi.client
             else
                 notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.NOT_CONNECTED, null);
 
-            this.transport.onData -= transport_onData;
-            this.transport.onStatus -= transport_onStatus;
+            if (isEventHandlerAdded)
+            {
+                this.transport.onData -= transport_onData;
+                this.transport.onStatus -= transport_onStatus;
+                isEventHandlerAdded = false;
+            }
         }
 
         public ConnectionStatus Status()
@@ -211,7 +214,7 @@ namespace hubiquitus4w8.hapi.client
                 notifyResultError(message.GetMsgid(), ResultStatus.MISSING_ATTR, "Actor is missing.", messageDelegate);
                 return;
             }
-            message.SetSent(new DateTime());
+            message.SetSent(DateTime.Now);
             message.SetPublisher(transportOptions.Jid.GetBareJID());
             if (message.GetTimeout() > 0)
             {
@@ -222,17 +225,24 @@ namespace hubiquitus4w8.hapi.client
                     message.SetMsgid(Guid.NewGuid().ToString());
                     messageDelegates.Add(message.GetMsgid(), messageDelegate);
                     // TODO :  implementer timer pour callback.
-
-
+                    TimerCallback tcb = new TimerCallback(TimeroutCallback);
+                    Timer timeOutTimer = new Timer(tcb, message, message.GetTimeout(), 0);
+                    timerOutDictionary.Add(message.GetMsgid(), timeOutTimer);
                 }
                 else
                 {
                     //when there is no callback, timeout has no sense. delete timeout.
                     message.SetTimeout(0);
                 }
-
-                transport.SendObject(message);
             }
+            transport.SendObject(message);
+        }
+
+        public void TimeroutCallback(object stateInfo) 
+        {
+            HMessage message = (HMessage)stateInfo;
+            notifyResultError(message.GetMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out.", null);
+            messageDelegates.Remove(message.GetMsgid());
         }
 
         /// <summary>
@@ -248,7 +258,7 @@ namespace hubiquitus4w8.hapi.client
                 throw new MissingAttrException("messageDelegate");
          
             HMessage cmdMessage = BuildCommand(actor, "hsubscribe", null, null);
-            cmdMessage.SetTimeout(options.GetTimeout());
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
             this.Send(cmdMessage, messageDelegate);
         }
 
@@ -264,7 +274,7 @@ namespace hubiquitus4w8.hapi.client
                 throw new MissingAttrException("messageDelegate");
 
             HMessage cmdMessage = BuildCommand(actor, "hunsubscribe", null, null);
-            cmdMessage.SetTimeout(options.GetTimeout());
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
             this.Send(cmdMessage, messageDelegate);
         }
 
@@ -284,13 +294,13 @@ namespace hubiquitus4w8.hapi.client
             if (messageDelegate == null)
                 throw new MissingAttrException("messageDelegate");
             JObject @params = new JObject();
-            @params.Add("actor", actor);
+            @params["actor"] = actor;
             if (nbLastMsg > 0)
-                @params.Add("nbLastMsg", nbLastMsg);
+                @params["nbLastMsg"] = nbLastMsg;
             else
-                @params.Add("nbLastMsg", 10);
+                @params["nbLastMsg"] = 10;
             HMessage cmdMessage = BuildCommand(actor, "hgetlastmessages", @params, null);
-            cmdMessage.SetTimeout(options.GetTimeout());
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
 
@@ -315,9 +325,8 @@ namespace hubiquitus4w8.hapi.client
         {
             if (messageDelegate == null)
                 throw new MissingAttrException("messageDelegate");
-
             HMessage cmdMessage = BuildCommand(transportOptions.GetHserverService(), "hgetsubscriptions", null, null);
-            cmdMessage.SetTimeout(options.GetTimeout());
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
 
@@ -341,10 +350,10 @@ namespace hubiquitus4w8.hapi.client
                 return;
             }
             JObject @params = new JObject();
-            @params.Add("convid", convid);
+            @params["convid"] = convid;
 
             HMessage cmdMessage = BuildCommand(actor, "hgetthread", @params, null);
-            cmdMessage.SetTimeout(options.GetTimeout());
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
 
         }
@@ -369,38 +378,24 @@ namespace hubiquitus4w8.hapi.client
                 return;
             }
             JObject @params = new JObject();
-            @params.Add("status", status);
+            @params["status"] = status;
 
             HMessage cmdMessage = BuildCommand(actor,"hgetthreads",@params, null);
-            cmdMessage.SetTimeout(options.GetTimeout());
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
 
         /// <summary>
-        /// Sets a filter to be applied to upcoming messages at the session level for a dedicated channel id.
+        /// Sets a filter to be applied to upcoming messages at the session level.
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="messageDelegate"></param>
-        //public void SetFilter(string chid, HFilterTemplate filter, Action<HMessage> messageDelegate)
-        //{
-        //    string cmdName = "hsetfilter";
-        //    if (chid == null)
-        //    {
-        //        notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", messageDelegate);
-        //        return;
-        //    }
-        //    if (filter == null)
-        //    {
-        //        notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "filter is missing", messageDelegate);
-        //        return;
-        //    }
-        //    HJsonDictionnary @params = new HJsonDictionnary();
-        //    @params.Add("chid", chid);
-        //    @params.Add("filter", filter);
-
-        //    HCommand cmd = new HCommand(transportOptions.GetHserverService(), cmdName, @params);
-        //    Send(cmd, messageDelegate);
-        //}
+        public void SetFilter(HCondition filter, Action<HMessage> messageDelegate)
+        {
+            HMessage cmdMessage = BuildCommand("session", "hSetFilter", filter, null);
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
+            Send(cmdMessage, messageDelegate);
+        }
 
        
 
@@ -414,12 +409,12 @@ namespace hubiquitus4w8.hapi.client
         {
             if (actor == null || actor.Length <= 0)
             {
-                notifyResultError(null, ResultStatus.MISSING_ATTR, "chid is missing", messageDelegate);
+                notifyResultError(null, ResultStatus.MISSING_ATTR, "actor is missing", messageDelegate);
                 return;
             }
 
             HMessage cmdMessage = BuildCommand(actor, "hrelevantmessages", null, null);
-            cmdMessage.SetTimeout(options.GetTimeout());
+            cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
 
@@ -633,7 +628,7 @@ namespace hubiquitus4w8.hapi.client
         /// The client MUST be connected to access to this service.
         /// Allow a hubapp client to create a hMessage with a hResult payload.
         /// </summary>
-        /// <param name="chid"></param>
+        /// <param name="actor"></param>
         /// <param name="status"></param>
         /// <param name="result"></param>
         /// <param name="mOptions"></param>
@@ -724,139 +719,81 @@ namespace hubiquitus4w8.hapi.client
 
         private void notifyStatus(ConnectionStatus status, ConnectionErrors error, string errorMsg)
         {
-            try
+            connectionStatus = status;
+            if (this.onStatus != null)
             {
-                connectionStatus = status;
-                if (this.onStatus != null)
+                HStatus hstatus = new HStatus();
+                hstatus.SetStatus(status);
+                hstatus.SetErrorCode(error);
+                hstatus.SetErrorMsg(errorMsg);
+
+                Thread statusThread = new Thread(new ThreadStart(() =>
+                     {
+                         this.onStatus(hstatus);
+                     }));
+                statusThread.Start();
+            }
+        }
+
+        private void notifyMessage(HMessage message, Action<HMessage> messageDelegate)
+        {
+            // 1 - we search the delegate with the ref if any in delegate dictionnary.
+            if(messageDelegates.Count >0 && message.GetRef() != null && messageDelegates.ContainsKey(HUtil.GetApiRef(message.GetRef())))
+            {
+                //TODO look for timer with ref in timer dictionnary, and cancel it
+                string msgRef = HUtil.GetApiRef(message.GetRef());
+                if (timerOutDictionary.ContainsKey(msgRef))
                 {
-                    HStatus hstatus = new HStatus();
-                    hstatus.SetStatus(status);
-                    hstatus.SetErrorCode(error);
-                    hstatus.SetErrorMsg(errorMsg);
-
-                    Thread statusThread = new Thread(new ThreadStart(() =>
-                         {
-                             try
-                             {
-                                 this.onStatus(hstatus);
-                             }
-                             catch (Exception)
-                             {
-
-                                 throw;
-                             }
-                         }));
-                    statusThread.Start();
+                    Timer timer = timerOutDictionary[msgRef];
+                    timerOutDictionary.Remove(msgRef);
+                    if (timer != null)
+                        timer.Dispose();
                 }
-
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
-        }
-
-        private void notifyResult(HMessage message)
-        {
-            Action<HMessage> messageDelegate = (Action<HMessage>)messageDelegates[message.GetRef()];
-            notifyResult(message, messageDelegate);
-        }
-
-        private void notifyResult(HMessage message, Action<HMessage> messageDelegate)
-        {
-            try
-            {
-                if (messageDelegate != null)
+                Action<HMessage> action = messageDelegates[msgRef];
+                messageDelegates.Remove(msgRef);
+                if (action != null)
                 {
-                    Thread thread = new Thread(() => messageDelegate(message));
+                    Thread thread = new Thread(() => action(message));
                     thread.Start();
                 }
             }
-            catch (Exception)
-            {
 
-                throw;
+            // 2 - if the ref can not provide a delegate, we try the parameter sent 
+            else if (messageDelegate != null)
+            {
+                Thread thread = new Thread(() => messageDelegate(message));
+                thread.Start();
             }
 
-        }
-
-        private void notifyMessage(HMessage message)
-        {
-            try
+            else 
             {
+                // 3 - in other case, try the default message delegate onMessage. 
                 if (this.onMessage != null)
                 {
-                    Thread messageThread = new Thread(new ThreadStart(() =>
-                    {
-                        try
-                        {
-                            this.onMessage(message);
-                        }
-                        catch (Exception)
-                        {
-
-                            throw;
-                        }
-
-                    }));
-                    messageThread.Start();
+                    Thread thread = new Thread(() => this.onMessage(message));
+                    thread.Start();
                 }
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
         }
 
-        private void notifyCommand(HCommand cmd)
-        {
-            try
-            {
-                if (this.onCommand != null)
-                {
-                    Thread commandThread = new Thread(new ThreadStart(() => {
-                        try
-                        {
-                            this.onCommand(cmd);
-                        }
-                        catch (Exception)
-                        {
-                            
-                            throw;
-                        }
-                    }));
-                    commandThread.Start();
-                }
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
-        }
+      
 
-        private void notifyResultError(string reqid, string cmd, ResultStatus resultStatus, string errorMsg)
+        private void notifyResultError(string @ref, ResultStatus resultStatus, string errorMsg, Action<HMessage> messageDelegate)
         {
             JObject obj = new JObject();
-            obj.Add("errorMsg", errorMsg);
+            obj["errorMsg"] = errorMsg;
+            
             HResult result = new HResult();
-           
             result.SetStatus(resultStatus);
             result.SetResult(obj);
-            //this.notifyResult(result);
-        }
 
-        private void notifyResultError(string reqid, ResultStatus resultStatus, string errorMsg, Action<HMessage> messageDelegate)
-        {
-            JObject obj = new JObject();
-            obj.Add("errorMsg", errorMsg);
-            HResult result = new HResult();
-         
-            result.SetStatus(resultStatus);
-            result.SetResult(obj);
-            //this.notifyResult(result, messageDelegate);
+            HMessage message = new HMessage();
+            message.SetRef(@ref);
+            message.SetType("hResult");
+            message.SetPayload(result);
+
+            this.notifyMessage(message, messageDelegate);
+
         }
 
         private void fillTransportOptions(string publisher, string password, HOptions options)
@@ -867,36 +804,29 @@ namespace hubiquitus4w8.hapi.client
 
                 this.transportOptions.Jid = jid;
                 this.transportOptions.Password = password;
-                //this.transportOptions.Hserver = options.;
+                this.transportOptions.Timeout = options.GetTimeout();
+             
 
-                //by default we user server host rather than publish host if defined
-                //if (options.serverHost != null)
-                //    this.transportOptions.ServerHost = options.serverHost;
-                //else
-                //    this.transportOptions.ServerHost = jid.Domain;
-                //this.transportOptions.ServerPort = options.serverPort;
+                //for endpoints, pick one randomly and fill transport options
+                if (options.GetEndpoints().Count() > 0)
+                {
+                    int endpointIndex = HUtil.PickIndex(options.GetEndpoints());
+                    string endpoint = options.GetEndpoints()[endpointIndex].ToString();
 
-                ////for endpoints, pick one randomly and fill transport options
-                //if (options.GetEndpoints().Count() > 0)
-                //{
-                //    int endpointIndex = HUtil.PickIndex<string>(options.GetEndpoints());
-                //    string endpoint = options.endpoints.ElementAt<string>(endpointIndex);
-
-                //    transportOptions.EndpointHost = HUtil.GetHost(endpoint);
-                //    transportOptions.EndpointPort = HUtil.GetPort(endpoint);
-                //    transportOptions.EndpointPath = HUtil.GetPath(endpoint);
-                //}
-                //else
-                //{
-                //    transportOptions.EndpointHost = null;
-                //    transportOptions.EndpointPort = 0;
-                //    transportOptions.EndpointPath = null;
-                //}
+                    transportOptions.EndpointHost = HUtil.GetHost(endpoint);
+                    transportOptions.EndpointPort = HUtil.GetPort(endpoint);
+                    transportOptions.EndpointPath = HUtil.GetPath(endpoint);
+                }
+                else
+                {
+                    transportOptions.EndpointHost = null;
+                    transportOptions.EndpointPort = 0;
+                    transportOptions.EndpointPath = null;
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Console.WriteLine("{0} : ", e);
             }
         }
 

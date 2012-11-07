@@ -36,6 +36,7 @@ namespace hubiquitus4w8.hapi.stuctures
     /// </summary>
     public class JabberID
     {
+
         private string username = "";      
         private string domain = "";
         private string resource = "";
@@ -94,7 +95,8 @@ namespace hubiquitus4w8.hapi.stuctures
             }
             catch (Exception e)
             {
-                Console.WriteLine("Invalid jid format in constructor JabberID Handler: {0}", e.ToString());
+                Console.WriteLine("{0} : Invalid jid format in constructor JabberID Handler", e);
+                Console.WriteLine("{0} : Invalid jid format in constructor JabberID Handler: {0}", e.ToString());
             }
         }
 

@@ -25,7 +25,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using log4net;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -35,8 +34,6 @@ namespace hubiquitus4w8.hapi.hStructures
     /// </summary>
     public class HStatus : JObject
     {
-
-        private static readonly ILog log = LogManager.GetLogger(typeof(HStatus));
 
         public HStatus()
         { 
@@ -62,7 +59,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the status attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the status attribute", e.ToString());
             }
             return status;
         }
@@ -78,7 +75,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the status attribute : ", e);
+                Console.WriteLine("{0} : Can not update the status attribute", e.ToString());
             }
         }
 
@@ -95,7 +92,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the errorCode attribute : ", e);
+                Console.WriteLine("{0} : Can not fetch the errorCode attribute", e.ToString());
             }
             return errorCode;
         }
@@ -111,7 +108,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the errorCode attribute : ",e);
+                Console.WriteLine("{0} : Can not update the errorCode attribute : ",e);
             }
         }
 
@@ -128,7 +125,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not fetch the errorMsg attribute : ", e);
+                Console.WriteLine("{0} : {0} : Can not fetch the errorMsg attribute", e.ToString());
             }
             return errorMsg;
         }
@@ -144,7 +141,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                log.Error("Can not update the errorMsg attribute : ", e);
+                Console.WriteLine("{0} : {0} : Can not update the errorMsg attribute", e.ToString());
             }
         }
 
