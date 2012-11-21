@@ -57,8 +57,11 @@ namespace hubiquitus4w8.hapi.client
         private HTransportOptions transportOptions;
         private bool isEventHandlerAdded = false;
 
-        public string FullJid { get; set; }
-        public string Resource { get; set; }
+        private string fullJid;
+        private string resource;
+
+        public string FullJid { get { return fullJid; } }
+        public string Resource { get { return resource; } }
 
         public delegate void StatusEventHandler(HStatus status);
         public delegate void MessageEventHandler(HMessage message);
@@ -112,8 +115,8 @@ namespace hubiquitus4w8.hapi.client
                 try
                 {
                     fillTransportOptions(publisher, password, options);
-                    this.FullJid = this.transportOptions.Jid.GetFullJID();
-                    this.Resource = this.transportOptions.GetResource();
+                    this.fullJid = this.transportOptions.Jid.GetFullJID();
+                    this.resource = this.transportOptions.GetResource();
                 }
                 catch (Exception e)
                 {
