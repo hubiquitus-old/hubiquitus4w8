@@ -526,26 +526,26 @@ namespace hubiquitus4w8.hapi.client
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ref"></param>
-        /// <param name="ack">
+        /// <param name="ackValue">
         /// The following values are authorized :
-        /// “recv” : means that the message has been received by the participant (on at least one of its devices)
-        /// “read” : means that the message has been read by the participant
+        /// “recv” / HAckValue.RECV : means that the message has been received by the participant (on at least one of its devices)
+        /// “read” / HAckValue.READ : means that the message has been read by the participant
         /// </param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildAck(string actor, string @ref, string ack, HMessageOptions mOptions)
+        public HMessage BuildAck(string actor, string @ref, string ackValue, HMessageOptions mOptions)
         {
             if (actor == null || actor.Length <= 0)
                 throw new MissingAttrException("actor");
             if (@ref == null || @ref.Length <= 0)
                 throw new MissingAttrException("ref");
-            if (ack == null)
+            if (ackValue == null)
                 throw new MissingAttrException("ack");
-            if (HUtil.CheckAck(ack))
+            if (HUtil.CheckAck(ackValue))
                 throw new Exception("only 'recv' and 'read' are authorized for ack");
 
             HAck hack = new HAck();
-            hack.SetAck(ack);
+            hack.SetAck(ackValue);
             if (mOptions == null)
                 mOptions = new HMessageOptions();
             mOptions.Ref = @ref;

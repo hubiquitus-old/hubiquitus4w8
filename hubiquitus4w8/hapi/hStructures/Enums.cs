@@ -37,13 +37,13 @@ namespace hubiquitus4w8.hapi.hStructures
     public enum ConnectionErrors
     {
         NO_ERROR = 0,
-        JID_MALFORMAT,
-        CONN_TIMEOUT,
-        AUTH_FAILED,
-        ALREADY_CONNECTED,
-        TECH_ERROR,
-        NOT_CONNECTED,
-        CONN_PROGRESS
+        JID_MALFORMAT = 1,
+        CONN_TIMEOUT = 2,
+        AUTH_FAILED = 3,
+        ALREADY_CONNECTED = 5,
+        TECH_ERROR = 6,
+        NOT_CONNECTED = 7,
+        CONN_PROGRESS = 8
     }
 
     public enum ConnectionStatus
@@ -74,5 +74,11 @@ namespace hubiquitus4w8.hapi.hStructures
         INVALID_ATTR = 7,
         NOT_AVAILABLE = 9,
         EXEC_TIMEOUT = 10
+    }
+
+    public static class HAckValue
+    {
+        public readonly static string RECV = "recv";
+        public readonly static string READ = "read";
     }
 }
