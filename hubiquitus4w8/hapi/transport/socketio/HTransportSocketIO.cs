@@ -1,20 +1,26 @@
 ﻿/*
  * Copyright (c) Novedia Group 2012.
  *
- *     This file is part of Hubiquitus.
+ *    This file is part of Hubiquitus
  *
- *     Hubiquitus is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ *    Permission is hereby granted, free of charge, to any person obtaining a copy
+ *    of this software and associated documentation files (the "Software"), to deal
+ *    in the Software without restriction, including without limitation the rights
+ *    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ *    of the Software, and to permit persons to whom the Software is furnished to do so,
+ *    subject to the following conditions:
  *
- *     Hubiquitus is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *    The above copyright notice and this permission notice shall be included in all copies
+ *    or substantial portions of the Software.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ *    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ *    PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ *    FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ *    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *    You should have received a copy of the MIT License along with Hubiquitus.
+ *    If not, see <http://opensource.org/licenses/mit-license.php>.
  */
 
 
@@ -23,12 +29,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using hubiquitus4w8.hapi.hStructures;
 using hubiquitus4w8.hapi.transport;
 using SocketIOClient;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using Windows.System.Threading;
 
 namespace hubiquitus4w8.hapi.transport.socketio
 {
@@ -37,15 +44,19 @@ namespace hubiquitus4w8.hapi.transport.socketio
         private ConnectionStatus connStatus = ConnectionStatus.DISCONNECTED;
         private HTransportOptions options = null;
         Client socketIO;
-        private Timer timeout = null;
-
+        private ThreadPoolTimer connTimeoutTimer = null;
+        private TimeSpan connTimeout; // max by default.
         public event DataEventHandler onData;
         public event StatusEventHandler onStatus;
+        
 
         public void Connect(HTransportOptions options)
         {
             this.connStatus = ConnectionStatus.CONNECTING;
             this.options = options;
+
+            //TODO init the connection timeout value!!
+            connTimeout = new TimeSpan(0, 0, 0, 0, 30000);
 
             string endpointHost = options.EndpointHost;
             int endpointPort = options.EndpointPort;
@@ -53,97 +64,102 @@ namespace hubiquitus4w8.hapi.transport.socketio
 
             string endpointAdress = ToEndpointAdress(endpointHost, endpointPort, endpointPath);
 
-            timeout = new Timer(options.Timeout);
-            timeout.Elapsed += timeout_Elapsed;
-            timeout.Enabled = true;
-
+            connTimeoutTimer = ThreadPoolTimer.CreateTimer(timeout_Elapsed, connTimeout);
+          
             socketIO = new Client(endpointAdress);
 
             socketIO.Message += socketIO_Message;
             socketIO.SocketConnectionClosed += socketIO_SocketConnectionClosed;
             socketIO.Error += socketIO_Error;
-            socketIO.On("connect", (fn) =>
+            socketIO.On("connect", (message) =>
                 {
-                    string publisher = options.Jid.GetFullJID();
-                    string password = options.Password;
-               
-                    JObject data = new JObject();
-                    try
-                    {
-                        data.Add("publisher", publisher);
-                        data.Add("password", password);
-                        data.Add("sent", DateTime.Now);
-                        socketIO.Emit("hConnect", data);
-
-                    }
-                    catch (Exception e)
-                    {
-                        if (socketIO != null)
-                            Disconnect();
-                        if (timeout != null)
-                        {
-                            timeout.Close();
-                            timeout = null;
-                        }
-                        updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR, e.Message);
-                    }
+                    if (this.options.AuthCb != null)
+                        this.options.AuthCb(options.Jid.GetFullJID(), Login);
+                    else
+                        Login(options.Jid.GetFullJID(), options.Password);
                 });
+            socketIO.ConnectAsync();
 
+        }
 
-            socketIO.Connect();
+        private void Login(string username, string password)
+        {
 
+            JObject data = new JObject();
+            try
+            {
+                data.Add("publisher", username);
+                data.Add("password", password);
+                data.Add("sent", DateTime.Now);
+                socketIO.Emit("hConnect", data);
+
+            }
+            catch (Exception e)
+            {
+                if (socketIO != null)
+                    Disconnect();
+                if (connTimeoutTimer != null)
+                {
+                    connTimeoutTimer.Cancel();
+                    connTimeoutTimer = null;
+                }
+                updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR, e.Message);
+            }
         }
 
         void socketIO_Message(object sender, MessageEventArgs e)
         {
 
-            if (e.Message.Json.Name == "hStatus" && e.Message.Json.Args != null && e.Message.Json.Args.GetType().IsSerializable)
-            {
-                JObject data = (JObject)e.Message.Json.Args[0];
-                try
-                {
-                    HStatus status = new HStatus(data);
-                    if (timeout != null)
-                    {
-                        timeout.Close();
-                        timeout = null;
-                    }
-                    updateStatus((ConnectionStatus)status.GetStatus(), (ConnectionErrors)status.GetErrorCode(), status.GetErrorMsg());
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("{0} : {0} exception caught.", ex);
-                    if (timeout != null)
-                    {
-                        timeout.Close();
-                        timeout = null;
-                    }
-                    socketIO.Close();
-                    updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR,ex.Message);  
-                }
-
-            }
-            else
+            if ("hStatus".Equals(e.Message.Event, StringComparison.OrdinalIgnoreCase))
             {
                 if (e.Message.Json.Args != null)
                 {
                     JObject data = (JObject)e.Message.Json.Args[0];
                     try
                     {
-                        if (timeout != null)
+                        HStatus status = new HStatus(data);
+                        if (connTimeoutTimer != null)
                         {
-                            timeout.Close();
-                            timeout = null;
+                            connTimeoutTimer.Cancel();
+                            connTimeoutTimer = null;
+                        }
+                        updateStatus((ConnectionStatus)status.GetStatus(), (ConnectionErrors)status.GetErrorCode(), status.GetErrorMsg());
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("{0} : {0} exception caught.", ex);
+                        if (connTimeoutTimer != null)
+                        {
+                            connTimeoutTimer.Cancel();
+                            connTimeoutTimer = null;
+                        }
+                        socketIO.Close();
+                        updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR, ex.Message);
+                    }
+                }
+
+            }
+            else if("hMessage".Equals(e.Message.Event, StringComparison.OrdinalIgnoreCase))
+            {
+                if (e.Message.Json.Args != null)
+                {
+                    JObject data = (JObject)e.Message.Json.Args[0];
+                    try
+                    {
+                        if (connTimeoutTimer != null)
+                        {
+                            connTimeoutTimer.Cancel();
+                            connTimeoutTimer = null;
                         }
                         onData(e.Message.Json.Name, data);
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("{0} : {0} exception caught.", ex);
-                        if (timeout != null)
+                        Debug.WriteLine("{0} : {0} exception caught.", ex);
+                        if (connTimeoutTimer != null)
                         {
-                            timeout.Close();
-                            timeout = null;
+                            connTimeoutTimer.Cancel();
+                            connTimeoutTimer = null;
                         }
                     }
                 }
@@ -162,29 +178,30 @@ namespace hubiquitus4w8.hapi.transport.socketio
             string errorMsg = null;
             if (e != null)
             {
-                errorMsg = e.Message;
+                errorMsg = e.ErrorStatus.ToString();
             }
-            if (timeout != null)
+            if (connTimeoutTimer != null)
             {
-                timeout.Close();
-                timeout = null;
+                connTimeoutTimer.Cancel();
+                connTimeoutTimer = null;
             }
-            Console.WriteLine("\n\n -->socketIO Error ");
+            Debug.WriteLine("\n\n -->socketIO Error ");
             updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR, errorMsg);
         }
 
         void socketIO_SocketConnectionClosed(object sender, EventArgs e)
         {
-            if (timeout != null)
+            if (connTimeoutTimer != null)
             {
-                timeout.Close();
-                timeout = null;
+                connTimeoutTimer.Cancel();
+                connTimeoutTimer = null;
             }
             if (this.connStatus != ConnectionStatus.DISCONNECTED)
             {
                 updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.NO_ERROR, null);
             }
-            Console.WriteLine("\n\n -->socketIO closed ");
+            this.Close();
+            Debug.WriteLine("\n\n -->socketIO closed ");
         }
 
         public void updateStatus(ConnectionStatus status, ConnectionErrors error, string errorMsg)
@@ -196,10 +213,10 @@ namespace hubiquitus4w8.hapi.transport.socketio
                 throw new ArgumentNullException("Error: " + this.GetType() + " require a StatusEventHandler onStatus");
         }
 
-        void timeout_Elapsed(object sender, ElapsedEventArgs e)
+        void timeout_Elapsed(object state)
         {
-            timeout.Stop();
-            timeout = null;
+            connTimeoutTimer.Cancel();
+            connTimeoutTimer = null;
             updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.CONN_TIMEOUT, null);
             if (socketIO.IsConnected)
                 socketIO.Close();
@@ -211,7 +228,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
             connStatus = ConnectionStatus.DISCONNECTING;
             try
             {
-                Close();
+                socketIO.Close();
                 if (socketIO.IsConnected == false)
                 {
                     connStatus = ConnectionStatus.DISCONNECTED;
@@ -220,7 +237,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} exception caught.", e);
+                Debug.WriteLine("{0} exception caught.", e);
             }
         }
 
@@ -233,7 +250,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
                 
 
             else
-                Console.WriteLine("Not connected.");
+                Debug.WriteLine("Not connected.");
                 
         }
 

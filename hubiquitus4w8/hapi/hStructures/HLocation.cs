@@ -1,22 +1,27 @@
 ﻿/*
  * Copyright (c) Novedia Group 2012.
  *
- *     This file is part of Hubiquitus.
+ *    This file is part of Hubiquitus
  *
- *     Hubiquitus is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ *    Permission is hereby granted, free of charge, to any person obtaining a copy
+ *    of this software and associated documentation files (the "Software"), to deal
+ *    in the Software without restriction, including without limitation the rights
+ *    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ *    of the Software, and to permit persons to whom the Software is furnished to do so,
+ *    subject to the following conditions:
  *
- *     Hubiquitus is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *    The above copyright notice and this permission notice shall be included in all copies
+ *    or substantial portions of the Software.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ *    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ *    PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ *    FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ *    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *    You should have received a copy of the MIT License along with Hubiquitus.
+ *    If not, see <http://opensource.org/licenses/mit-license.php>.
  */
-
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace hubiquitus4w8.hapi.hStructures
 {
@@ -59,7 +65,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the pos attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the pos attribute", e.ToString());
             }
             return pos;
         }
@@ -74,13 +80,13 @@ namespace hubiquitus4w8.hapi.hStructures
             try
             {
                 if (pos == null)
-                    Console.WriteLine("{0} : The pos attribute can not be null!");
+                    Debug.WriteLine("{0} : The pos attribute can not be null!");
                 else
                     this["pos"] = pos;
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the pos attribute: {0}", e.ToString());
+                Debug.WriteLine("{0} : Can not update the pos attribute: {0}", e.ToString());
             }
         }
 
@@ -98,7 +104,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the zip attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the zip attribute", e.ToString());
             }
             return zip;
         }
@@ -114,7 +120,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the zip attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the zip attribute", e.ToString());
             }
         }
 
@@ -131,7 +137,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the num attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the num attribute", e.ToString());
             }
             return num;
         }
@@ -147,7 +153,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the num attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the num attribute", e.ToString());
             }
         }
 
@@ -164,7 +170,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the waytype attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the waytype attribute", e.ToString());
             }
             return waytype;
         }
@@ -180,7 +186,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the waytype attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the waytype attribute", e.ToString());
             }
         }
 
@@ -197,7 +203,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the way attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the way attribute", e.ToString());
             }
             return way;
         }
@@ -213,7 +219,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the way attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the way attribute", e.ToString());
             }
         }
 
@@ -230,7 +236,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the addr attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the addr attribute", e.ToString());
             }
             return addr;
         }
@@ -246,7 +252,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the addr attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the addr attribute", e.ToString());
             }
         }
 
@@ -263,7 +269,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the floor attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the floor attribute", e.ToString());
             }
             return floor;
         }
@@ -279,7 +285,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the floor the floor attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the floor the floor attribute", e.ToString());
             }
         }
 
@@ -296,7 +302,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the building attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the building attribute", e.ToString());
             }
             return building;
         }
@@ -312,7 +318,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the building attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the building attribute", e.ToString());
             }
         }
 
@@ -329,7 +335,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the city attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the city attribute", e.ToString());
             }
             return city;
         }
@@ -345,7 +351,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the city attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the city attribute", e.ToString());
             }
         }
 
@@ -362,7 +368,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not fetch the countryCode attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the countryCode attribute", e.ToString());
             }
             return countryCode;
         }
@@ -378,7 +384,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the countyCode attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the countyCode attribute", e.ToString());
             }
         }
     }

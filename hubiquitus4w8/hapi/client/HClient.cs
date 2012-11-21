@@ -1,20 +1,26 @@
 ﻿/*
  * Copyright (c) Novedia Group 2012.
  *
- *     This file is part of Hubiquitus.
+ *    This file is part of Hubiquitus
  *
- *     Hubiquitus is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ *    Permission is hereby granted, free of charge, to any person obtaining a copy
+ *    of this software and associated documentation files (the "Software"), to deal
+ *    in the Software without restriction, including without limitation the rights
+ *    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ *    of the Software, and to permit persons to whom the Software is furnished to do so,
+ *    subject to the following conditions:
  *
- *     Hubiquitus is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *    The above copyright notice and this permission notice shall be included in all copies
+ *    or substantial portions of the Software.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ *    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ *    PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ *    FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ *    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *    You should have received a copy of the MIT License along with Hubiquitus.
+ *    If not, see <http://opensource.org/licenses/mit-license.php>.
  */
 
 
@@ -33,19 +39,26 @@ using hubiquitus4w8.hapi.transport;
 using hubiquitus4w8.hapi.transport.socketio;
 using hubiquitus4w8.hapi.util;
 using hubiquitus4w8.hapi.exceptions;
+using System.Diagnostics;
+using Windows.System.Threading;
+using Windows.Foundation;
 
 namespace hubiquitus4w8.hapi.client
 {
     /// <summary>
-    /// Hubiquitus client, public api version v0.4
+    /// Hubiquitus client, public api version v0.5
     /// </summary>
     public class HClient
     {
         private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED;
         private HOptions options = null;
         private HTransport transport = null;
+        private HTransportManager transportManager = null;
         private HTransportOptions transportOptions;
         private bool isEventHandlerAdded = false;
+
+        public string FullJid { get; set; }
+        public string Resource { get; set; }
 
         public delegate void StatusEventHandler(HStatus status);
         public delegate void MessageEventHandler(HMessage message);
@@ -62,7 +75,7 @@ namespace hubiquitus4w8.hapi.client
 
 
         private Dictionary<string, Action<HMessage>> messageDelegates = new Dictionary<string, Action<HMessage>>();
-        private Dictionary<string, Timer> timerOutDictionary = new Dictionary<string, Timer>();
+        private Dictionary<string, ThreadPoolTimer> timerOutDictionary = new Dictionary<string, ThreadPoolTimer>();
 
         public HClient()
         {
@@ -99,12 +112,13 @@ namespace hubiquitus4w8.hapi.client
                 try
                 {
                     fillTransportOptions(publisher, password, options);
+                    this.FullJid = this.transportOptions.Jid.GetFullJID();
+                    this.Resource = this.transportOptions.GetResource();
                 }
                 catch (Exception e)
                 {
                     notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.JID_MALFORMAT, e.Message);
                     return;
-                    throw e;
                 }
 
                 if (options.GetTransport() == "socketio")
@@ -113,20 +127,16 @@ namespace hubiquitus4w8.hapi.client
                     {
                         this.transport = new HTransportSocketIO();
                     }
+                    if (transportManager == null)
+                        this.transportManager = new HTransportManager(this.transport);
                     if (!isEventHandlerAdded)
                     {
-                        this.transport.onStatus += transport_onStatus;
-                        this.transport.onData += transport_onData;
+                        this.transportManager.onStatus = transport_onStatus;
+                        this.transportManager.onData = transport_onData;
                         isEventHandlerAdded = true;
                     }
-                    this.transport.Connect(this.transportOptions);
+                    this.transportManager.Connect(this.transportOptions);
                 }
-                else
-                {
-                    // XMPP
-                    Console.WriteLine("{0} : XMPP to be defined!!");
-                }
-                
             }
             else
             {
@@ -171,19 +181,12 @@ namespace hubiquitus4w8.hapi.client
             if (shouldDisconnect)
             {
                 notifyStatus(ConnectionStatus.DISCONNECTING, ConnectionErrors.NO_ERROR, null);
-                transport.Disconnect();
+                transportManager.Disconnect();
             }
             else if (connInprogress)
                 notifyStatus(ConnectionStatus.CONNECTING, ConnectionErrors.CONN_PROGRESS, "Can not disconnect while a connection is in progress");
             else
                 notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.NOT_CONNECTED, null);
-
-            if (isEventHandlerAdded)
-            {
-                this.transport.onData -= transport_onData;
-                this.transport.onStatus -= transport_onStatus;
-                isEventHandlerAdded = false;
-            }
         }
 
         public ConnectionStatus Status()
@@ -224,9 +227,9 @@ namespace hubiquitus4w8.hapi.client
                 {
                     message.SetMsgid(Guid.NewGuid().ToString());
                     messageDelegates.Add(message.GetMsgid(), messageDelegate);
-                    // TODO :  implementer timer pour callback.
-                    TimerCallback tcb = new TimerCallback(TimeroutCallback);
-                    Timer timeOutTimer = new Timer(tcb, message, message.GetTimeout(), 0);
+                    
+                    ThreadPoolTimer timeOutTimer = ThreadPoolTimer.CreateTimer(TimeroutCallback, new TimeSpan(0,0,0,0,message.GetTimeout()));
+                    
                     timerOutDictionary.Add(message.GetMsgid(), timeOutTimer);
                 }
                 else
@@ -235,7 +238,7 @@ namespace hubiquitus4w8.hapi.client
                     message.SetTimeout(0);
                 }
             }
-            transport.SendObject(message);
+            transportManager.SendObject(message);
         }
 
         public void TimeroutCallback(object stateInfo) 
@@ -705,7 +708,7 @@ namespace hubiquitus4w8.hapi.client
                 message.SetPersistent(mOptions.Persistent);
                 message.SetTimeout(mOptions.Timeout);
                 if (mOptions.RelevanceOffset != null)
-                    message.SetRelevance((new DateTime()).AddMilliseconds(mOptions.RelevanceOffset.Value));
+                    message.SetRelevance((DateTime.Now).AddMilliseconds(mOptions.RelevanceOffset.Value));
                 else
                     message.SetRelevance(mOptions.Relevance);
             }
@@ -727,11 +730,12 @@ namespace hubiquitus4w8.hapi.client
                 hstatus.SetErrorCode(error);
                 hstatus.SetErrorMsg(errorMsg);
 
-                Thread statusThread = new Thread(new ThreadStart(() =>
-                     {
-                         this.onStatus(hstatus);
-                     }));
-                statusThread.Start();
+                IAsyncAction threadPoolWorkItem = ThreadPool.RunAsync(
+                    (source) =>
+                    {
+                        this.onStatus(hstatus);
+                    }
+                    );
             }
         }
 
@@ -740,29 +744,36 @@ namespace hubiquitus4w8.hapi.client
             // 1 - we search the delegate with the ref if any in delegate dictionnary.
             if(messageDelegates.Count >0 && message.GetRef() != null && messageDelegates.ContainsKey(HUtil.GetApiRef(message.GetRef())))
             {
-                //TODO look for timer with ref in timer dictionnary, and cancel it
                 string msgRef = HUtil.GetApiRef(message.GetRef());
                 if (timerOutDictionary.ContainsKey(msgRef))
                 {
-                    Timer timer = timerOutDictionary[msgRef];
+                    ThreadPoolTimer timer = timerOutDictionary[msgRef];
                     timerOutDictionary.Remove(msgRef);
                     if (timer != null)
-                        timer.Dispose();
+                        timer.Cancel();
                 }
                 Action<HMessage> action = messageDelegates[msgRef];
                 messageDelegates.Remove(msgRef);
                 if (action != null)
                 {
-                    Thread thread = new Thread(() => action(message));
-                    thread.Start();
+                    IAsyncAction threadPoolWorkItem = ThreadPool.RunAsync(
+                        (source) =>
+                        {
+                            action(message);
+                        }
+                        );
                 }
             }
 
             // 2 - if the ref can not provide a delegate, we try the parameter sent 
             else if (messageDelegate != null)
             {
-                Thread thread = new Thread(() => messageDelegate(message));
-                thread.Start();
+                IAsyncAction threadPoolWorkItem = ThreadPool.RunAsync(
+                        (source) =>
+                        {
+                            messageDelegate(message);
+                        }
+                        );
             }
 
             else 
@@ -770,8 +781,12 @@ namespace hubiquitus4w8.hapi.client
                 // 3 - in other case, try the default message delegate onMessage. 
                 if (this.onMessage != null)
                 {
-                    Thread thread = new Thread(() => this.onMessage(message));
-                    thread.Start();
+                    IAsyncAction threadPoolWorkItem = ThreadPool.RunAsync(
+                       (source) =>
+                       {
+                           this.onMessage(message);
+                       }
+                       );
                 }
             }
         }
@@ -805,6 +820,7 @@ namespace hubiquitus4w8.hapi.client
                 this.transportOptions.Jid = jid;
                 this.transportOptions.Password = password;
                 this.transportOptions.Timeout = options.GetTimeout();
+                this.transportOptions.AuthCb = options.AuthCb;
              
 
                 //for endpoints, pick one randomly and fill transport options
@@ -826,7 +842,7 @@ namespace hubiquitus4w8.hapi.client
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : ", e);
+                Debug.WriteLine("{0} : ", e);
             }
         }
 

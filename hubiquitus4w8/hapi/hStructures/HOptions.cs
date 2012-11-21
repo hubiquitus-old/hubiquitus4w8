@@ -1,20 +1,26 @@
 ﻿/*
  * Copyright (c) Novedia Group 2012.
  *
- *     This file is part of Hubiquitus.
+ *    This file is part of Hubiquitus
  *
- *     Hubiquitus is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ *    Permission is hereby granted, free of charge, to any person obtaining a copy
+ *    of this software and associated documentation files (the "Software"), to deal
+ *    in the Software without restriction, including without limitation the rights
+ *    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ *    of the Software, and to permit persons to whom the Software is furnished to do so,
+ *    subject to the following conditions:
  *
- *     Hubiquitus is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *    The above copyright notice and this permission notice shall be included in all copies
+ *    or substantial portions of the Software.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ *    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ *    PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ *    FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ *    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *    You should have received a copy of the MIT License along with Hubiquitus.
+ *    If not, see <http://opensource.org/licenses/mit-license.php>.
  */
 
 
@@ -25,7 +31,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using log4net;
+using System.Diagnostics;
+using hubiquitus4w8.hapi.transport;
 
 namespace hubiquitus4w8.hapi.hStructures
 {   
@@ -49,6 +56,8 @@ namespace hubiquitus4w8.hapi.hStructures
             SetTimeout(options.GetTimeout());
             SetMsgTimeout(options.GetMsgTimeout());
         }
+
+        public AuthenticationCallback AuthCb { get; set; }
 
         public string GetTransport()
         {
@@ -75,7 +84,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the transport attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the transport attribute", e.ToString());
             }
         }
 
@@ -90,7 +99,7 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 endpoints = new JArray();
                 endpoints.Add("http://localhost:8080");
-                Console.WriteLine("{0} : Can not fetch the endpoints attribute, return 'http://localhost:8080' instead : {0}", e.ToString());
+                Debug.WriteLine("{0} : Can not fetch the endpoints attribute, return 'http://localhost:8080' instead : {0}", e.ToString());
             }
             return endpoints;
         }
@@ -102,11 +111,11 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (endpoints != null && endpoints.Count > 0)
                     this["endpoints"] = endpoints;
                 else
-                    Console.WriteLine("{0} : The endpoints attribute can not be null or empty.");
+                    Debug.WriteLine("{0} : The endpoints attribute can not be null or empty.");
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the endpoints attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the endpoints attribute", e.ToString());
             }
         }
 
@@ -139,7 +148,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the timeout attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the timeout attribute", e.ToString());
             }
         }
         /// <summary>
@@ -171,7 +180,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0} : Can not update the msgTimerout attribute", e.ToString());
+                Debug.WriteLine("{0} : Can not update the msgTimerout attribute", e.ToString());
             }
         }
 
