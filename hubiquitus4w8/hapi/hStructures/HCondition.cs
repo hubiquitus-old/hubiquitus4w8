@@ -394,5 +394,64 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             return value;
         }
+
+        public bool? GetRelevant()
+        {
+            bool? relevant;
+            try
+            {
+                relevant = this["relevant"].ToObject<bool>();
+            }
+            catch (Exception e)
+            {
+                relevant = null;
+            }
+            return relevant;
+        }
+
+        public void SetRelevant(bool? relevant)
+        {
+            try
+            {
+                if (relevant == null)
+                    this.Remove("relevant");
+                else
+                    this["relevant"] = relevant;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not update the relevant attribute", e.ToString());
+            }
+        }
+
+        public HPos GetGeo()
+        {
+            HPos geo;
+            try
+            {
+                geo = new HPos(JObject.Parse(this["geo"].ToString()));
+            }
+            catch (Exception e)
+            {
+                geo = null;
+                Debug.WriteLine("{0} : Can not fetch the geo attribute", e.ToString());
+            }
+            return geo;
+        }
+
+        public void SetGeo(HPos geo)
+        {
+            try
+            {
+                if (geo == null)
+                    this.Remove("geo");
+                else
+                    this["geo"] = geo;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not update the geo attribute", e.ToString());
+            }
+        }
     }
 }

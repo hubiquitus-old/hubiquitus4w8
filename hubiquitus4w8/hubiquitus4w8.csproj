@@ -114,6 +114,7 @@
     <Compile Include="hapi\hStructures\HMessage.cs" />
     <Compile Include="hapi\hStructures\HMessageOptions.cs" />
     <Compile Include="hapi\hStructures\HOptions.cs" />
+    <Compile Include="hapi\hStructures\HPos.cs" />
     <Compile Include="hapi\hStructures\HResult.cs" />
     <Compile Include="hapi\hStructures\HStatus.cs" />
     <Compile Include="hapi\hStructures\HValue.cs" />
