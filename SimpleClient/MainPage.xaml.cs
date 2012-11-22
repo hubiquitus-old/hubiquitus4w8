@@ -68,6 +68,8 @@ namespace SimpleClient
         void client_onStatus(HStatus status)
         {
             Debug.WriteLine(">>>client_onStatus: " + status.ToString());
+            Debug.WriteLine("--> fulljid : " + client.FullJid);
+            Debug.WriteLine("--> resource : " + client.Resource);
             Update_TextBlock_UI(statusScreen, status.ToString());
         }
 
@@ -198,9 +200,16 @@ namespace SimpleClient
             ja.Add("u2@hub.novediagroup.com");
             valueArray.SetValues(ja);
             filter.SetInValue(valueArray);
+            HPos geo = new HPos();
+            geo.SetLat(12.2);
+            geo.SetLng(45.2);
+            geo.SetRadius(500);
+            filter.SetGeo(geo);
+            filter.SetRelevant(true);
+            Debug.WriteLine("--> filter : " + filter.ToString());
             //Remove the filter.
             //HCondition filter = new HCondition(JObject.Parse("{}")); 
-            client.SetFilter(filter, callback);
+            //client.SetFilter(filter, callback);
         }
 
         private void subBt_Click(object sender, RoutedEventArgs e)
