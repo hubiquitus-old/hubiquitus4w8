@@ -57,11 +57,8 @@ namespace hubiquitus4w8.hapi.client
         private HTransportOptions transportOptions;
         private bool isEventHandlerAdded = false;
 
-        private string fullJid;
-        private string resource;
-
-        public string FullJid { get { return fullJid; } }
-        public string Resource { get { return resource; } }
+        public string FullJid { get { return this.transportOptions.Jid.GetFullJID() ; } }
+        public string Resource { get { return this.transportOptions.GetResource() ; } }
 
         public delegate void StatusEventHandler(HStatus status);
         public delegate void MessageEventHandler(HMessage message);
@@ -115,8 +112,6 @@ namespace hubiquitus4w8.hapi.client
                 try
                 {
                     fillTransportOptions(publisher, password, options);
-                    this.fullJid = this.transportOptions.Jid.GetFullJID();
-                    this.resource = this.transportOptions.GetResource();
                 }
                 catch (Exception e)
                 {
@@ -244,7 +239,7 @@ namespace hubiquitus4w8.hapi.client
             transportManager.SendObject(message);
         }
 
-        public void TimeroutCallback(object stateInfo) 
+        private void TimeroutCallback(object stateInfo) 
         {
             HMessage message = (HMessage)stateInfo;
             notifyResultError(message.GetMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out.", null);
