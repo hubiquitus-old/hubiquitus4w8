@@ -39,7 +39,7 @@ namespace hubiquitus4w8.hapi.exceptions
         private static readonly long serialVersionUID = 1L;
         private string attrName = null;
 
-        public string AttrName { get; set; }
+        public string AttrName { get { return attrName; } set { attrName = value; } }
         /// <summary>
         /// constructor
         /// </summary>

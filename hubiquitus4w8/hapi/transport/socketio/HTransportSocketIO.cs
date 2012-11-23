@@ -36,6 +36,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using Windows.System.Threading;
+using hubiquitus4w8.hapi.stuctures;
 
 namespace hubiquitus4w8.hapi.transport.socketio
 {
@@ -46,6 +47,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
         Client socketIO;
         private ThreadPoolTimer connTimeoutTimer = null;
         private TimeSpan connTimeout; // max by default.
+        private bool isFullJidSet = false;
         public event DataEventHandler onData;
         public event StatusEventHandler onStatus;
         
@@ -123,7 +125,8 @@ namespace hubiquitus4w8.hapi.transport.socketio
                             connTimeoutTimer.Cancel();
                             connTimeoutTimer = null;
                         }
-                        updateStatus((ConnectionStatus)status.GetStatus(), (ConnectionErrors)status.GetErrorCode(), status.GetErrorMsg());
+                        if(isFullJidSet)
+                            updateStatus((ConnectionStatus)status.GetStatus(), (ConnectionErrors)status.GetErrorCode(), status.GetErrorMsg());
                     }
                     catch (Exception ex)
                     {
@@ -163,7 +166,26 @@ namespace hubiquitus4w8.hapi.transport.socketio
                         }
                     }
                 }
-
+            }
+            else if ("attrs".Equals(e.Message.Event, StringComparison.OrdinalIgnoreCase))
+            {
+                if (e.Message.Json.Args != null)
+                {
+                    JObject data = (JObject)e.Message.Json.Args[0];
+                    try
+                    {
+                        JabberID jid = new JabberID(data["publisher"].ToString());
+                        this.options.Jid = jid;
+                        isFullJidSet = true;
+                        if (connStatus != ConnectionStatus.CONNECTED)
+                            updateStatus(ConnectionStatus.CONNECTED, ConnectionErrors.NO_ERROR, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("{0} : {0} exception caught.", ex);
+                    }
+                    
+                }
             }
         }
 
