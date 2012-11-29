@@ -58,7 +58,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
             this.options = options;
 
             //TODO init the connection timeout value!!
-            connTimeout = new TimeSpan(0, 0, 0, 0, 30000);
+            connTimeout = new TimeSpan(0, 0, 0, 0, options.Timeout);
 
             string endpointHost = options.EndpointHost;
             int endpointPort = options.EndpointPort;
@@ -125,7 +125,12 @@ namespace hubiquitus4w8.hapi.transport.socketio
                             connTimeoutTimer.Cancel();
                             connTimeoutTimer = null;
                         }
-                        if(isFullJidSet)
+                        if (status.GetStatus().Value == ConnectionStatus.CONNECTED)
+                        {
+                            if (isFullJidSet)
+                                updateStatus((ConnectionStatus)status.GetStatus(), (ConnectionErrors)status.GetErrorCode(), status.GetErrorMsg());
+                        }
+                        else
                             updateStatus((ConnectionStatus)status.GetStatus(), (ConnectionErrors)status.GetErrorCode(), status.GetErrorMsg());
                     }
                     catch (Exception ex)
@@ -195,19 +200,20 @@ namespace hubiquitus4w8.hapi.transport.socketio
             if (socketIO != null && socketIO.IsConnected)
             {
                 socketIO.Close();
+                this.Close();
             }
             socketIO = null;
             string errorMsg = null;
             if (e != null)
             {
-                errorMsg = e.ErrorStatus.ToString();
+                errorMsg = e.Message;
             }
             if (connTimeoutTimer != null)
             {
                 connTimeoutTimer.Cancel();
                 connTimeoutTimer = null;
             }
-            Debug.WriteLine("\n\n -->socketIO Error ");
+            Debug.WriteLine("[SOCKET_IO]: socketIO Error ");
             updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.TECH_ERROR, errorMsg);
         }
 
@@ -223,7 +229,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
                 updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.NO_ERROR, null);
             }
             this.Close();
-            Debug.WriteLine("\n\n -->socketIO closed ");
+            Debug.WriteLine("[SOCKET_IO]: socketIO closed ");
         }
 
         public void updateStatus(ConnectionStatus status, ConnectionErrors error, string errorMsg)
@@ -298,6 +304,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
 
         private void Close()
         {
+            isFullJidSet = false;
             if (this.socketIO != null)
             {
                 socketIO.Message -= socketIO_Message;

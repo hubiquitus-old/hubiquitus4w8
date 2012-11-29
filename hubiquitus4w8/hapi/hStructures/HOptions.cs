@@ -121,6 +121,7 @@ namespace hubiquitus4w8.hapi.hStructures
 
         /// <summary>
         /// default timeout value used by the hAPI before rise a connection timeout error during connection attempt
+        /// Defaut value is 15000 ms.
         /// </summary>
         /// <returns></returns>
         public int GetTimeout()
@@ -153,6 +154,7 @@ namespace hubiquitus4w8.hapi.hStructures
         }
         /// <summary>
         /// default timeout value used by the hAPI for all the services except the send() one
+        /// Defaut value is 30000 ms.
         /// </summary>
         /// <returns></returns>
         public int GetMsgTimeout()
