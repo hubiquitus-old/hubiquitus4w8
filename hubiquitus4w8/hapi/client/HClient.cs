@@ -227,7 +227,7 @@ namespace hubiquitus4w8.hapi.client
                     ThreadPoolTimer timeOutTimer = ThreadPoolTimer.CreateTimer((obj) =>
                     {
                         notifyResultError(message.GetMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out.", null);
-                    }, new TimeSpan(0, 0, 0, 0, 2/*message.GetTimeout()*/));
+                    }, new TimeSpan(0, 0, 0, 0, message.GetTimeout()));
                     
                     timerOutDictionary.Add(message.GetMsgid(), timeOutTimer);
                 }
