@@ -132,7 +132,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception)
             {
-                timeout = 15000; //15000s by default
+                timeout = 15000; //15000ms by default
             }
             return timeout;
         }
@@ -144,7 +144,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (timeout >= 0)
                     this["timeout"] = timeout;
                 else
-                    this["timeout"] = 15000; // 15000s by default.
+                    this["timeout"] = 15000; // 15000ms by default.
             }
             catch (Exception e)
             {
@@ -164,7 +164,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception)
             {
-                timeout = 30000; //30000s by default
+                timeout = 30000; //30000ms by default
             }
             return timeout;
         }
@@ -176,7 +176,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (timeout >= 0)
                     this["msgTimeout"] = timeout;
                 else
-                    this["msgTimeout"] = 30000; //30000s by default
+                    this["msgTimeout"] = 30000; //30000ms by default
             }
             catch (Exception e)
             {
