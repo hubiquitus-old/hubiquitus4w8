@@ -121,6 +121,7 @@ namespace hubiquitus4w8.hapi.hStructures
 
         /// <summary>
         /// default timeout value used by the hAPI before rise a connection timeout error during connection attempt
+        /// Defaut value is 15000 ms.
         /// </summary>
         /// <returns></returns>
         public int GetTimeout()
@@ -153,6 +154,7 @@ namespace hubiquitus4w8.hapi.hStructures
         }
         /// <summary>
         /// default timeout value used by the hAPI for all the services except the send() one
+        /// Defaut value is 30000 ms.
         /// </summary>
         /// <returns></returns>
         public int GetMsgTimeout()
@@ -178,6 +180,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 else
                     this["msgTimeout"] = 30000; //30000ms by default
             }
+
             catch (Exception e)
             {
                 Debug.WriteLine("{0} : Can not update the msgTimerout attribute", e.ToString());

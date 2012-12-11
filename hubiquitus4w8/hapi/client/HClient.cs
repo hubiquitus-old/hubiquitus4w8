@@ -59,6 +59,7 @@ namespace hubiquitus4w8.hapi.client
 
         public string FullJid { get { return this.transportOptions.Jid.GetFullJID() ; } }
         public string Resource { get { return this.transportOptions.GetResource() ; } }
+        public ConnectionStatus Status { get { return this.connectionStatus; } }
 
         public delegate void StatusEventHandler(HStatus status);
         public delegate void MessageEventHandler(HMessage message);
@@ -108,7 +109,6 @@ namespace hubiquitus4w8.hapi.client
 
             if (shouldConnect)
             {
-                notifyStatus(ConnectionStatus.CONNECTING, ConnectionErrors.NO_ERROR, null);
                 try
                 {
                     fillTransportOptions(publisher, password, options);
@@ -133,6 +133,7 @@ namespace hubiquitus4w8.hapi.client
                         this.transportManager.onData = transport_onData;
                         isEventHandlerAdded = true;
                     }
+                    notifyStatus(ConnectionStatus.CONNECTING, ConnectionErrors.NO_ERROR, null);
                     this.transportManager.Connect(this.transportOptions);
                 }
             }
@@ -187,10 +188,7 @@ namespace hubiquitus4w8.hapi.client
                 notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.NOT_CONNECTED, null);
         }
 
-        public ConnectionStatus Status()
-        {
-            return this.connectionStatus;
-        }
+       
 
         
         /// <summary>
@@ -225,8 +223,11 @@ namespace hubiquitus4w8.hapi.client
                 {
                     message.SetMsgid(Guid.NewGuid().ToString());
                     messageDelegates.Add(message.GetMsgid(), messageDelegate);
-                    
-                    ThreadPoolTimer timeOutTimer = ThreadPoolTimer.CreateTimer(TimeroutCallback, new TimeSpan(0,0,0,0,message.GetTimeout()));
+
+                    ThreadPoolTimer timeOutTimer = ThreadPoolTimer.CreateTimer((obj) =>
+                    {
+                        notifyResultError(message.GetMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out.", null);
+                    }, new TimeSpan(0, 0, 0, 0, 2/*message.GetTimeout()*/));
                     
                     timerOutDictionary.Add(message.GetMsgid(), timeOutTimer);
                 }
@@ -237,13 +238,6 @@ namespace hubiquitus4w8.hapi.client
                 }
             }
             transportManager.SendObject(message);
-        }
-
-        private void TimeroutCallback(object stateInfo) 
-        {
-            HMessage message = (HMessage)stateInfo;
-            notifyResultError(message.GetMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out.", null);
-            messageDelegates.Remove(message.GetMsgid());
         }
 
         /// <summary>

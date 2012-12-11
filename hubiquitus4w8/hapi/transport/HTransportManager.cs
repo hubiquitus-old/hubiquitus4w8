@@ -35,6 +35,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Networking.Connectivity;
 using Windows.System.Threading;
+using Windows.Web;
 
 namespace hubiquitus4w8.hapi.transport
 {
@@ -149,7 +150,21 @@ namespace hubiquitus4w8.hapi.transport
         {
             this.connStatus = status;
             if (onStatus != null)
-                onStatus(status, error, errorMsg);
+            {
+              
+                if (WebErrorStatus.ConnectionAborted.ToString().Equals(errorMsg))
+                {
+                    onStatus(status, error, errorMsg + " " + ErrorMessage.reconnIn5s);
+                    ThreadPoolTimer timer = ThreadPoolTimer.CreateTimer(
+                       async (obj) =>
+                       {
+                           await ThreadPool.RunAsync(TryToConnectDisconnect, WorkItemPriority.High);
+                       }, new TimeSpan(0, 0, 0, 0, 5000));
+                    
+                }
+                else
+                    onStatus(status, error, errorMsg);
+            }
             else
                 throw new ArgumentNullException("Error: " + this.GetType() + " require a StatusEventHandler onStatus");
         }
