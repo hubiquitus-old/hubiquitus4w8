@@ -133,14 +133,15 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\MyGit\socketio_w8\SocketIO4Net\packages\Newtonsoft.Json.4.5.10\lib\winrt45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SocketIO4Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libs\SocketIO4Net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\socketio_w8\SocketIO4Net\SocketIO4Net\SocketIO4Net.csproj">
-      <Project>{27d619fb-a7c1-4366-9b12-283a702d0778}</Project>
-      <Name>SocketIO4Net</Name>
-    </ProjectReference>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

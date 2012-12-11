@@ -180,6 +180,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 else
                     this["msgTimeout"] = 30000; //30000s by default
             }
+
             catch (Exception e)
             {
                 Debug.WriteLine("{0} : Can not update the msgTimerout attribute", e.ToString());

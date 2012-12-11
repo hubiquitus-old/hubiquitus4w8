@@ -206,7 +206,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
             string errorMsg = null;
             if (e != null)
             {
-                errorMsg = e.Message;
+                errorMsg = e.ErrorStatus.ToString();
             }
             if (connTimeoutTimer != null)
             {
