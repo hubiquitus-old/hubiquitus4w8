@@ -1,4 +1,4 @@
-# Hubiquitus4w8 - An implementation of Hubiquitus for the windwows 8.
+# Hubiquitus4w8 - An implementation of Hubiquitus for the windows 8.
 
 
 ## License 
