@@ -34,7 +34,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using hubiquitus4w8.hapi.hStructures;
-using hubiquitus4w8.hapi.stuctures;
 using hubiquitus4w8.hapi.transport;
 using hubiquitus4w8.hapi.transport.socketio;
 using hubiquitus4w8.hapi.util;
@@ -42,6 +41,7 @@ using hubiquitus4w8.hapi.exceptions;
 using System.Diagnostics;
 using Windows.System.Threading;
 using Windows.Foundation;
+using System.Text.RegularExpressions;
 
 namespace hubiquitus4w8.hapi.client
 {
@@ -57,8 +57,8 @@ namespace hubiquitus4w8.hapi.client
         private HTransportOptions transportOptions;
         private bool isEventHandlerAdded = false;
 
-        public string FullJid { get { return this.transportOptions.Jid.GetFullJID() ; } }
-        public string Resource { get { return this.transportOptions.GetResource() ; } }
+        public string FullJid { get { return this.transportOptions.FullUrn; } }
+        public string Resource { get { return this.transportOptions.Resource; } }
         public ConnectionStatus Status { get { return this.connectionStatus; } }
 
         public delegate void StatusEventHandler(HStatus status);
@@ -83,6 +83,12 @@ namespace hubiquitus4w8.hapi.client
             transportOptions = new HTransportOptions();
         }
 
+
+        private bool checkURN(string urn)
+        {
+            string urn_pattern = @"urn:[a-z0-9]{1}[a-z0-9\-]{1,31}:[a-z0-9_,:=@;!'%/#\(\)\+\-\.\$\*\?]+";
+            return Regex.Match(urn, urn_pattern).Success;
+        }
 
         /// <summary>
         /// Connect to server
@@ -109,13 +115,13 @@ namespace hubiquitus4w8.hapi.client
 
             if (shouldConnect)
             {
-                try
+                if(checkURN(publisher))
                 {
                     fillTransportOptions(publisher, password, options);
                 }
-                catch (Exception e)
+                else
                 {
-                    notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.JID_MALFORMAT, e.Message);
+                    notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.URN_MALFORMAT, null);
                     return;
                 }
 
@@ -214,7 +220,7 @@ namespace hubiquitus4w8.hapi.client
                 return;
             }
             message.SetSent(DateTime.Now);
-            message.SetPublisher(transportOptions.Jid.GetBareJID());
+            message.SetPublisher(transportOptions.FullUrn);
             if (message.GetTimeout() > 0)
             {
                 // hAPI will do correlation. If no answer within the
@@ -704,8 +710,8 @@ namespace hubiquitus4w8.hapi.client
                 else
                     message.SetRelevance(mOptions.Relevance);
             }
-            if (transportOptions != null && transportOptions.Jid != null)
-                message.SetPublisher(transportOptions.Jid.GetBareJID());
+            if (transportOptions != null && transportOptions.Urn != null)
+                message.SetPublisher(transportOptions.FullUrn);
             else
                 message.SetPublisher(null);
             message.SetPayload(payload);
@@ -807,9 +813,8 @@ namespace hubiquitus4w8.hapi.client
         {
             try
             {
-                JabberID jid = new JabberID(publisher);
-
-                this.transportOptions.Jid = jid;
+                
+                this.transportOptions.Urn = publisher;
                 this.transportOptions.Password = password;
                 this.transportOptions.Timeout = options.GetTimeout();
                 this.transportOptions.AuthCb = options.AuthCb;

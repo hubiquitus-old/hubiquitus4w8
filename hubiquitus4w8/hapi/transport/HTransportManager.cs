@@ -130,9 +130,6 @@ namespace hubiquitus4w8.hapi.transport
                     connStatus = ConnectionStatus.DISCONNECTING;
                     Transport.Disconnect();
                 }
-                else
-                {
-                }
             }
             else
                 this.onStatus(connStatus, ConnectionErrors.TECH_ERROR, ErrorMessage.noConnectivity);

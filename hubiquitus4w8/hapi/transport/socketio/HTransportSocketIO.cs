@@ -36,7 +36,6 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using Windows.System.Threading;
-using hubiquitus4w8.hapi.stuctures;
 
 namespace hubiquitus4w8.hapi.transport.socketio
 {
@@ -76,9 +75,9 @@ namespace hubiquitus4w8.hapi.transport.socketio
             socketIO.On("connect", (message) =>
                 {
                     if (this.options.AuthCb != null)
-                        this.options.AuthCb(options.Jid.GetFullJID(), Login);
+                        this.options.AuthCb(options.Urn, Login);
                     else
-                        Login(options.Jid.GetFullJID(), options.Password);
+                        Login(options.Urn, options.Password);
                 });
             socketIO.ConnectAsync();
 
@@ -90,7 +89,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
             JObject data = new JObject();
             try
             {
-                data.Add("publisher", username);
+                data.Add("login", username);
                 data.Add("password", password);
                 data.Add("sent", DateTime.Now);
                 socketIO.Emit("hConnect", data);
@@ -179,8 +178,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
                     JObject data = (JObject)e.Message.Json.Args[0];
                     try
                     {
-                        JabberID jid = new JabberID(data["publisher"].ToString());
-                        this.options.Jid = jid;
+                        options.FullUrn = data["publisher"].ToString();
                         isFullJidSet = true;
                         if (connStatus != ConnectionStatus.CONNECTED)
                             updateStatus(ConnectionStatus.CONNECTED, ConnectionErrors.NO_ERROR, null);
@@ -243,8 +241,11 @@ namespace hubiquitus4w8.hapi.transport.socketio
 
         void timeout_Elapsed(object state)
         {
-            connTimeoutTimer.Cancel();
-            connTimeoutTimer = null;
+            if (connTimeoutTimer != null)
+            {
+                connTimeoutTimer.Cancel();
+                connTimeoutTimer = null;
+            }
             updateStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.CONN_TIMEOUT, null);
             if (socketIO.IsConnected)
                 socketIO.Close();

@@ -25,17 +25,16 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using hubiquitus4w8.hapi.stuctures;
 
 namespace hubiquitus4w8.hapi.transport
 {
     public class HTransportOptions
     {
-        private JabberID jid = null;
+        private string urn = null;
+        private string fullUrn = null;
+        private string domain = null;
+        private string username = null;
+        private string resource = null;
         private string password = null;
         private string endpointHost = null;
         private int endpointPort = 0;
@@ -48,19 +47,7 @@ namespace hubiquitus4w8.hapi.transport
         {
         }
 
-        public string GetUsername()
-        {
-            if (jid == null)
-                throw new NullReferenceException("Error: " + this.GetType() + " need a jid");
-            return jid.Username;
-        }
-
-        public string GetResource()
-        {
-            if (jid == null)
-                throw new NullReferenceException("Error: " + this.GetType() + " need a jid");
-            return jid.Resource;
-        }
+       
 
         /// <summary>
         /// return hserver service name (by default if should be "hnode@domain")
@@ -69,8 +56,8 @@ namespace hubiquitus4w8.hapi.transport
         public string GetHserverService()
         {
             string nodeService = null;
-            if (this.jid != null)
-                nodeService = this.hserver + "@" + this.jid.Domain;
+            if (this.urn != null)
+                nodeService = this.hserver + "@" + this.Domain;
             return nodeService;
         }
 
@@ -80,16 +67,52 @@ namespace hubiquitus4w8.hapi.transport
         /// <returns></returns>
         public string GetPubsubService() 
         {
-            return "pubsub" + "." + this.jid.Domain;
+            return "pubsub" + "." + this.Domain;
         }
 
         //getter & setter 
 
-        public JabberID Jid 
+        public string Urn 
         {
-            get { return jid; }
-            set { jid = value; }
+            get { return urn; }
+            set
+            {
+                urn = value; 
+
+                Domain = urn.Split(":".ToCharArray())[1];
+                Username = urn.Split(":".ToCharArray())[2];
+            }
         }
+
+        public string FullUrn
+        {
+            get { return fullUrn; }
+            set 
+            {
+                fullUrn = value;
+                Resource = fullUrn.Split(":".ToCharArray())[2].Split("/".ToCharArray())[1];
+            }
+        }
+
+        public string Domain
+        {
+            get { return domain; }
+            set { domain = value; }
+        }
+
+        public string Username
+        {
+            get { return username; }
+            set { username = value; }
+
+        }
+
+        public string Resource
+        {
+            get { return resource; }
+            set { resource = value; }
+        }
+
 
         public string Password
         {
@@ -131,7 +154,7 @@ namespace hubiquitus4w8.hapi.transport
 
         public override string ToString()
         {
-            return "HTransportOptions [jid=" + jid + ", password=" + password
+            return "HTransportOptions [jid=" + urn + ", password=" + password
                 + ", endpointHost=" + endpointHost + ", endpointPort="
                 + endpointPort + ", endpointPath=" + endpointPath + ", hNode="
                 + hserver + "]";
@@ -147,7 +170,7 @@ namespace hubiquitus4w8.hapi.transport
                     + ((endpointPath == null) ? 0 : endpointPath.GetHashCode());
             result = prime * result + endpointPort;
             result = prime * result + ((hserver == null) ? 0 : hserver.GetHashCode());
-            result = prime * result + ((jid == null) ? 0 : jid.GetHashCode());
+            result = prime * result + ((urn == null) ? 0 : urn.GetHashCode());
             result = prime * result
                     + ((password == null) ? 0 : password.GetHashCode());
             return result;
@@ -162,7 +185,7 @@ namespace hubiquitus4w8.hapi.transport
             if (obj.GetType() != this.GetType())
                 return false;
             HTransportOptions hobj = (HTransportOptions)obj;
-            if (this.jid.Equals(hobj.jid))
+            if (this.urn.Equals(hobj.urn))
                 return false;
             if (this.password != hobj.password)
                 return false;
