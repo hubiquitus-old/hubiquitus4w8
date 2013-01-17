@@ -56,6 +56,7 @@ namespace hubiquitus4w8.hapi.client
         private HTransportManager transportManager = null;
         private HTransportOptions transportOptions;
         private bool isEventHandlerAdded = false;
+        private HCondition filter = new HCondition();
 
         public string FullJid { get { return this.transportOptions.FullUrn; } }
         public string Resource { get { return this.transportOptions.Resource; } }
@@ -93,10 +94,11 @@ namespace hubiquitus4w8.hapi.client
         /// <summary>
         /// Connect to server
         /// </summary>
-        /// <param name="publisher">user jid i.e.(my_user@domain/resource)</param>
+        /// <param name="login">user jid i.e.(my_user@domain/resource)</param>
         /// <param name="password"></param>
         /// <param name="options"></param>
-        public void Connect(string publisher, string password, HOptions options)
+        /// <param name="context"></param>
+        public void Connect(string login, string password, HOptions options, JObject context)
         {
             bool shouldConnect = false;
             bool connInprogress = false;
@@ -115,9 +117,9 @@ namespace hubiquitus4w8.hapi.client
 
             if (shouldConnect)
             {
-                if(checkURN(publisher))
+                if(checkURN(login))
                 {
-                    fillTransportOptions(publisher, password, options);
+                    fillTransportOptions(login, password, options, context);
                 }
                 else
                 {
@@ -152,6 +154,17 @@ namespace hubiquitus4w8.hapi.client
                 else
                     notifyStatus(ConnectionStatus.CONNECTED, ConnectionErrors.ALREADY_CONNECTED, null);
             }
+        }
+
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        /// <param name="options"></param>
+        public void Connect(string login, string password, HOptions options)
+        {
+            this.Connect(login, password, options, null);
         }
 
         void transport_onData(string type, JObject obj)
@@ -258,7 +271,7 @@ namespace hubiquitus4w8.hapi.client
             if (messageDelegate == null)
                 throw new MissingAttrException("messageDelegate");
          
-            HMessage cmdMessage = BuildCommand(actor, "hsubscribe", null, null);
+            HMessage cmdMessage = BuildCommand(actor, "hSubscribe", null, null, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             this.Send(cmdMessage, messageDelegate);
         }
@@ -267,14 +280,13 @@ namespace hubiquitus4w8.hapi.client
         /// The client MUST be connected to access to this service.
         /// Demands the server an unsubscription to the channel
         /// </summary>
-        /// <param name="actor"></param>
         /// <param name="messageDelegate"></param>
-        public void Unsubscribe(string actor, Action<HMessage> messageDelegate)
+        public void Unsubscribe(Action<HMessage> messageDelegate)
         {
             if (messageDelegate == null)
                 throw new MissingAttrException("messageDelegate");
 
-            HMessage cmdMessage = BuildCommand(actor, "hunsubscribe", null, null);
+            HMessage cmdMessage = BuildCommand("session", "hUnsubscribe", null, null, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             this.Send(cmdMessage, messageDelegate);
         }
@@ -300,7 +312,7 @@ namespace hubiquitus4w8.hapi.client
                 @params["nbLastMsg"] = nbLastMsg;
             else
                 @params["nbLastMsg"] = 10;
-            HMessage cmdMessage = BuildCommand(actor, "hgetlastmessages", @params, null);
+            HMessage cmdMessage = BuildCommand(actor, "hGetLastMessages", @params, filter, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
@@ -326,7 +338,7 @@ namespace hubiquitus4w8.hapi.client
         {
             if (messageDelegate == null)
                 throw new MissingAttrException("messageDelegate");
-            HMessage cmdMessage = BuildCommand(transportOptions.GetHserverService(), "hgetsubscriptions", null, null);
+            HMessage cmdMessage = BuildCommand("session", "hGetSubscriptions", null, null, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
@@ -353,7 +365,7 @@ namespace hubiquitus4w8.hapi.client
             JObject @params = new JObject();
             @params["convid"] = convid;
 
-            HMessage cmdMessage = BuildCommand(actor, "hgetthread", @params, null);
+            HMessage cmdMessage = BuildCommand(actor, "hGetThread", @params, filter, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
 
@@ -381,7 +393,7 @@ namespace hubiquitus4w8.hapi.client
             JObject @params = new JObject();
             @params["status"] = status;
 
-            HMessage cmdMessage = BuildCommand(actor,"hgetthreads",@params, null);
+            HMessage cmdMessage = BuildCommand(actor,"hGetThreads",@params, filter, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
@@ -393,7 +405,8 @@ namespace hubiquitus4w8.hapi.client
         /// <param name="messageDelegate"></param>
         public void SetFilter(HCondition filter, Action<HMessage> messageDelegate)
         {
-            HMessage cmdMessage = BuildCommand("session", "hSetFilter", filter, null);
+            HMessage cmdMessage = BuildCommand("session", "hSetFilter", filter, null, null);
+            this.filter = filter;
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
@@ -414,7 +427,7 @@ namespace hubiquitus4w8.hapi.client
                 return;
             }
 
-            HMessage cmdMessage = BuildCommand(actor, "hrelevantmessages", null, null);
+            HMessage cmdMessage = BuildCommand(actor, "hRelevantMessages", null, filter, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
@@ -607,19 +620,18 @@ namespace hubiquitus4w8.hapi.client
         /// <param name="actor"></param>
         /// <param name="cmd"></param>
         /// <param name="params"></param>
+        /// <param name="filter"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildCommand(string actor, string cmd, JObject @params, HMessageOptions mOptions)
+        public HMessage BuildCommand(string actor, string cmd, JObject @params, HCondition filter, HMessageOptions mOptions)
         {
             if (actor == null || actor.Length <= 0)
                 throw new MissingAttrException("actor");
             if (cmd == null || cmd.Length <= 0)
                 throw new MissingAttrException("cmd");
 
-            HCommand hcommand = new HCommand();
-            hcommand.SetCmd(cmd);
-            hcommand.SetParams(@params);
-
+            HCommand hcommand = new HCommand(cmd, @params, filter);
+           
             HMessage hmessage = BuildMessage(actor, "hCommand", hcommand, mOptions);
             return hmessage;
         }
@@ -809,7 +821,7 @@ namespace hubiquitus4w8.hapi.client
 
         }
 
-        private void fillTransportOptions(string publisher, string password, HOptions options)
+        private void fillTransportOptions(string publisher, string password, HOptions options, JObject context)
         {
             try
             {

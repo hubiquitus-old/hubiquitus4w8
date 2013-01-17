@@ -42,13 +42,13 @@ namespace hubiquitus4w8.hapi.hStructures
         private string @ref = null;
         private string convid = null;
         private HMessagePriority? priority = null;
-        private DateTime? relevance = null;
+        private long relevance = 0;
         private int? relevanceOffset = null;
         private bool? persistent = null;
         private HLocation location = null;
         private string author = null;
         private JObject headers = null;
-        private DateTime? published = null;
+        private long published = 0;
         private int timeout = 0;
 
         public string Ref
@@ -70,7 +70,7 @@ namespace hubiquitus4w8.hapi.hStructures
             set { priority = value; }
         }
 
-        public DateTime? Relevance
+        public long Relevance
         {
             get { return relevance; }
             set { relevance = value; }
@@ -107,7 +107,7 @@ namespace hubiquitus4w8.hapi.hStructures
             set { headers = value; }
         }
 
-        public DateTime? Published
+        public long Published
         {
             get { return published; }
             set { published = value; }

@@ -276,16 +276,30 @@ namespace hubiquitus4w8.hapi.hStructures
 
 
         /// <summary>
-        /// Date-time until which the message is considered as relevant. NULL if undefined
+        /// Timestamp until which the message is considered as relevant. NULL if undefined
         /// </summary>
         /// <returns></returns>
-        public DateTime? GetRelevance()
+        public long GetRelevance()
+        {
+            long relevance = 0;
+            try
+            {
+                relevance = this["relevance"].ToObject<long>();
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not fetch the relevance attribute", e.ToString());
+            }
+            return relevance;
+        }
+
+        public DateTime? GetRelevanceAsDate()
         {
             DateTime? relevance = null;
             try
             {
-                relevance = this["relevance"].ToObject<DateTime>();
-
+                relevance = new DateTime(this["relevance"].ToObject<long>());
             }
             catch (Exception e)
             {
@@ -304,7 +318,26 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this["relevance"] = relevance.GetValueOrDefault();//.ToString(HUtil.DateISO8601Format);
+                    this["relevance"] = relevance.GetValueOrDefault().Ticks;//.ToString(HUtil.DateISO8601Format);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not update the relevance attribute", e.ToString());
+            }
+        }
+
+        public void SetRelevance(long relevance)
+        {
+            try
+            {
+                if (relevance == 0)
+                {
+                    this.Remove("relevance");
+                }
+                else
+                {
+                    this["relevance"] = relevance;//.ToString(HUtil.DateISO8601Format);
                 }
             }
             catch (Exception e)
@@ -462,12 +495,26 @@ namespace hubiquitus4w8.hapi.hStructures
         /// Mandatory. The date and time at which the message has been published. NULL if undefined
         /// </summary>
         /// <returns></returns>
-        public DateTime? GetPublished()
+        public DateTime? GetPublishedAsDate()
         {
             DateTime? published = null;
             try
             {
-                published = this["published"].ToObject<DateTime>();
+                published = new DateTime(this["published"].ToObject<long>());
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not fetch the published attribute", e.ToString());
+            }
+            return published;
+        }
+
+        public long GetPublished()
+        {
+            long published = 0;
+            try
+            {
+                published = this["published"].ToObject<long>();
             }
             catch (Exception e)
             {
@@ -486,7 +533,26 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this["published"] = published.GetValueOrDefault().ToString(HUtil.DateISO8601Format);
+                    this["published"] = published.GetValueOrDefault().Ticks;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not update the published attribute", e.ToString());
+            }
+        }
+
+        public void SetPublished(long published)
+        {
+            try
+            {
+                if (published == 0)
+                {
+                    this.Remove("published");
+                }
+                else
+                {
+                    this["published"] = published;
                 }
             }
             catch (Exception e)
@@ -1016,12 +1082,26 @@ namespace hubiquitus4w8.hapi.hStructures
         /// 
         /// </summary>
         /// <returns>sent. Null if undefined.</returns>
-        public DateTime? GetSent()
+        public DateTime? GetSentAsDate()
         {
             DateTime? sent = null;
             try
             {
-                sent = this["sent"].ToObject<DateTime>();
+                sent = new DateTime(this["sent"].ToObject<long>());
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not fetch the sent attribute", e.ToString());
+            }
+            return sent;
+        }
+
+        public long GetSent()
+        {
+            long sent = 0;
+            try
+            {
+                sent = this["sent"].ToObject<long>();
             }
             catch (Exception e)
             {
@@ -1037,7 +1117,22 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (sent == null)
                     this.Remove("sent");
                 else
-                    this["sent"] = sent.GetValueOrDefault();
+                    this["sent"] = sent.GetValueOrDefault().Ticks;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not update the sent attribute", e.ToString());
+            }
+        }
+
+        public void SetSent(long sent)
+        {
+            try
+            {
+                if (sent == 0)
+                    this.Remove("sent");
+                else
+                    this["sent"] = sent;
             }
             catch (Exception e)
             {

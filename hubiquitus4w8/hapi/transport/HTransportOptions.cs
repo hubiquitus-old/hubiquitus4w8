@@ -24,6 +24,7 @@
  */
 
 
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace hubiquitus4w8.hapi.transport
@@ -41,6 +42,7 @@ namespace hubiquitus4w8.hapi.transport
         private string endpointPath = null;
         private string hserver = "hnode";
         private int timeout = 0;
+        private JObject context = null;
         public AuthenticationCallback AuthCb { get; set; }
 
         public HTransportOptions()
@@ -152,52 +154,10 @@ namespace hubiquitus4w8.hapi.transport
             set { timeout = value; }
         }
 
-        public override string ToString()
+        public JObject Context
         {
-            return "HTransportOptions [jid=" + urn + ", password=" + password
-                + ", endpointHost=" + endpointHost + ", endpointPort="
-                + endpointPort + ", endpointPath=" + endpointPath + ", hNode="
-                + hserver + "]";
-        }
-
-        public override int GetHashCode()
-        {
-            const int prime = 31;
-            int result = 1;
-            result = prime * result
-                    + ((endpointHost == null) ? 0 : endpointHost.GetHashCode());
-            result = prime * result
-                    + ((endpointPath == null) ? 0 : endpointPath.GetHashCode());
-            result = prime * result + endpointPort;
-            result = prime * result + ((hserver == null) ? 0 : hserver.GetHashCode());
-            result = prime * result + ((urn == null) ? 0 : urn.GetHashCode());
-            result = prime * result
-                    + ((password == null) ? 0 : password.GetHashCode());
-            return result;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (obj.GetType() != this.GetType())
-                return false;
-            HTransportOptions hobj = (HTransportOptions)obj;
-            if (this.urn.Equals(hobj.urn))
-                return false;
-            if (this.password != hobj.password)
-                return false;
-          if (this.endpointHost != hobj.endpointHost)
-                return false;
-            if (this.endpointPath != hobj.endpointPath)
-                return false;
-            if (this.endpointPort != hobj.endpointPort)
-                return false;
-            if (this.hserver != hobj.hserver)
-                return false;
-            return true;
+            get { return context; }
+            set { context = value; }
         }
     }
 }

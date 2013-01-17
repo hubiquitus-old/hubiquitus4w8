@@ -91,7 +91,12 @@ namespace hubiquitus4w8.hapi.transport.socketio
             {
                 data.Add("login", username);
                 data.Add("password", password);
-                data.Add("sent", DateTime.Now);
+                data.Add("sent", DateTime.Now.Ticks);
+                if (options.Context != null)
+                {
+                    data.Add("context", options.Context);
+                }
+
                 socketIO.Emit("hConnect", data);
 
             }
