@@ -127,6 +127,7 @@ namespace SimpleClient
              //       Login(username, "u1");
              //   }
              //   );
+
             client.Connect(usernamTbx.Text, passwordTbx.Text, options);
 
         }
@@ -196,8 +197,8 @@ namespace SimpleClient
             HArrayOfValue valueArray = new HArrayOfValue();
             valueArray.SetName("publisher");
             JArray ja = new JArray();
-            ja.Add("u1@hub.novediagroup.com");
-            ja.Add("u2@hub.novediagroup.com");
+            ja.Add("urn:localhost:u1");
+            ja.Add("urn:localhost:u2");
             valueArray.SetValues(ja);
             filter.SetInValue(valueArray);
 
