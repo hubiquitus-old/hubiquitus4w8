@@ -148,19 +148,28 @@ namespace hubiquitus4w8.hapi.transport
             this.connStatus = status;
             if (onStatus != null)
             {
-              
+
                 if (WebErrorStatus.ConnectionAborted.ToString().Equals(errorMsg))
                 {
-                    onStatus(status, error, errorMsg + " " + ErrorMessage.reconnIn5s);
+                    if (this.shouldConnect)
+                        onStatus(status, error, errorMsg + " " + ErrorMessage.reconnIn5s);
+                    else
+                        onStatus(status, error, errorMsg);
                     ThreadPoolTimer timer = ThreadPoolTimer.CreateTimer(
                        async (obj) =>
                        {
                            await ThreadPool.RunAsync(TryToConnectDisconnect, WorkItemPriority.High);
                        }, new TimeSpan(0, 0, 0, 0, 5000));
-                    
+
                 }
                 else
+                {
                     onStatus(status, error, errorMsg);
+                    if (error == ConnectionErrors.AUTH_FAILED)
+                    {
+                        this.shouldConnect = false;
+                    }
+                }
             }
             else
                 throw new ArgumentNullException("Error: " + this.GetType() + " require a StatusEventHandler onStatus");
