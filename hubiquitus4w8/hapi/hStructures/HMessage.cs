@@ -299,7 +299,7 @@ namespace hubiquitus4w8.hapi.hStructures
             DateTime? relevance = null;
             try
             {
-                relevance = new DateTime(this["relevance"].ToObject<long>());
+                relevance = HUtil.Timestamps2Datetime(this["relevance"].ToObject<long>());
             }
             catch (Exception e)
             {
@@ -318,7 +318,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this["relevance"] = relevance.GetValueOrDefault().Ticks;//.ToString(HUtil.DateISO8601Format);
+                    this["relevance"] = HUtil.DateTime2Timestamps(relevance.Value);
                 }
             }
             catch (Exception e)
@@ -337,7 +337,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this["relevance"] = relevance;//.ToString(HUtil.DateISO8601Format);
+                    this["relevance"] = relevance;
                 }
             }
             catch (Exception e)
@@ -500,7 +500,7 @@ namespace hubiquitus4w8.hapi.hStructures
             DateTime? published = null;
             try
             {
-                published = new DateTime(this["published"].ToObject<long>());
+                published = HUtil.Timestamps2Datetime(this["published"].ToObject<long>());
             }
             catch (Exception e)
             {
@@ -533,7 +533,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 }
                 else
                 {
-                    this["published"] = published.GetValueOrDefault().Ticks;
+                    this["published"] = HUtil.DateTime2Timestamps(published.Value);
                 }
             }
             catch (Exception e)
@@ -1087,7 +1087,7 @@ namespace hubiquitus4w8.hapi.hStructures
             DateTime? sent = null;
             try
             {
-                sent = new DateTime(this["sent"].ToObject<long>());
+                sent = HUtil.Timestamps2Datetime(this["sent"].ToObject<long>());
             }
             catch (Exception e)
             {
@@ -1117,7 +1117,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 if (sent == null)
                     this.Remove("sent");
                 else
-                    this["sent"] = sent.GetValueOrDefault().Ticks;
+                    this["sent"] = HUtil.DateTime2Timestamps(sent.Value);
             }
             catch (Exception e)
             {

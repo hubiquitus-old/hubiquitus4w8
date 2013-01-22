@@ -31,10 +31,9 @@ namespace hubiquitus4w8.hapi.transport
 {
     public class HTransportOptions
     {
-        private string urn = null;
+        private string login = null;
         private string fullUrn = null;
         private string domain = null;
-        private string username = null;
         private string resource = null;
         private string password = null;
         private string endpointHost = null;
@@ -51,38 +50,17 @@ namespace hubiquitus4w8.hapi.transport
 
        
 
-        /// <summary>
-        /// return hserver service name (by default if should be "hnode@domain")
-        /// </summary>
-        /// <returns></returns>
-        public string GetHserverService()
-        {
-            string nodeService = null;
-            if (this.urn != null)
-                nodeService = this.hserver + "@" + this.Domain;
-            return nodeService;
-        }
+        
 
-        /// <summary>
-        /// return pubsub service name (by default it should be "pubsub")
-        /// </summary>
-        /// <returns></returns>
-        public string GetPubsubService() 
-        {
-            return "pubsub" + "." + this.Domain;
-        }
 
         //getter & setter 
 
-        public string Urn 
+        public string Login 
         {
-            get { return urn; }
+            get { return login; }
             set
             {
-                urn = value; 
-
-                Domain = urn.Split(":".ToCharArray())[1];
-                Username = urn.Split(":".ToCharArray())[2];
+                login = value;
             }
         }
 
@@ -92,6 +70,7 @@ namespace hubiquitus4w8.hapi.transport
             set 
             {
                 fullUrn = value;
+                Domain = fullUrn.Split(":".ToCharArray())[1];
                 Resource = fullUrn.Split(":".ToCharArray())[2].Split("/".ToCharArray())[1];
             }
         }
@@ -102,13 +81,7 @@ namespace hubiquitus4w8.hapi.transport
             set { domain = value; }
         }
 
-        public string Username
-        {
-            get { return username; }
-            set { username = value; }
-
-        }
-
+        
         public string Resource
         {
             get { return resource; }

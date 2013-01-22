@@ -36,6 +36,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using Windows.System.Threading;
+using hubiquitus4w8.hapi.util;
 
 namespace hubiquitus4w8.hapi.transport.socketio
 {
@@ -75,9 +76,9 @@ namespace hubiquitus4w8.hapi.transport.socketio
             socketIO.On("connect", (message) =>
                 {
                     if (this.options.AuthCb != null)
-                        this.options.AuthCb(options.Urn, Login);
+                        this.options.AuthCb(options.Login, Login);
                     else
-                        Login(options.Urn, options.Password);
+                        Login(options.Login, options.Password);
                 });
             socketIO.ConnectAsync();
 
@@ -91,7 +92,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
             {
                 data.Add("login", username);
                 data.Add("password", password);
-                data.Add("sent", DateTime.Now.Ticks);
+                data.Add("sent",HUtil.DateTime2Timestamps(DateTime.UtcNow));
                 if (options.Context != null)
                 {
                     data.Add("context", options.Context);

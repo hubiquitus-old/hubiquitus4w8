@@ -84,13 +84,6 @@ namespace hubiquitus4w8.hapi.client
             transportOptions = new HTransportOptions();
         }
 
-
-        private bool checkURN(string urn)
-        {
-            string urn_pattern = @"urn:[a-z0-9]{1}[a-z0-9\-]{1,31}:[a-z0-9_,:=@;!'%/#\(\)\+\-\.\$\*\?]+";
-            return Regex.Match(urn, urn_pattern).Success;
-        }
-
         /// <summary>
         /// Connect to server
         /// </summary>
@@ -117,15 +110,8 @@ namespace hubiquitus4w8.hapi.client
 
             if (shouldConnect)
             {
-                if(checkURN(login))
-                {
-                    fillTransportOptions(login, password, options, context);
-                }
-                else
-                {
-                    notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionErrors.URN_MALFORMAT, null);
-                    return;
-                }
+                
+                fillTransportOptions(login, password, options, context);
 
                 if (options.GetTransport() == "socketio")
                 {
@@ -232,7 +218,7 @@ namespace hubiquitus4w8.hapi.client
                 notifyResultError(message.GetMsgid(), ResultStatus.MISSING_ATTR, "Actor is missing.", messageDelegate);
                 return;
             }
-            message.SetSent(DateTime.Now);
+            message.SetSent(DateTime.UtcNow);
             message.SetPublisher(transportOptions.FullUrn);
             if (message.GetTimeout() > 0)
             {
@@ -281,12 +267,14 @@ namespace hubiquitus4w8.hapi.client
         /// Demands the server an unsubscription to the channel
         /// </summary>
         /// <param name="messageDelegate"></param>
-        public void Unsubscribe(Action<HMessage> messageDelegate)
+        public void Unsubscribe(string actor, Action<HMessage> messageDelegate)
         {
+            if (actor == null || actor.Length <= 0)
+                throw new MissingAttrException("actor");
             if (messageDelegate == null)
                 throw new MissingAttrException("messageDelegate");
 
-            HMessage cmdMessage = BuildCommand("session", "hUnsubscribe", null, null, null);
+            HMessage cmdMessage = BuildCommand("session", "hUnsubscribe", actor, null, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             this.Send(cmdMessage, messageDelegate);
         }
@@ -623,7 +611,7 @@ namespace hubiquitus4w8.hapi.client
         /// <param name="filter"></param>
         /// <param name="mOptions"></param>
         /// <returns></returns>
-        public HMessage BuildCommand(string actor, string cmd, JObject @params, HCondition filter, HMessageOptions mOptions)
+        public HMessage BuildCommand(string actor, string cmd, JToken @params, HCondition filter, HMessageOptions mOptions)
         {
             if (actor == null || actor.Length <= 0)
                 throw new MissingAttrException("actor");
@@ -718,11 +706,15 @@ namespace hubiquitus4w8.hapi.client
                 message.SetPersistent(mOptions.Persistent);
                 message.SetTimeout(mOptions.Timeout);
                 if (mOptions.RelevanceOffset != null)
-                    message.SetRelevance((DateTime.Now).AddMilliseconds(mOptions.RelevanceOffset.Value));
+                {
+                    Debug.WriteLine("----   " + mOptions.RelevanceOffset);
+                    message.SetRelevance((DateTime.UtcNow).AddMilliseconds(mOptions.RelevanceOffset.Value));
+                    Debug.WriteLine("++++   " + message.GetRelevance());
+                }
                 else
                     message.SetRelevance(mOptions.Relevance);
             }
-            if (transportOptions != null && transportOptions.Urn != null)
+            if (transportOptions != null && transportOptions.Login != null)
                 message.SetPublisher(transportOptions.FullUrn);
             else
                 message.SetPublisher(null);
@@ -821,12 +813,12 @@ namespace hubiquitus4w8.hapi.client
 
         }
 
-        private void fillTransportOptions(string publisher, string password, HOptions options, JObject context)
+        private void fillTransportOptions(string login, string password, HOptions options, JObject context)
         {
             try
             {
                 
-                this.transportOptions.Urn = publisher;
+                this.transportOptions.Login = login;
                 this.transportOptions.Password = password;
                 this.transportOptions.Timeout = options.GetTimeout();
                 this.transportOptions.AuthCb = options.AuthCb;
