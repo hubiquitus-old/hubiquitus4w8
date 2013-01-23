@@ -47,10 +47,11 @@ namespace hubiquitus4w8.hapi.hStructures
         {
         }
 
-        public HCommand(string cmd, JObject @params)
+        public HCommand(string cmd, JToken @params, HCondition filter)
         {
             SetCmd(cmd);
             SetParams(@params);
+            SetFilter(filter);
         }
 
      
@@ -96,12 +97,12 @@ namespace hubiquitus4w8.hapi.hStructures
         /// Get params thrown to the hserver. 
         /// </summary>
         /// <returns>Null if undefined.</returns>
-        public JObject GetParams()
+        public JToken GetParams()
         {
-            JObject @params = null;
+            JToken @params = null;
             try
             {
-                @params = this["params"].ToObject<JObject>();
+                @params = this["params"].ToObject<JToken>();
             }
             catch (Exception e)
             {
@@ -114,7 +115,7 @@ namespace hubiquitus4w8.hapi.hStructures
         /// Set params thrown to the hserver.
         /// </summary>
         /// <param name="params"></param>
-        public void SetParams(JObject @params)
+        public void SetParams(JToken @params)
         {
             try
             {
@@ -126,6 +127,36 @@ namespace hubiquitus4w8.hapi.hStructures
             catch (Exception e)
             {
                 Debug.WriteLine("{0} : Can not update the params attribute", e.ToString());
+            }
+        }
+
+        public HCondition GetFilter() 
+        {
+            HCondition filter = null;
+            try
+            {
+                filter =  new HCondition(this["filter"].ToObject<JObject>());
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("{0} : Can not fetch the params attribute", e.ToString());
+            }
+            return filter;
+        }
+
+
+        public void SetFilter(HCondition filter)
+        {
+            try
+            {
+                if (filter == null)
+                    this.Remove("filter");
+                else
+                    this["filter"] = filter;
+            }
+            catch (Exception e) 
+            {
+                Debug.WriteLine("{0} : Can not update the filter attribute", e.ToString());
             }
         }
     }

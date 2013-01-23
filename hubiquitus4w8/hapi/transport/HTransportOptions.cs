@@ -24,72 +24,70 @@
  */
 
 
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using hubiquitus4w8.hapi.stuctures;
 
 namespace hubiquitus4w8.hapi.transport
 {
     public class HTransportOptions
     {
-        private JabberID jid = null;
+        private string login = null;
+        private string fullUrn = null;
+        private string domain = null;
+        private string resource = null;
         private string password = null;
         private string endpointHost = null;
         private int endpointPort = 0;
         private string endpointPath = null;
         private string hserver = "hnode";
         private int timeout = 0;
+        private JObject context = null;
         public AuthenticationCallback AuthCb { get; set; }
 
         public HTransportOptions()
         {
         }
 
-        public string GetUsername()
-        {
-            if (jid == null)
-                throw new NullReferenceException("Error: " + this.GetType() + " need a jid");
-            return jid.Username;
-        }
+       
 
-        public string GetResource()
-        {
-            if (jid == null)
-                throw new NullReferenceException("Error: " + this.GetType() + " need a jid");
-            return jid.Resource;
-        }
+        
 
-        /// <summary>
-        /// return hserver service name (by default if should be "hnode@domain")
-        /// </summary>
-        /// <returns></returns>
-        public string GetHserverService()
-        {
-            string nodeService = null;
-            if (this.jid != null)
-                nodeService = this.hserver + "@" + this.jid.Domain;
-            return nodeService;
-        }
-
-        /// <summary>
-        /// return pubsub service name (by default it should be "pubsub")
-        /// </summary>
-        /// <returns></returns>
-        public string GetPubsubService() 
-        {
-            return "pubsub" + "." + this.jid.Domain;
-        }
 
         //getter & setter 
 
-        public JabberID Jid 
+        public string Login 
         {
-            get { return jid; }
-            set { jid = value; }
+            get { return login; }
+            set
+            {
+                login = value;
+            }
         }
+
+        public string FullUrn
+        {
+            get { return fullUrn; }
+            set 
+            {
+                fullUrn = value;
+                Domain = fullUrn.Split(":".ToCharArray())[1];
+                Resource = fullUrn.Split(":".ToCharArray())[2].Split("/".ToCharArray())[1];
+            }
+        }
+
+        public string Domain
+        {
+            get { return domain; }
+            set { domain = value; }
+        }
+
+        
+        public string Resource
+        {
+            get { return resource; }
+            set { resource = value; }
+        }
+
 
         public string Password
         {
@@ -129,52 +127,10 @@ namespace hubiquitus4w8.hapi.transport
             set { timeout = value; }
         }
 
-        public override string ToString()
+        public JObject Context
         {
-            return "HTransportOptions [jid=" + jid + ", password=" + password
-                + ", endpointHost=" + endpointHost + ", endpointPort="
-                + endpointPort + ", endpointPath=" + endpointPath + ", hNode="
-                + hserver + "]";
-        }
-
-        public override int GetHashCode()
-        {
-            const int prime = 31;
-            int result = 1;
-            result = prime * result
-                    + ((endpointHost == null) ? 0 : endpointHost.GetHashCode());
-            result = prime * result
-                    + ((endpointPath == null) ? 0 : endpointPath.GetHashCode());
-            result = prime * result + endpointPort;
-            result = prime * result + ((hserver == null) ? 0 : hserver.GetHashCode());
-            result = prime * result + ((jid == null) ? 0 : jid.GetHashCode());
-            result = prime * result
-                    + ((password == null) ? 0 : password.GetHashCode());
-            return result;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (obj.GetType() != this.GetType())
-                return false;
-            HTransportOptions hobj = (HTransportOptions)obj;
-            if (this.jid.Equals(hobj.jid))
-                return false;
-            if (this.password != hobj.password)
-                return false;
-          if (this.endpointHost != hobj.endpointHost)
-                return false;
-            if (this.endpointPath != hobj.endpointPath)
-                return false;
-            if (this.endpointPort != hobj.endpointPort)
-                return false;
-            if (this.hserver != hobj.hserver)
-                return false;
-            return true;
+            get { return context; }
+            set { context = value; }
         }
     }
 }

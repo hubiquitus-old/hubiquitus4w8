@@ -43,7 +43,8 @@ namespace hubiquitus4w8.hapi.hStructures
         ALREADY_CONNECTED = 5,
         TECH_ERROR = 6,
         NOT_CONNECTED = 7,
-        CONN_PROGRESS = 8
+        CONN_PROGRESS = 8,
+        URN_MALFORMAT
     }
 
     public enum ConnectionStatus
