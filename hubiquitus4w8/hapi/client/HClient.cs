@@ -273,8 +273,9 @@ namespace hubiquitus4w8.hapi.client
                 throw new MissingAttrException("actor");
             if (messageDelegate == null)
                 throw new MissingAttrException("messageDelegate");
-
-            HMessage cmdMessage = BuildCommand("session", "hUnsubscribe", actor, null, null);
+            JObject @params = new JObject();
+            @params["channel"] = actor;
+            HMessage cmdMessage = BuildCommand("session", "hUnsubscribe", @params, null, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             this.Send(cmdMessage, messageDelegate);
         }
