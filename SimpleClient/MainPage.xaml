@@ -11,11 +11,11 @@
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="95,36,0,0" TextWrapping="Wrap" Text="Server: " VerticalAlignment="Top"/>
         <TextBox Name="serverTbx" Text="http://hub.novediagroup.com:8080" HorizontalAlignment="Left" Margin="208,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="63,87,0,0" TextWrapping="Wrap" Text="Username: " VerticalAlignment="Top"/>
-        <TextBox Name="usernamTbx" Text="u1@hub.novediagroup.com" HorizontalAlignment="Left" Margin="208,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
+        <TextBox Name="usernamTbx" Text="urn:localhost:u1" HorizontalAlignment="Left" Margin="208,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="69,138,0,0" TextWrapping="Wrap" Text="Password: " VerticalAlignment="Top"/>
-        <TextBox Name="passwordTbx" Text="u1" HorizontalAlignment="Left" Margin="208,133,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
+        <TextBox Name="passwordTbx" Text="urn:localhost:u1" HorizontalAlignment="Left" Margin="208,133,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="103,190,0,0" TextWrapping="Wrap" Text="Actor: " VerticalAlignment="Top"/>
-        <TextBox Name="actorTbx" Text="#test@hub.novediagroup.com" HorizontalAlignment="Left" Margin="208,186,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
+        <TextBox Name="actorTbx" Text="urn:localhost:testChannel" HorizontalAlignment="Left" Margin="208,186,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="12,238,0,0" TextWrapping="Wrap" Text="NbLastMessage: " VerticalAlignment="Top"/>
         <TextBox Name="nbLastMsgTbx" HorizontalAlignment="Left" Margin="208,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="709,36,0,0" TextWrapping="Wrap" Text="Message: " VerticalAlignment="Top"/>

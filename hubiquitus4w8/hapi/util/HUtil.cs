@@ -109,5 +109,15 @@ namespace hubiquitus4w8.hapi.util
                 return null;
         }
 
+
+        public static long DateTime2Timestamps(DateTime d)
+        {
+            return (d.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks) / 10000;
+        }
+
+        public static DateTime Timestamps2Datetime(long t)
+        {
+            return new DateTime(t * 10000 + DateTime.Parse("01/01/1970 00:00:00").Ticks);
+        }
     }
 }
