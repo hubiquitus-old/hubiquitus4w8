@@ -118,7 +118,6 @@
     <Compile Include="hapi\hStructures\HResult.cs" />
     <Compile Include="hapi\hStructures\HStatus.cs" />
     <Compile Include="hapi\hStructures\HValue.cs" />
-    <Compile Include="hapi\structures\JabberID.cs" />
     <Compile Include="hapi\transport\HTransport.cs" />
     <Compile Include="hapi\transport\HTransportManager.cs" />
     <Compile Include="hapi\transport\HTransportOptions.cs" />
