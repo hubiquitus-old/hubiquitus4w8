@@ -5,13 +5,15 @@ Implementation of the hubiquitusClient. It allow to connect to an hNode server a
 Starts a connection to hNode. Status will be received in the `onStatus` callback set by the user and real-time hMessages will be received through the `onMessage` callback. Each command executed has its own callback that receives a hMessage with hResult payload. 
 
 ```c#
-public void Connect(string publisher, string password, HOptions options)
+public void Connect(string login, string password, HOptions options)
+public void Connect(string login, string password, HOptions options, JObject context)
 ```
 Where:
 
-* publisher : login of the publisher (ie : user@domain)
+* login : login of the publisher (ie : user@domain)
 * password : publisher's password
 * hOptions : Complementary values used for the connection to the server [HOptions](https://github.com/hubiquitus/hubiquitus4w8/wiki/Options-v-0.5)
+* context : optional, the user's context.
 
 Note : if a technical disconnection is raised then the system will try to reconnect by itself automatically.
 
@@ -64,7 +66,7 @@ The hAPI sends the hMessage to the hserver which transfer it to the specified ac
 The hserver will perform one of the following actions :
 * If the actor is a channel (ie : #channelName@domain) the hserver will perform a publish operation of the provided hMessage to the channel and send an hMessage with hResult payload containing the published message and cmd name set with hsend to acknowledge publishing
 * If the actor is either ‘session’ and payload type is ‘hCommand’ the server will handle it. In other cases, it will send an hMessage with a hResult error NOT_AUTHORIZED.
-* If the actor is a jid, hserver will relay the message to the relevant actor.
+* If the actor is a urn, hserver will relay the message to the relevant actor.
 
 Nominal response :
 * If callback provided, an hMessage referring to sent message (eg : ref = hAPI client  msgid of sent message).
@@ -91,7 +93,7 @@ Nominal response : a hMessage with an hResult payload with no error.
 public void Subscribe(string actor, Action<HMessage> messageDelegate)
 ```
 Where:
-* actor : The channel jid to subscribe to.(ie : "#test@domain")
+* actor : The channel urn to subscribe to.(ie : "#test@domain")
 * messageDelegate : Delegate that will be notify when command result is available. See send for HMessageDelegate structure
 
 
@@ -129,7 +131,7 @@ or
  public void GetLastMessages(string actor, Action<HMessage> messageDelegate)
 ```
 Where:
-* actor : The channel jid of the messages. Mandatory.
+* actor : The channel urn of the messages. Mandatory.
 * nbLastMsg : the number of message request to the server. if <= 0, the default value found in the channel header will be used and as fall back a default value of 10.
 * messageDelegate : Delegate that will be notify when command result is available. See command for HMessageDelegate structure
 
@@ -338,13 +340,14 @@ Where:
 Build a hMessage with a hCommand payload
 
 ```c#
- public HMessage BuildCommand(string actor, string cmd, JObject @params, HMessageOptions mOptions) 
+ public HMessage BuildCommand(string actor, string cmd, JObject @params, HCondition filter, HMessageOptions mOptions) 
 ```
 Where:
 * actor : The actor for the hMessage. Mandatory.
 * cmd : The name of the command.
 * params : Parameters of the command. Not mandatory.
 * options : hMessage creation options. See buildMessage for hMessageOptions Structure.
+* filter : optional. null if there is no filter.
 * return : A hMessage with a hCommand payload.
 
 #### BuildResult
