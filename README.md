@@ -1,7 +1,7 @@
 # Hubiquitus4w8 - An implementation of Hubiquitus for the Windows 8.
 
 
-## How to install
+
 
 First of all, clone the project.
 Tap the following command in terminal(Linux) or in Powershell(Windows) : 
