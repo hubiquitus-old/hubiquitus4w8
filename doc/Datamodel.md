@@ -1,4 +1,3 @@
-
 #Datamodel
 The hAPI datamodel defines semantics core to the Hubiquitus platform. It defines the core concepts of the hubiquitus programming model, the data structures associated with it and the way data is transmitted and processed through the network.
 
@@ -58,8 +57,10 @@ public class HMessage : JObject
         public HMessagePriority? GetPriority()
         public void SetPriority(HMessagePriority? priority)
 
-        public DateTime? GetRelevance()
+        public long GetRelevance()
+        public DateTime? GetRelevanceAsDate()
         public void SetRelevance(DateTime? relevance)
+        public void SetRelevance(long relevance)
 
         public bool? GetPersistent()
         public void SetPersistent(bool? persistent)
@@ -73,8 +74,10 @@ public class HMessage : JObject
         public string GetPublisher()
         public void SetPublisher(string publisher)
 
-        public DateTime? GetPublished()
+        public long GetPublished()
+	public DateTime? GetPublishedAsDate()
         public void SetPublished(DateTime? published)
+        public void SetPublished(long published)
 
         public JObject GetHeaders()
         public void SetHeaders(JObject headers)
@@ -108,8 +111,10 @@ public class HMessage : JObject
         public int GetTimeout()
         public void SetTimeout(int timeout)
         
-        public DateTime? GetSent()
+        public long GetSent()
+        public DateTime? GetSentAsDate()
         public void SetSent(DateTime? sent)
+        public void SetSent(long sent)
 }
 ```
 Where : 
@@ -119,7 +124,7 @@ Where :
 * ref : Refers to another hMessage msgid. Provide a mechanism to do correlation between messages.
 * type : Type of the message payload.
 * priority : Message priority. If UNDEFINED, priority lower to 0. Mandatory. Can be filled by hApi. 
-* relevance : Define is the message is persistent. If true, the message is not persistent. True by defaut.
+* persistent : Define if the message is persistent. If true, the message is not persistent. false by defaut.
 * location : The geographical location to which the message refer. See HLocation below.
 * author : Author's id of this message.
 * publisher : Publisher id. Mandatory. Can be filled by hApi.
