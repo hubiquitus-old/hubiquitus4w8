@@ -34,3 +34,9 @@ git clone git://github.com/hubiquitus/hubiquitus4w8.git
 
 ## Example
 
+[Simple Client](https://github.com/hubiquitus/hubiquitus4w8/tree/master/SimpleClient) is an example application to test the hAPI.
+
+### How to run
+
+1. Right click on the project -> click _Set as Startup project_
+2. Run with mode debug.
