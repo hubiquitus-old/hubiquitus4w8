@@ -23,7 +23,7 @@ git clone git://github.com/hubiquitus/hubiquitus4w8.git
 
  * [hClient Functions](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/hClient%20Functions.md) : Connect, disconnect, builder ... All the function of the client.
 
- * [hClient Variables](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/hClient%20Variables.md) : Status, FullJid, Resource... All the variables of the client.
+ * [hClient Variables](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/hClient%20Variables.md) : Status, FullUrn, Resource... All the variables of the client.
 
  * [Codes](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/Codes.md) : ConnectionStatus, ConnectionError, ResultStatus ... All the enumeration of Hubiquitus.
 
