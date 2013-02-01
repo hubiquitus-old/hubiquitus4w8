@@ -49,23 +49,23 @@ public class HMessageOptions
         private string @ref = null;
         private string convid = null;
         private HMessagePriority? priority = null;
-        private DateTime? relevance = null;
+        private long relevance = null;
         private int? relevanceOffset = null;
         private bool? persistent = null;
         private HLocation location = null;
         private string author = null;
         private JObject headers = null;
-        private DateTime? published = null;
+        private long published = null;
         private int timeout = 0;
 }
 ```
  * ref : The msgid of the message referred to
  * convid : The conversation id to use if the message should take place in a conversation
  * priority : priority of the message. If UNDEFINED, priority lower to 0. See [HMessagePrioity](https://github.com/hubiquitus/hubiquitus4w8/wiki/Codes-v-0.5)
- * relevance : specifies the end of relevance
+ * relevance : specifies the end of relevance(timestamps).
  * persistent : indicate if the HMessage is persistent
  * location : the location of the HMessage. See [HLocation](https://github.com/hubiquitus/hubiquitus4w8/wiki/hAPI-Datamodel-v-0.5)
  * author : the author of the HMessage
  * headers : the headers of the HMessage. See [HHeader](https://github.com/hubiquitus/hubiquitus4w8/wiki/hAPI-Datamodel-v-0.5)
- * published : Allows the client to set a specific published date. If not specified the hServer will set the published date.
+ * published : Allows the client to set a specific published date(timestamps). If not specified the hServer will set the published date.
  * timeout : Time (in ms) to wait for a response before hAPI sends a timeout
