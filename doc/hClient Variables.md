@@ -12,10 +12,10 @@ public ConnectionStatus Status;
 Where:
 * return : the connection status (See codes pages)
 
-### FullJid
-The FullJid will return the full Jid of the client.
+### FullUrn
+The FullUrn will return the full Jid of the client.
 ```c#
-public string FullJid;
+public string FullUrn;
 ```
 
 ### Resource
