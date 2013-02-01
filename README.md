@@ -1,10 +1,13 @@
 # Hubiquitus4w8 - An implementation of Hubiquitus for the Windows 8.
 
 
+## Prerequisite
 
+[Github for Windows](http://windows.github.com/)
 
-First of all, clone the project.
-Tap the following command in terminal(Linux) or in Powershell(Windows) : 
+## Clone the project 
+
+Tap the following command Powershell : 
 
 ```js
 git clone git://github.com/hubiquitus/hubiquitus4w8.git
