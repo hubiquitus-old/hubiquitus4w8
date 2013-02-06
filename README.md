@@ -1,45 +1,25 @@
-# Hubiquitus4w8 - An implementation of Hubiquitus for the Windows 8.
+# Hubiquitus4w8
+
+Hubiquitus4w8 is an implementation of Hubiquitus hAPI for the Windows 8
+
+## Docs
+
+The whole documentation of the Hubiquitus4w8 project is available in the `doc` subdirectory of this repo.
+
+Hubiquitus4w8 need a Hubiquits server. You can find all you need in the Hubiquitus repo : [hubiquitus](https://github.com/hubiquitus/hubiquitus)
 
 
-## Prerequisite
+## Code
 
-[Github for Windows](http://windows.github.com/)
-
-## Clone the project 
-
-Tap the following command Powershell : 
-
-```js
-git clone git://github.com/hubiquitus/hubiquitus4w8.git
-```
+The source code of the Hubiquitus4w8 hAPI itself is in the `hubiquitus4w8` subdirectory of this repo.
 
 
-## How to use
+## Issues
 
-### How to use hAPI
+If you want to know what we are doing right now, you could watch our job [here](http://hubiquitus.atlassian.net/).
 
-1. Run project with _Release_ mode.
-2. Copy the libary ```hubiquitus4w8.dll``` in _C:\Users\Chenliang\Documents\test\hubiquitus4w8\hubiquitus4w8\obj\Release_ to your project and add it to your reference.
+## License
 
+Hubiquitus is a free and open source software licensed under the terms of the [MIT license](http://opensource.org/licenses/MIT). 
 
-#### hAPI Reference :
-
- * [hClient Functions](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/hClient%20Functions.md) : Connect, disconnect, builder ... All the function of the client.
-
- * [hClient Variables](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/hClient%20Variables.md) : Status, FullUrn, Resource... All the variables of the client.
-
- * [Codes](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/Codes.md) : ConnectionStatus, ConnectionError, ResultStatus ... All the enumeration of Hubiquitus.
-
- * [Datamodel](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/Datamodel.md) : Information about hAPI Datamodel.
-
- * [Options](https://github.com/hubiquitus/hubiquitus4w8/blob/master/doc/hOptions.md) : Information about options class.
-
-
-## Example
-
-[Simple Client](https://github.com/hubiquitus/hubiquitus4w8/tree/master/SimpleClient) is an example application to test the hAPI.
-
-### How to run
-
-1. Right click on the project -> click _Set as Startup project_
-2. Run with mode debug.
+This document itself, as the whole documentation provided with the project, is licensed under the terms of the Creative Commons Attribution Unported 3.0 ([CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)).
