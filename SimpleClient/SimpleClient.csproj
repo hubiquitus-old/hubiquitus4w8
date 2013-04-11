@@ -100,13 +100,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\hubiquitus4w8\hubiquitus4w8.csproj">
-      <Project>{a28eec44-3e73-48cb-a301-f289bdae48eb}</Project>
-      <Name>hubiquitus4w8</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -119,6 +112,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="packages.config" />
     <None Include="SimpleClient_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -142,8 +136,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="hubiquitus4w8">
+      <HintPath>..\..\libs\hubiquitus4w8.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\libs\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.2\lib\netcore45\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

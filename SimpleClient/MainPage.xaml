@@ -30,17 +30,13 @@
         <TextBox Name="timeoutTbx" HorizontalAlignment="Left" Margin="810,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="446"/>
         <Button Name="connBt" Content="Connect" HorizontalAlignment="Left" Margin="28,310,0,0" VerticalAlignment="Top" Click="connBt_Click"/>
         <Button Name="disConnBt" Content="Disconnect" HorizontalAlignment="Left" Margin="140,310,0,0" VerticalAlignment="Top" Click="disConnBt_Click"/>
-        <Button Name="sendBt" Content="Send" HorizontalAlignment="Left" Margin="253,310,0,0" VerticalAlignment="Top" Click="sendBt_Click"/>
-        <Button Name="subBt" Content="Subscribe" HorizontalAlignment="Left" Margin="28,353,0,0" VerticalAlignment="Top" Click="subBt_Click"/>
-        <Button Name="unsubBt" Content="UnSubscribe" HorizontalAlignment="Left" Margin="140,353,0,0" VerticalAlignment="Top" Click="unsubBt_Click"/>
+        <Button Name="sendBt" Content="Send" HorizontalAlignment="Left" Margin="281,310,0,0" VerticalAlignment="Top" Click="sendBt_Click"/>
+        <Button Name="subBt" Content="Subscribe" HorizontalAlignment="Left" Margin="847,310,0,0" VerticalAlignment="Top" Click="subBt_Click"/>
+        <Button Name="unsubBt" Content="UnSubscribe" HorizontalAlignment="Left" Margin="695,310,0,0" VerticalAlignment="Top" Click="unsubBt_Click"/>
         <Button Name="setFilterBt" Content="SetFilter" HorizontalAlignment="Left" Margin="980,310,0,0" VerticalAlignment="Top" Click="setFilterBt_Click"/>
-        <Button Name="getsubBt" Content="GetSubs" HorizontalAlignment="Left" Margin="588,310,0,0" VerticalAlignment="Top" Click="getsubBt_Click"/>
+        <Button Name="getsubBt" Content="GetSubs" HorizontalAlignment="Left" Margin="563,310,0,0" VerticalAlignment="Top" Click="getsubBt_Click"/>
         <Button Name="clearBt_Status" Content="Clear" HorizontalAlignment="Left" Margin="180,720,0,0" VerticalAlignment="Top" Click="clearBt_Status_Click"/>
-        <Button Name="getLastMsgBt" Content="GetLasMsg" HorizontalAlignment="Left" Margin="850,310,0,0" VerticalAlignment="Top" Click="getLastMsgBt_Click"/>
-        <Button Name="getReleMsgBt" Content="getReleMsg" HorizontalAlignment="Left" Margin="709,310,0,0" VerticalAlignment="Top" Click="getReleMsgBt_Click"/>
-        <Button Name="getThreadBt" Content="GetThread" HorizontalAlignment="Left" Margin="334,310,0,0" VerticalAlignment="Top" Click="getThreadBt_Click"/>
-        <Button Name="getThreadsBt" Content="getThreads" HorizontalAlignment="Left" Margin="457,310,0,0" VerticalAlignment="Top" Click="getThreadsBt_Click"/>
-        <Button Name="pubCSBt" Content="PubConvState" HorizontalAlignment="Left" Margin="281,353,0,0" VerticalAlignment="Top" Click="pubCSBt_Click"/>
+        <Button Name="pubCSBt" Content="PubConvState" HorizontalAlignment="Left" Margin="387,310,0,0" VerticalAlignment="Top" Click="pubCSBt_Click"/>
         <CheckBox Name="persistentCb" Content="Persistent" HorizontalAlignment="Left" Margin="1137,315,0,0" VerticalAlignment="Top"/>
         
         

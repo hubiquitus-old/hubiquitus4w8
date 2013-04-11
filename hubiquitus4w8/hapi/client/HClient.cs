@@ -278,45 +278,7 @@ namespace hubiquitus4w8.hapi.client
             HMessage cmdMessage = BuildCommand("session", "hUnsubscribe", @params, null, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             this.Send(cmdMessage, messageDelegate);
-        }
-
-       
-
-       
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Demands the hserver a list of the last messages saved for a dedicated channel. 
-        /// The requester must be in the channel’s participants list.
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="nbLastMsg"></param>
-        /// <param name="messageDelegate"></param>
-        public void GetLastMessages(string actor, int nbLastMsg, Action<HMessage> messageDelegate)
-        {
-            if (messageDelegate == null)
-                throw new MissingAttrException("messageDelegate");
-            JObject @params = new JObject();
-            @params["actor"] = actor;
-            if (nbLastMsg > 0)
-                @params["nbLastMsg"] = nbLastMsg;
-            else
-                @params["nbLastMsg"] = 10;
-            HMessage cmdMessage = BuildCommand(actor, "hGetLastMessages", @params, filter, null);
-            cmdMessage.SetTimeout(options.GetMsgTimeout());
-            Send(cmdMessage, messageDelegate);
-        }
-
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Demands the hserver a list of the last messages saved for a dedicated channel. 
-        /// The requester must be in the channel’s participants list.
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="messageDelegate"></param>
-        public void GetLastMessages(string actor, Action<HMessage> messageDelegate)
-        {
-            GetLastMessages(actor, -1, messageDelegate);
-        }
+        }      
 
         /// <summary>
         /// Demands the server a list of the publisher’s subscriptions.
@@ -333,61 +295,6 @@ namespace hubiquitus4w8.hapi.client
         }
 
         /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Demands to the hserver the list of messages correlated by the convid value on a dedicated channel
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="convid"></param>
-        /// <param name="messageDelegate"></param>
-        public void GetThread(string actor, string convid, Action<HMessage> messageDelegate)
-        {
-            if (actor == null || actor.Length <= 0)
-            {
-                notifyResultError(null, ResultStatus.MISSING_ATTR, "Actor is missing", messageDelegate);
-                return;
-            }
-            if (convid == null || convid.Length <= 0)
-            {
-                notifyResultError(null, ResultStatus.MISSING_ATTR, "convid is missing", messageDelegate);
-                return;
-            }
-            JObject @params = new JObject();
-            @params["convid"] = convid;
-
-            HMessage cmdMessage = BuildCommand(actor, "hGetThread", @params, filter, null);
-            cmdMessage.SetTimeout(options.GetMsgTimeout());
-            Send(cmdMessage, messageDelegate);
-
-        }
-
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Demands to the hserver the list of convid where there is a hConvState with the status value searched on the channel 
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="status"></param>
-        /// <param name="messageDelegate"></param>
-        public void GetThreads(string actor, string status, Action<HMessage> messageDelegate)
-        {
-            if (actor == null || actor.Length <= 0)
-            {
-                notifyResultError(null, ResultStatus.MISSING_ATTR, "actor is missing", messageDelegate);
-                return;
-            }
-            if (status == null || status.Length <= 0)
-            {
-                notifyResultError(null, ResultStatus.MISSING_ATTR, "status is missing", messageDelegate);
-                return;
-            }
-            JObject @params = new JObject();
-            @params["status"] = status;
-
-            HMessage cmdMessage = BuildCommand(actor,"hGetThreads",@params, filter, null);
-            cmdMessage.SetTimeout(options.GetMsgTimeout());
-            Send(cmdMessage, messageDelegate);
-        }
-
-        /// <summary>
         /// Sets a filter to be applied to upcoming messages at the session level.
         /// </summary>
         /// <param name="filter"></param>
@@ -396,27 +303,6 @@ namespace hubiquitus4w8.hapi.client
         {
             HMessage cmdMessage = BuildCommand("session", "hSetFilter", filter, null, null);
             this.filter = filter;
-            cmdMessage.SetTimeout(options.GetMsgTimeout());
-            Send(cmdMessage, messageDelegate);
-        }
-
-       
-
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Demands to the hserver the list of the available relevant message for a dedicated channel.
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="messageDelegate"></param>
-        public void GetRelevantMessages(string actor, Action<HMessage> messageDelegate)
-        {
-            if (actor == null || actor.Length <= 0)
-            {
-                notifyResultError(null, ResultStatus.MISSING_ATTR, "actor is missing", messageDelegate);
-                return;
-            }
-
-            HMessage cmdMessage = BuildCommand(actor, "hRelevantMessages", null, filter, null);
             cmdMessage.SetTimeout(options.GetMsgTimeout());
             Send(cmdMessage, messageDelegate);
         }
