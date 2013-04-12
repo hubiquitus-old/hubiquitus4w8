@@ -16,8 +16,6 @@
         <TextBox Name="passwordTbx" Text="urn:localhost:u1" HorizontalAlignment="Left" Margin="208,133,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="103,190,0,0" TextWrapping="Wrap" Text="Actor: " VerticalAlignment="Top"/>
         <TextBox Name="actorTbx" Text="urn:localhost:testChannel" HorizontalAlignment="Left" Margin="208,186,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
-        <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="12,238,0,0" TextWrapping="Wrap" Text="NbLastMessage: " VerticalAlignment="Top"/>
-        <TextBox Name="nbLastMsgTbx" HorizontalAlignment="Left" Margin="208,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="709,36,0,0" TextWrapping="Wrap" Text="Message: " VerticalAlignment="Top"/>
         <TextBox Name="msgTbx" HorizontalAlignment="Left" Margin="810,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="446"/>
         <TextBlock FontSize="20" HorizontalAlignment="Left" Margin="714,87,0,0" TextWrapping="Wrap" Text="Conv_ID: " VerticalAlignment="Top"/>
