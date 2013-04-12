@@ -153,42 +153,10 @@ namespace SimpleClient
             Debug.WriteLine(">>>Send Message<<<\n" + hMsg.ToString() + "\n");
 
         }
-
-        private void getThreadBt_Click(object sender, RoutedEventArgs e)
-        {
-            client.GetThread(actorTbx.Text, convidTbx.Text, callback);
-        }
-
-        private void getThreadsBt_Click(object sender, RoutedEventArgs e)
-        {
-            client.GetThreads(actorTbx.Text, statusTbx.Text, callback);
-        }
-
+                
         private void getsubBt_Click(object sender, RoutedEventArgs e)
         {
             client.GetSubscriptions(callback);
-        }
-
-        private void getReleMsgBt_Click(object sender, RoutedEventArgs e)
-        {
-            client.GetRelevantMessages(actorTbx.Text, callback);
-        }
-
-        private void getLastMsgBt_Click(object sender, RoutedEventArgs e)
-        {
-            int nb = -1;
-            try
-            {
-                nb = int.Parse(nbLastMsgTbx.Text);
-            }
-            catch (Exception)
-            {
-
-            }
-            if (nb > 0)
-                client.GetLastMessages(actorTbx.Text, nb, callback);
-            else
-                client.GetLastMessages(actorTbx.Text, callback);
         }
 
         private void setFilterBt_Click(object sender, RoutedEventArgs e)
