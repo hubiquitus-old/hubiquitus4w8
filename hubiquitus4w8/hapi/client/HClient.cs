@@ -59,6 +59,7 @@ namespace hubiquitus4w8.hapi.client
         private HCondition filter = new HCondition();
 
         public string FullJid { get { return this.transportOptions.FullUrn; } }
+        public string BareJid { get { return this.transportOptions.FullUrn.Split('/')[0]; } }
         public string Resource { get { return this.transportOptions.Resource; } }
         public ConnectionStatus Status { get { return this.connectionStatus; } }
 
