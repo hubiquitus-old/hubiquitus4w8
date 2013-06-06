@@ -135,15 +135,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="hubiquitus4w8">
-      <HintPath>..\..\libs\hubiquitus4w8.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SocketIO4Net">
       <HintPath>..\..\libs\SocketIO4Net.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\hubiquitus4w8\hubiquitus4w8.csproj">
+      <Project>{a28eec44-3e73-48cb-a301-f289bdae48eb}</Project>
+      <Name>hubiquitus4w8</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

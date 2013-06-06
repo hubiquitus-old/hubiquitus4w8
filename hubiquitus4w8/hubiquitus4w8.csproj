@@ -102,15 +102,11 @@
     <Compile Include="hapi\client\HClient.cs" />
     <Compile Include="hapi\exceptions\MissingAttrException.cs" />
     <Compile Include="hapi\hStructures\Enums.cs" />
-    <Compile Include="hapi\hStructures\HAck.cs" />
-    <Compile Include="hapi\hStructures\HAlert.cs" />
     <Compile Include="hapi\hStructures\HArrayOfValue.cs" />
     <Compile Include="hapi\hStructures\HCommand.cs" />
     <Compile Include="hapi\hStructures\HCondition.cs" />
-    <Compile Include="hapi\hStructures\HConvState.cs" />
     <Compile Include="hapi\hStructures\HGeo.cs" />
     <Compile Include="hapi\hStructures\HLocation.cs" />
-    <Compile Include="hapi\hStructures\HMeasure.cs" />
     <Compile Include="hapi\hStructures\HMessage.cs" />
     <Compile Include="hapi\hStructures\HMessageOptions.cs" />
     <Compile Include="hapi\hStructures\HOptions.cs" />
@@ -130,9 +126,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="hubiquitus4w8">
-      <HintPath>..\..\libs\hubiquitus4w8.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\libs\Newtonsoft.Json.dll</HintPath>
