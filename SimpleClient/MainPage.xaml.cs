@@ -150,7 +150,9 @@ namespace SimpleClient
                 mOptions.RelevanceOffset = int.Parse(relevantTbx.Text);
             HMessage hMsg = client.BuildMessage(actorTbx.Text, "text", msgTbx.Text, mOptions);
             client.Send(hMsg, null);
+            
             Debug.WriteLine(">>>Send Message<<<\n" + hMsg.ToString() + "\n");
+            Debug.WriteLine(">>>BareJid<<<\n" + client.BareJid + "\n");
 
         }
                 
@@ -187,17 +189,6 @@ namespace SimpleClient
         private void unsubBt_Click(object sender, RoutedEventArgs e)
         {
             client.Unsubscribe(actorTbx.Text, callback);
-        }
-
-        private void pubCSBt_Click(object sender, RoutedEventArgs e)
-        {
-            HMessageOptions mOptions = new HMessageOptions();
-            if (persistentCb.IsChecked.Value)
-                mOptions.Persistent = true;
-            else
-                mOptions.Persistent = false;
-            HMessage hMsg = client.BuildConvState(actorTbx.Text, convidTbx.Text, statusTbx.Text, mOptions);
-            client.Send(hMsg, callback);
         }
 
         private void clearBt_Status_Click(object sender, RoutedEventArgs e)

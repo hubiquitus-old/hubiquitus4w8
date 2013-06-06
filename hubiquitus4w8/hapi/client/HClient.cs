@@ -59,6 +59,7 @@ namespace hubiquitus4w8.hapi.client
         private HCondition filter = new HCondition();
 
         public string FullJid { get { return this.transportOptions.FullUrn; } }
+        public string BareJid { get { return this.transportOptions.FullUrn.Split('/')[0]; } }
         public string Resource { get { return this.transportOptions.Resource; } }
         public ConnectionStatus Status { get { return this.connectionStatus; } }
 
@@ -351,27 +352,7 @@ namespace hubiquitus4w8.hapi.client
             return InnerBuildMessage(actor, type, payload, mOptions);
         }
 
-        public HMessage BuildMessage(string actor, string type, HAck payload, HMessageOptions mOptions)
-        {
-            return InnerBuildMessage(actor, type, payload, mOptions);
-        }
-
-        public HMessage BuildMessage(string actor, string type, HAlert payload, HMessageOptions mOptions)
-        {
-            return InnerBuildMessage(actor, type, payload, mOptions);
-        }
-
         public HMessage BuildMessage(string actor, string type, HCommand payload, HMessageOptions mOptions)
-        {
-            return InnerBuildMessage(actor, type, payload, mOptions);
-        }
-
-        public HMessage BuildMessage(string actor, string type, HConvState payload, HMessageOptions mOptions)
-        {
-            return InnerBuildMessage(actor, type, payload, mOptions);
-        }
-
-        public HMessage BuildMessage(string actor, string type, HMeasure payload, HMessageOptions mOptions)
         {
             return InnerBuildMessage(actor, type, payload, mOptions);
         }
@@ -379,115 +360,6 @@ namespace hubiquitus4w8.hapi.client
         public HMessage BuildMessage(string actor, string type, HResult payload, HMessageOptions mOptions)
         {
             return InnerBuildMessage(actor, type, payload, mOptions);
-        }
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Allow a hubapp client to create a hMessage with a hConvState payload.
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="convid"></param>
-        /// <param name="status"></param>
-        /// <param name="mOptions"></param>
-        /// <returns></returns>
-        public HMessage BuildConvState(string actor, string convid, string status, HMessageOptions mOptions)
-        {
-            if (actor == null || actor.Length <= 0)
-                throw new MissingAttrException("actor");
-            if (convid == null || convid.Length <= 0)
-                throw new MissingAttrException("convid");
-            if (status == null || status.Length <= 0)
-                throw new MissingAttrException("status");
-
-            HConvState convState = new HConvState();
-            convState.SetStatus(status);
-
-            HMessage message = BuildMessage(actor, "hConvState", convState, mOptions);
-            message.SetConvid(convid);
-            return message;
-        }
-
-
-        
-        //HAckValue à faire
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Allow a hubapp client to create a hMessage with a hAck payload.
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="ref"></param>
-        /// <param name="ackValue">
-        /// The following values are authorized :
-        /// “recv” / HAckValue.RECV : means that the message has been received by the participant (on at least one of its devices)
-        /// “read” / HAckValue.READ : means that the message has been read by the participant
-        /// </param>
-        /// <param name="mOptions"></param>
-        /// <returns></returns>
-        public HMessage BuildAck(string actor, string @ref, string ackValue, HMessageOptions mOptions)
-        {
-            if (actor == null || actor.Length <= 0)
-                throw new MissingAttrException("actor");
-            if (@ref == null || @ref.Length <= 0)
-                throw new MissingAttrException("ref");
-            if (ackValue == null)
-                throw new MissingAttrException("ack");
-            if (HUtil.CheckAck(ackValue))
-                throw new Exception("only 'recv' and 'read' are authorized for ack");
-
-            HAck hack = new HAck();
-            hack.SetAck(ackValue);
-            if (mOptions == null)
-                mOptions = new HMessageOptions();
-            mOptions.Ref = @ref;
-            HMessage message = BuildMessage(actor, "hAck", hack, mOptions);
-            return message;
-        }
-
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Allow a hubapp client to create a hMessage with a hAlert payload.
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="alert"></param>
-        /// <param name="mOptions"></param>
-        /// <returns></returns>
-        public HMessage BuildAlert(string actor, string alert, HMessageOptions mOptions)
-        {
-            if (actor == null || actor.Length <= 0)
-                throw new MissingAttrException("actor");
-            if (alert == null || alert.Length <= 0)
-                throw new MissingAttrException("alert");
-
-            HAlert halert = new HAlert();
-            halert.SetAlert(alert);
-
-            HMessage message = BuildMessage(actor, "hAlert", halert, mOptions);
-            return message;
-        }
-
-        /// <summary>
-        /// The client MUST be connected to access to this service.
-        /// Allow a hubapp client to create a hMessage with a hMeasure payload.
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="value"></param>
-        /// <param name="unit"></param>
-        /// <param name="mOptions"></param>
-        /// <returns></returns>
-        public HMessage BuildMeasure(string actor, string value, string unit, HMessageOptions mOptions)
-        {
-                if (actor == null || actor.Length <= 0)
-                    throw new MissingAttrException("actor");
-                if (value == null || value.Length <= 0)
-                    throw new MissingAttrException("value");
-                if (unit == null || unit.Length <= 0)
-                    throw new MissingAttrException("unit");
-
-                HMeasure hmeasure = new HMeasure();
-                hmeasure.SetUnit(unit);
-                hmeasure.SetValue(value);
-
-                HMessage message = BuildMessage(actor, "hMeasure", hmeasure, mOptions);
-                return message;
         }
 
         /// <summary>
