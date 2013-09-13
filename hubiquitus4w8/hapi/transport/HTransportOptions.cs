@@ -25,9 +25,8 @@
 
 
 using Newtonsoft.Json.Linq;
-using System;
 
-namespace hubiquitus4w8.hapi.transport
+namespace HubiquitusDotNetW8.hapi.transport
 {
     public class HTransportOptions
     {

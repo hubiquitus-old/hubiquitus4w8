@@ -25,12 +25,11 @@
 
 
 
-using System;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
 
-namespace hubiquitus4w8.hapi.hStructures
+namespace HubiquitusDotNetW8.hapi.hStructures
 {
     /// <summary>
     /// Version 0.5

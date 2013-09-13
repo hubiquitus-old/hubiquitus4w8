@@ -23,16 +23,11 @@
  *    If not, see <http://opensource.org/licenses/mit-license.php>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
 
-namespace hubiquitus4w8.hapi.hStructures
+namespace HubiquitusDotNetW8.hapi.hStructures
 {
     /// <summary>
     /// Version 0.5

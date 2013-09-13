@@ -24,12 +24,8 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace hubiquitus4w8.hapi.exceptions
+namespace HubiquitusDotNetW8.hapi.exceptions
 {
     /// <summary>
     /// Exception to notify a missing attribute (ONLY used in builders)

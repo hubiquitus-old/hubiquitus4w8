@@ -23,21 +23,15 @@
  *    If not, see <http://opensource.org/licenses/mit-license.php>.
  */
 
-using hubiquitus4w8.hapi.hStructures;
-using hubiquitus4w8.hapi.util;
+using HubiquitusDotNetW8.hapi.hStructures;
+using HubiquitusDotNetW8.hapi.util;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Networking.Connectivity;
 using Windows.System.Threading;
 using Windows.Web;
 
-namespace hubiquitus4w8.hapi.transport
+namespace HubiquitusDotNetW8.hapi.transport
 {
     public class HTransportManager
     {

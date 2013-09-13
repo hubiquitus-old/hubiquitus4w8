@@ -25,25 +25,20 @@
 
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
+using HubiquitusDotNetW8.hapi.exceptions;
+using HubiquitusDotNetW8.hapi.hStructures;
+using HubiquitusDotNetW8.hapi.transport;
+using HubiquitusDotNetW8.hapi.transport.socketio;
+using HubiquitusDotNetW8.hapi.util;
 using Newtonsoft.Json.Linq;
-using hubiquitus4w8.hapi.hStructures;
-using hubiquitus4w8.hapi.transport;
-using hubiquitus4w8.hapi.transport.socketio;
-using hubiquitus4w8.hapi.util;
-using hubiquitus4w8.hapi.exceptions;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using Windows.System.Threading;
+using System.Linq;
 using Windows.Foundation;
-using System.Text.RegularExpressions;
+using Windows.System.Threading;
 
-namespace hubiquitus4w8.hapi.client
+namespace HubiquitusDotNetW8.hapi.client
 {
     /// <summary>
     /// Hubiquitus client, public api version v0.5
@@ -219,15 +214,20 @@ namespace hubiquitus4w8.hapi.client
                 notifyResultError(message.GetMsgid(), ResultStatus.MISSING_ATTR, "Actor is missing.", messageDelegate);
                 return;
             }
+
+
             message.SetSent(DateTime.UtcNow);
+            message.SetPublished(DateTime.UtcNow);
+            message.SetMsgid(Guid.NewGuid().ToString());
             message.SetPublisher(transportOptions.FullUrn);
+            
+
             if (message.GetTimeout() > 0)
             {
                 // hAPI will do correlation. If no answer within the
                 // timeout, a timeout error will be sent.
                 if (messageDelegate != null)
-                {
-                    message.SetMsgid(Guid.NewGuid().ToString());
+                { 
                     messageDelegates.Add(message.GetMsgid(), messageDelegate);
 
                     ThreadPoolTimer timeOutTimer = ThreadPoolTimer.CreateTimer((obj) =>

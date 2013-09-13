@@ -24,15 +24,11 @@
  */
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using hubiquitus4w8.hapi.hStructures;
+using HubiquitusDotNetW8.hapi.hStructures;
 using Newtonsoft.Json.Linq;
+using System;
 
-namespace hubiquitus4w8.hapi.transport
+namespace HubiquitusDotNetW8.hapi.transport
 {
     public delegate void DataEventHandler(string type, JObject obj);
     public delegate void StatusEventHandler(ConnectionStatus status, ConnectionErrors error, string errorMsg);
