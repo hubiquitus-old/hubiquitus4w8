@@ -25,13 +25,8 @@
 
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace hubiquitus4w8.hapi.hStructures
+namespace HubiquitusDotNetW8.hapi.hStructures
 {
 
     public enum ConnectionErrors

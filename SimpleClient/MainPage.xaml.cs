@@ -24,28 +24,19 @@
  */
 
 
-using hubiquitus4w8.hapi.client;
-using hubiquitus4w8.hapi.hStructures;
-using hubiquitus4w8.hapi.transport;
+using HubiquitusDotNetW8.hapi.client;
+using HubiquitusDotNetW8.hapi.hStructures;
+using HubiquitusDotNetW8.hapi.transport;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace SimpleClient
+namespace W8ExempleClient
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -70,9 +61,10 @@ namespace SimpleClient
             Debug.WriteLine(">>>client_onStatus: " + status.ToString());
             Debug.WriteLine("--> fulljid : " + client.FullJid);
             Debug.WriteLine("--> resource : " + client.Resource);
+            if (!status.GetErrorCode().Equals("NO_ERROR"))
+                Update_TextBlock_UI(errorScreen, status.GetErrorMsg());
             Update_TextBlock_UI(statusScreen, status.ToString());
         }
-
 
         void client_onMessage(HMessage message)
         {
@@ -100,37 +92,26 @@ namespace SimpleClient
                  );
         }
 
-        /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
-        /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
-        /// property is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-        }
-
         private void connBt_Click(object sender, RoutedEventArgs e)
         {
-            string endpoint = serverTbx.Text;
+            
             if (options.GetEndpoints() != null)
                 options.GetEndpoints().Clear();
+
+            string endpoint = serverTbx.Text;
             if (!string.IsNullOrEmpty(endpoint))
             {
                 JArray ja = new JArray();
                 ja.Add(endpoint);
                 options.SetEndpoints(ja);
             }
-             //options.AuthCb = new AuthenticationCallback(
-             //   (username, Login) =>
-             //   {
-             //       Debug.WriteLine("AuthenticationCallback called!");
-             //       Login(username, "u1");
-             //   }
-             //   );
-
+            
             client.Connect(usernamTbx.Text, passwordTbx.Text, options);
 
         }
+
+
+        
 
         private void disConnBt_Click(object sender, RoutedEventArgs e)
         {
@@ -140,15 +121,19 @@ namespace SimpleClient
         private void sendBt_Click(object sender, RoutedEventArgs e)
         {
             HMessageOptions mOptions = new HMessageOptions();
+
             if (persistentCb.IsChecked.Value)
                 mOptions.Persistent = true;
             else
                 mOptions.Persistent = false;
+
             if (!string.IsNullOrEmpty(timeoutTbx.Text))
                 mOptions.Timeout = int.Parse(timeoutTbx.Text);
+
             if (!string.IsNullOrEmpty(relevantTbx.Text))
                 mOptions.RelevanceOffset = int.Parse(relevantTbx.Text);
-            HMessage hMsg = client.BuildMessage(actorTbx.Text, "text", msgTbx.Text, mOptions);
+
+            HMessage hMsg = client.BuildMessage(actorTbx.Text, "string", msgTbx.Text, mOptions);
             client.Send(hMsg, null);
             
             Debug.WriteLine(">>>Send Message<<<\n" + hMsg.ToString() + "\n");
@@ -194,6 +179,11 @@ namespace SimpleClient
         private void clearBt_Status_Click(object sender, RoutedEventArgs e)
         {
             Update_TextBlock_UI(statusScreen, "clear");
+        }
+       
+        private void clearBt_Error_Click(object sender, RoutedEventArgs e)
+        {
+            Update_TextBlock_UI(errorScreen, "clear");
         }
 
         private void clearBt_Message_Click(object sender, RoutedEventArgs e)

@@ -24,21 +24,15 @@
  */
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using hubiquitus4w8.hapi.hStructures;
-using hubiquitus4w8.hapi.transport;
-using SocketIOClient;
+using HubiquitusDotNetW8.hapi.hStructures;
+using HubiquitusDotNetW8.hapi.util;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using SocketIOClient;
+using System;
 using System.Diagnostics;
 using Windows.System.Threading;
-using hubiquitus4w8.hapi.util;
 
-namespace hubiquitus4w8.hapi.transport.socketio
+namespace HubiquitusDotNetW8.hapi.transport.socketio
 {
     public class HTransportSocketIO : HTransport
     {
@@ -86,7 +80,6 @@ namespace hubiquitus4w8.hapi.transport.socketio
 
         private void Login(string username, string password)
         {
-
             JObject data = new JObject();
             try
             {
@@ -210,7 +203,7 @@ namespace hubiquitus4w8.hapi.transport.socketio
             string errorMsg = null;
             if (e != null)
             {
-                errorMsg = e.ErrorStatus.ToString();
+                errorMsg = e.Exception.ToString();
             }
             if (connTimeoutTimer != null)
             {

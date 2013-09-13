@@ -24,19 +24,14 @@
  */
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using HubiquitusDotNetW8.hapi.transport;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
-using hubiquitus4w8.hapi.transport;
 
-namespace hubiquitus4w8.hapi.hStructures
-{   
-    
+namespace HubiquitusDotNetW8.hapi.hStructures
+{
+
     public class HOptions : JObject
     {
 
@@ -46,7 +41,7 @@ namespace hubiquitus4w8.hapi.hStructures
 
         public HOptions(JObject jsonObj)
             : base(jsonObj)
-        { 
+        {
         }
 
         public HOptions(HOptions options)
@@ -88,6 +83,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
         }
 
+
         public JArray GetEndpoints()
         {
             JArray endpoints = null;
@@ -95,7 +91,7 @@ namespace hubiquitus4w8.hapi.hStructures
             {
                 endpoints = this["endpoints"].ToObject<JArray>();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 endpoints = new JArray();
                 endpoints.Add("http://localhost:8080");
@@ -133,7 +129,7 @@ namespace hubiquitus4w8.hapi.hStructures
             }
             catch (Exception)
             {
-                timeout = 15000; //15000ms by default
+                timeout = 10000; //15000ms by default
             }
             return timeout;
         }
@@ -152,6 +148,7 @@ namespace hubiquitus4w8.hapi.hStructures
                 Debug.WriteLine("{0} : Can not update the timeout attribute", e.ToString());
             }
         }
+
         /// <summary>
         /// default timeout value used by the hAPI for all the services except the send() one
         /// Defaut value is 30000 ms.
